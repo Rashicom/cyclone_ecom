@@ -1,0 +1,69 @@
+{% extends 'adminbase.html' %}
+
+{% load static %}
+
+
+{% block admintitle %}Admin | orders{% endblock admintitle %}
+{% block logoutbutton %}
+<a class="btn btn-outline-secondary" href="{% url 'logout' %}" role="button"><img class="navimg" src="{% static 'Images/user.png' %}"  alt="">Logout</a>
+{% endblock logoutbutton %}
+
+
+{% block adminsection %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                
+                <a href="{% url 'dashboard' %}" class="list-group-item list-group-item-action">Dashboard</a>
+                <a href="{% url 'sellerinfo' %}" class="list-group-item list-group-item-action">Sellers info</a>
+                <a href="{% url 'userinfo' %}" class="list-group-item list-group-item-action">Users info</a>
+                <a href="{% url 'products' %}" class="list-group-item list-group-item-action">Products</a>
+                <a href="{% url 'category' %}" class="list-group-item list-group-item-action">Category</a>
+                <a href="{% url 'orders' %}" class="list-group-item list-group-item-action active">Orders</a>
+                <a href="{% url 'coupenmanagemant' %}" class="list-group-item list-group-item-action">Reports</a>
+                <a href="{% url 'reports' %}" class="list-group-item list-group-item-action">Reports</a>
+
+            </div>
+
+        </div>
+        <div class="col-md-9">
+            <h3>Orders</h3>
+            <hr>
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Order no</th>
+                    <th scope="col">Customer email</th>
+                    <th scope="col">Orderd on</th>
+                    <th scope="col">Payment status</th>
+                    <th scope="col">Order status</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                    <!-- iterate start -->
+                    {% if orders %}
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{order.order_no}}</th>
+                        <td>{{order.email}}</td>
+                        <td>{{order.order_date}}</td>
+                        <td>{{order.payment_status}}</td>
+                        <td>{{order.order_status}}</td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                    <!-- iterate end -->
+                  
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock adminsection %}

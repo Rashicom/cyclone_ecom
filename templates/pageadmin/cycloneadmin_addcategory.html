@@ -1,0 +1,188 @@
+{% extends 'adminbase.html' %}
+
+{% load static %}
+
+
+{% block admintitle %}Admin | addcategory{% endblock admintitle %}
+{% block logoutbutton %}
+<a class="btn btn-outline-secondary" href="{% url 'logout' %}" role="button"><img class="navimg" src="{% static 'Images/user.png' %}"  alt="">Logout</a>
+{% endblock logoutbutton %}
+
+
+{% block adminsection %}
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                
+                <a href="" class="list-group-item list-group-item-action">Dashboard</a>
+                <a href="{% url 'sellerinfo' %}" class="list-group-item list-group-item-action">Sellers info</a>
+                <a href="{% url 'userinfo' %}" class="list-group-item list-group-item-action">Users info</a>
+                <a href="{% url 'products' %}" class="list-group-item list-group-item-action">Products</a>
+                <a href="{% url 'category' %}" class="list-group-item list-group-item-action active">Category</a>
+                <a href="{% url 'orders' %}" class="list-group-item list-group-item-action">Orders</a>
+                <a href="{% url 'coupenmanagemant' %}" class="list-group-item list-group-item-action">Reports</a>
+                <a href="{% url 'reports' %}" class="list-group-item list-group-item-action">Reports</a>
+
+            </div>
+
+        </div>
+        <div class="col-md-9">
+            <h3>Add category</h3>
+            <hr>
+            <br>
+            <br>
+            <h5>Basic informations</h5>
+            <hr>
+            <br>
+            <!-- add category start -->
+            <form method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+
+                        <!-- select company for adding categories -->
+                        <label>company</label>
+                        <select class="form-control bg-transparent" id="company_selecter" name="company">
+                            <!-- list out company name here from database -->
+                            {% for product in products %}
+                            <option value={{product.company}}>{{product.company}}</option>
+                            {% endfor %}
+                            
+                        </select>
+                        
+
+                    </div>
+
+                    <div class="col"> 
+
+                        <!-- select model for adding categories -->
+                        <label>model</label>
+                        <select class="form-control bg-transparent" name="model" id="exampleFormControlSelect1">
+                            <!-- list model name from database -->
+                            {% for product in products %}
+                            <option>{{product.model}}</option>
+                            {% endfor %}
+                            
+                        
+                        </select>
+                    </div>
+
+                  
+                </div>
+                <br>
+                <br>
+                <h5>Catogary detailes</h5>
+                <hr>
+                <br>
+                <div class="row">
+                    <div class="col">
+
+                        <!-- frame size -->
+                        <label>Frame size</label>
+                        <select class="form-control bg-transparent" name="frame_size" id="exampleFormControlSelect1">
+                            <option>35</option>
+                            <option>38</option>
+                            <option>41</option>
+                            <option>43</option>
+                            <option>46</option>
+                            <option>48</option>
+                            <option>53</option>
+                            <option>56</option>
+
+
+                        </select>
+                        <br>
+
+                        <!--  color -->
+                        <label>Color</label>
+                        <select class="form-control bg-transparent" name="color" id="exampleFormControlSelect1">
+                            <option>black</option>
+                            <option>white</option>
+                            <option>blue</option>
+                            <option>green</option>
+                            <option>red</option>
+                            <option>orange</option>
+                            <option>violet</option>
+                            
+                        </select>
+                    </div>
+                    <div class="col">
+
+                        <!-- break type -->
+                        <label>Break type</label>
+                        <select class="form-select bg-transparent" name="break_type" aria-label="Default select example">
+                            <option selected value="mechanical break">mechanical break</option>
+                            <option value="disc break">disc break</option>
+                            <option value="hydroulic break">hydroulic break</option>
+                            
+                        </select>
+                        <br>
+
+                        <!-- gear type -->
+                        <label>Gear type</label>
+                        <input type="text" name="gear_type" class="bg-transparent prodctfld d-block" placeholder="Enter company name">
+                        
+                    </div>
+                </div>
+                <br><br>    
+
+
+                <!-- image -->
+                <h5>Image section</h5>
+                <hr>
+                <br>
+                <input type="file" name="product_image">
+                <br><br>
+
+                <br>
+
+                <!-- price -->
+                <h5>Price detailes</h5>
+                <hr>
+                <br>
+
+                <!-- mrp -->
+                <label>MRP</label>
+                <input type="text" name="mrp" class="bg-transparent prodctfld d-block" placeholder="Enter company name">
+                <br>
+
+                <!-- selling price -->
+                <label>Selling price</label>
+                <input type="text" name="seller_price" class="bg-transparent prodctfld d-block" placeholder="Enter company name">
+                <br>
+
+                <!-- quantity -->
+                <label>Quantity</label>
+                <input type="text" name="quantity" class="bg-transparent prodctfld d-block" placeholder="Enter company name">
+                <br>
+
+                <!-- is discounted -->
+                <label for="">is the product in discount category ?</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="is_discounted" id="flexRadioDefault1" value="True">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                      Yes
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="is_discounted" id="flexRadioDefault1" value="False">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                      No
+                    </label>
+                </div>
+                  
+                 <br>
+                
+               
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <!-- add product start -->
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock adminsection %}

@@ -1,0 +1,232 @@
+{% extends 'cyclonebase.html' %}
+{% load static %}
+{% block cyclonecontant %}
+
+    <!--================Home Banner Area =================-->
+    <section class="banner_area">
+      <div class="banner_inner d-flex align-items-center">
+        <div class="container">
+          <div
+            class="banner_content d-md-flex justify-content-between align-items-center">
+            <div class="mb-3 mb-md-0">
+              <h2>Order summery</h2>
+              <p>We are happy to sell to you</p>
+            </div>
+            <div class="page_link">
+              <a href="index.html">Home</a>
+              <a href="checkout.html">Product Checkout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--================End Home Banner Area =================-->
+
+    <!--================Checkout Area =================-->
+    <section>
+      <div class="container">
+        <div class="row mt-3">
+        
+          <div class="col-md-9">
+
+            <div class="card text-dark bg-light mb-3">
+                <div class="card-header">Order no: {{order_no}}</div>
+
+                <!-- iterateively display oroducts -->
+                {% if cart_list %}
+                {% for item in cart_list %}
+                <div class="card-body">
+                  <h5 class="card-title">{{item.category_id__product_id__model}}</h5>
+                  <div class="row">
+                    <div class="col-6">
+                        <p>{{item.category_id__product_id__company}}</p>
+                        <p>size :{{item.category_id__frame_size}}</p>
+                        <p>color :{{item.category_id__color}}</p>
+                    </div>
+                    <div class="col-6">
+                        <p>quantity :{{item.cartitem_quantity}}</p>
+                        <p>price :{{item.category_id__seller_price}}</p>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- iterateively display oroducts -->
+
+                {% for price in address_data %}
+                <div class="card-body">
+                    <h5 class="card-title">Offer detailes</h5>
+                    <hr>
+                    <ul>
+                        <li>
+                            <div class="d-flex justify-content-between">
+                              <p>Totel MRP</p>
+                              <p>{{price.mrp_amount}}</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex justify-content-between">
+                              <p>After descount</p>
+                              <p>{{seller_price}}</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex justify-content-between">
+                              <p>Coupen discount</p>
+                              <p>{{price.coupen_discount}}</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex justify-content-between">
+                              <p>Delivery charge</p>
+                              <p>{{price.delivery_charge}}</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex justify-content-between">
+                              <h5>Payment amount</h5>
+                              <h5>{{price.payment_amount}}</h5>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex justify-content-between">
+                              <h5></h5>
+                              <h6 class="text-success">You saved {{saved}} in this order</h6>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                {% endfor %}
+                
+
+                {% for address in address_data %}
+                <div class="card-body">
+                    <h5 class="card-title">Payment detailes</h5>
+                    <hr>
+                    <div class="">
+                        <p>Payment opton: {{address.payment_method}}</p>
+
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title">Shipping address</h5>
+                    <div class="row border border-secondary rounded-2">
+                        <p>address type :{{address.to_address__address_type}}</p>
+                        <p>name</p>
+                        <div class="col-6">
+                            <p>{{address.to_address__address}},{{address.to_address__place}}</p>
+                            <p>district :{{address.to_address__district}}</p>
+                        </div>
+                        <div class="col-6">
+                            <p>state :{{address.to_address__state}}, zip code :{{address.to_address__zip_cod}}</p>
+                            <p>contact number:{{address.to_address__contact_number}}</p>
+                        </div>
+
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+
+          </div>
+          
+
+          
+          <div class="col-md-3">
+
+            <div class="card border-secondary mb-3 sticky-top" style="max-width: 20rem;">
+              <div class="card-header bg-transparent border-secondary">Price detailes</div>
+              <div class="card-body ">
+                <ul class="">
+                  <li>
+                    <div class="d-flex justify-content-between">
+                      <p>Totel mrp(Inc.GST)</p>
+                      <p>mrt totel</p>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="d-flex justify-content-between">
+                      <p>Discount</p>
+                      <p>amount</p>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="d-flex justify-content-between">
+                      <p>Delivery charge</p>
+                      <p>charfe if any</p>
+                    </div>
+                  </li>
+                  <hr>
+                  <li>
+                    <div class="d-flex justify-content-between">
+                      <p>Total</p>
+                      <p>amount</p>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="d-grid gap-2">
+                      <button class="btn btn-info" id="proceed_payment" type="button">Razor pay</button>
+                      <button id="rzp-button1">Pay</button>
+                    </div>
+                  </li>
+                </ul>
+                
+              </div>
+            </div>
+
+          </div>
+
+
+        </div>
+        
+
+      </div>
+
+    </section>
+    <!--================End Checkout Area =================-->
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+      var options = {
+          "key": "{{key_id}}", // Enter the Key ID generated from the Dashboard
+          "amount": "{{payment.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+          "currency": "INR",
+          "name": "Acme Corp", //your business name
+          "description": "Test Transaction",
+          "image": "https://example.com/your_logo",
+          "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+          "handler": function (response){
+              alert(response.razorpay_payment_id);
+              alert(response.razorpay_order_id);
+              alert(response.razorpay_signature)
+          },
+          "prefill": {
+              "name": "Gaurav Kumar", //your customer's name
+              "email": "gaurav.kumar@example.com",
+              "contact": "9000090000"
+          },
+          "notes": {
+              "address": "Razorpay Corporate Office"
+          },
+          "theme": {
+              "color": "#3399cc"
+          }
+      };
+      var rzp1 = new Razorpay(options);
+      rzp1.on('payment.failed', function (response){
+              alert(response.error.code);
+              alert(response.error.description);
+              alert(response.error.source);
+              alert(response.error.step);
+              alert(response.error.reason);
+              alert(response.error.metadata.order_id);
+              alert(response.error.metadata.payment_id);
+      });
+      document.getElementById('rzp-button1').onclick = function(e){
+          rzp1.open();
+          e.preventDefault();
+      }
+    </script>
+
+    {% endblock cyclonecontant %}

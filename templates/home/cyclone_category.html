@@ -1,0 +1,238 @@
+
+{% extends 'cyclonebase.html' %}
+{% load static %}
+{% block cyclonecontant %}
+
+    <!--================Home Banner Area =================-->
+    <section class="banner_area">
+      <div class="banner_inner d-flex align-items-center">
+        <div class="container">
+          <div class="banner_content d-md-flex justify-content-between align-items-center">
+            <div class="mb-3 mb-md-0">
+              <h2>Shop Category</h2>
+              <p>Very us move be blessed multiply night</p>
+            </div>
+            <div class="page_link">
+              <a href="index.html">Home</a>
+              <a href="category.html">Shop</a>
+              <a href="category.html">Women Fashion</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--================End Home Banner Area =================-->
+
+    <!--================Category Product Area =================-->
+    <section class="cat_product_area section_gap">
+      <div class="container">
+        <div class="row flex-row-reverse">
+
+
+          <!-- <<<<<<<<<<<right area start>>>>>>>>>>>>>>>> -->
+          <div class="col-lg-9">
+            <div class="product_top_bar">
+
+              <!-- sorting bar start -->
+              <div class="left_dorp">
+                <select class="sorting">
+                  <option value="1">Default sorting</option>
+                  <option value="2">Default sorting 01</option>
+                  <option value="4">Default sorting 02</option>
+                </select>
+                <select class="show">
+                  <option value="1">Show 12</option>
+                  <option value="2">Show 14</option>
+                  <option value="4">Show 16</option>
+                </select>
+              </div>
+            </div>
+            <!-- sorting bar end -->
+
+            
+            <div class="latest_product_inner">
+              <div class="row">
+                
+                {% if products %}
+                {% for product in products %}
+                <!-- product tiles iteratively display start -->
+                <div class="col-md-6">
+
+                  <div class="card p-3" style="width: 24rem;">
+                    <a href="{% url 'product' product.product_category__id %}">
+                      <div class="row">
+                        <div class="col-8">
+                          <div class=""><h4 class="m-0">{{product.model}}</h4></div>
+                          <!-- star rating -->
+                          <div>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                          </div>
+  
+                          <!-- color circle -->
+                          <div>
+                            <i class="fa fa-circle" aria-hidden="true"></i>
+                            <i class="fa fa-circle" aria-hidden="true"></i>
+                            <i class="fa fa-circle" aria-hidden="true"></i> 
+                          </div>
+                        </div>
+                        <!-- offer section start -->
+                        <div class="col-4">
+                          {% if product.product_category__is_discounted %}
+                          <div class="bg-danger rounded-circle p-1">
+                            <h3>25%</h3>
+                            <h4>OFF</h4>
+                          </div>
+                          {% endif %}
+                        </div>
+                        <!-- offer section start -->
+                      </div>
+                      <div class="">
+                        <img src="/media/{{product.product_category__product_image__product_image}}" class="card-img-top" alt="">
+                      </div>
+                      
+                      <div class="row">
+                        <div class="col-4 align-middle"><p>{{product.product_category__break_type}}</p></div>
+                        <div class="col-4 d-flex justify-content-center"><p>{{product.product_category__gear_type}}</p></div>
+                        <div class="col-4 d-flex justify-content-end"><p>{{product.suspention}}</p></div>
+  
+                      </div>
+                      <div class="d-flex justify-content-between">
+                        <h4 class="fw-bolder">₹{{product.product_category__seller_price}}</h4>
+                        <a class="" href="#" role="">Compare with</a>
+                      </div>
+                      <!-- add some thicknes to hr tag -->
+                      <hr>
+                    </a>
+                    
+                    <div class="row">
+                      <div class="d-flex col-4">
+                        <a class="wishbtn" role="button" data-id={{product.product_category__id}}><img class="navimg" src="{% static 'Images/like.png' %}" alt=""></a>
+                        
+                      </div>
+                      <div class="d-flex justify-content-center col-4">
+                        <a class="addtocartbtn" role="button" data-id={{product.product_category__id}}><img class="navimg" src="{% static 'Images/cart.png' %}" alt=""></a>
+                      </div>
+                      <div class="d-flex justify-content-end col-4">
+                        <a class="btn btn-outline-success" role="button">BUY NOW</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- product tiles iteratively display end -->
+
+              </div>
+            </div>
+          </div>
+          <!-- <<<<<<<<<<<right area end >>>>>>>>>>>>>>>> -->
+
+
+          <div class="col-lg-3">
+            <div class="left_sidebar_area">
+              <aside class="left_widgets p_filter_widgets">
+                <div class="l_w_title">
+                  <h3>Browse Categories</h3>
+                </div>
+                <div class="widgets_inner">
+                  <ul class="list">
+                    <li>
+                      <a href="#">Mountain bikes</a>
+                    </li>
+                    <li>
+                      <a href="#">Hybrid bikes</a>
+                    </li>
+                    <li>
+                      <a href="#">Road bikes</a>
+                    </li>
+                    <li>
+                      <a href="#">Ladies bikes</a>
+                    </li>
+                    <li>
+                      <a href="#">Kids bikes</a>
+                    </li>
+                    <li>
+                      <a href="#">Unisex bikes</a>
+                    </li>
+                   
+                  </ul>
+                </div>
+              </aside>
+
+              <aside class="left_widgets p_filter_widgets">
+                <div class="l_w_title">
+                  <h3>Product Brand</h3>
+                </div>
+                <div class="widgets_inner">
+                  <ul class="list">
+                    <li>
+                      <a href="#">Hero</a>
+                    </li>
+                    <li>
+                      <a href="#">Firefox</a>
+                    </li>
+                    <li class="active">
+                      <a href="#">Trinix</a>
+                    </li>
+                    <li>
+                      <a href="#">Java</a>
+                    </li>
+                    <li>
+                      <a href="#">Navioc</a>
+                    </li>
+                  </ul>
+                </div>
+              </aside>
+
+              <aside class="left_widgets p_filter_widgets">
+                <div class="l_w_title">
+                  <h3>Color Filter</h3>
+                </div>
+                <div class="widgets_inner">
+                  <ul class="list">
+                    <li>
+                      <a href="#">Black</a>
+                    </li>
+                    <li>
+                      <a href="#">Black Leather</a>
+                    </li>
+                    <li class="active">
+                      <a href="#">Black with red</a>
+                    </li>
+                    <li>
+                      <a href="#">Gold</a>
+                    </li>
+                    <li>
+                      <a href="#">Spacegrey</a>
+                    </li>
+                  </ul>
+                </div>
+              </aside>
+
+              <aside class="left_widgets p_filter_widgets">
+                <div class="l_w_title">
+                  <h3>Price Filter</h3>
+                </div>
+                <div class="widgets_inner">
+                  <div class="range_item">
+                    <div id="slider-range"></div>
+                    <div class="">
+                      <label for="amount">Price : </label>
+                      <input type="text" id="amount" readonly />
+                    </div>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--================End Category Product Area =================-->
+
+    
+{% endblock cyclonecontant %}

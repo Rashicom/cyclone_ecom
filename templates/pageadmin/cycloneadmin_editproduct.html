@@ -1,0 +1,177 @@
+{% extends 'adminbase.html' %}
+
+{% load static %}
+
+
+{% block admintitle %}Admin | editproduct{% endblock admintitle %}
+{% block logoutbutton %}
+<a class="btn btn-outline-secondary" href="{% url 'logout' %}" role="button"><img class="navimg" src="{% static 'Images/user.png' %}"  alt="">Logout</a>
+{% endblock logoutbutton %}
+
+
+{% block adminsection %}
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                
+                <a href="" class="list-group-item list-group-item-action">Dashboard</a>
+                <a href="{% url 'sellerinfo' %}" class="list-group-item list-group-item-action">Sellers info</a>
+                <a href="{% url 'userinfo' %}" class="list-group-item list-group-item-action">Users info</a>
+                <a href="{% url 'products' %}" class="list-group-item list-group-item-action active">Products</a>
+                <a href="{% url 'category' %}" class="list-group-item list-group-item-action">Category</a>
+                <a href="{% url 'orders' %}" class="list-group-item list-group-item-action">Orders</a>
+                <a href="{% url 'coupenmanagemant' %}" class="list-group-item list-group-item-action">Reports</a>
+                <a href="{% url 'reports' %}" class="list-group-item list-group-item-action">Reports</a>
+
+            </div>
+
+        </div>
+        <div class="col-md-9">
+            <h3>Edit product</h3>
+            <hr>
+            <br>
+            <br>
+            <h5>Basic informations</h5>
+            <hr>
+            <br>
+            <!-- add product start -->
+            <form method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        
+                        <!-- company charecter field -->
+                        <label>Company</label>
+                        <input type="text" name="company" class="bg-transparent prodctfld d-block" placeholder="Enter company name" value={{products.company}}>
+                        <br>
+
+                        <!-- model charecter field -->
+                        <label>Model</label>
+                        <input type="text" name="model" class="bg-transparent prodctfld d-block" placeholder="Enter company name" value={{products.model}}>
+                        <br>
+
+                        <!-- radio buttons for wheel size integer-->
+                        <label>Wheel size</label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wheel_size" id="inlineRadio2" value="32" {% if products.wheel_size is 32 %}checked{% endif %}>
+                                <label class="form-check-label" for="inlineRadio2">32</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wheel_size" id="inlineRadio2" value="35" {% if products.wheel_size is 35 %}checked{% endif %}>
+                                <label class="form-check-label" for="inlineRadio2">35</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wheel_size" id="inlineRadio2" value="38" {% if products.wheel_size is 38 %}checked{% endif %}>
+                                <label class="form-check-label" for="inlineRadio2">38</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wheel_size" id="inlineRadio2" value="44" {% if products.wheel_size is 44 %}checked{% endif %}>
+                                <label class="form-check-label" for="inlineRadio2">44</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wheel_size"   id="inlineRadio2" value="50" {% if products.wheel_size is 50 %}checked{% endif %}>
+                                <label class="form-check-label" for="inlineRadio2">50</label>
+                            </div>
+                            
+                        </div>
+                        <br><hr>
+
+                        <!-- suspention -->
+                        <label>Suspention</label>
+                        <select class="bg-transparent form-select" name="suspention" aria-label="Default select example">
+                            <option {% if products.suspention == "No suspention"  %}selected{% endif %} value="No suspention">No suspention</option>
+                            <option {% if products.suspention == "Front suspention"  %}selected{% endif %} value="Front suspention">Front suspention</option>
+                            <option {% if products.suspention == "Rear suspention"  %}selected{% endif %} value="Rear suspention">Rear suspention</option>
+                            
+                        </select>
+                        <br><hr>
+                        
+                        <!-- internal cabling boolian -->
+                        <label>Internal cabling</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="internal_cabling" value="True" id="flexRadioDefault1" {% if products.internal_cabling == True %}checked{% endif %}>
+                            <label class="form-check-label" for="flexRadioDefault1">
+                              Yes
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="internal_cabling" value="False" id="flexRadioDefault2" {% if products.internal_cabling == False %}checked{% endif %}>
+                            <label class="form-check-label" for="flexRadioDefault2">
+                              No
+                            </label>
+                        </div>
+
+                    </div>
+
+                    <div class="col">
+
+                        <!-- bike type -->
+                        <label>Bike type</label>
+                        <select class="form-control bg-transparent" name="bike_type" id="exampleFormControlSelect1">
+                            <option>Mountain Bike</option>
+                            <option {% if products.bike_type == "Road bike" %}selected{% endif %}>Road bike</option>
+                            <option {% if products.bike_type == "Hybrid bike" %}selected{% endif %}>Hybrid bike</option>
+                            <option {% if products.bike_type == "Kids bike" %}selected{% endif %}>Kids bike</option>
+                            <option {% if products.bike_type == "Ladies bike" %}selected{% endif %}>Ladies bike</option>
+                        </select>
+                        <br>
+
+                        <!-- gender_cat -->
+                        <label>Gender</label>
+                        <select class="form-control bg-transparent" name="gender_cat" id="exampleFormControlSelect1">
+                            <option {% if products.gender_cat == "Unisex" %}selected{% endif %}>Unisex</option>
+                            <option {% if products.gender_cat == "Male" %}selected{% endif %}>Male</option>
+                            <option {% if products.gender_cat == "Female" %}selected{% endif %}>Female</option>
+                        
+                        </select>
+                    </div>
+
+                  
+                </div>
+ 
+                <br>
+                <h5>Discriptions detailes</h5>
+                <hr>
+                <br>
+
+                <!--  4 type descriptions -->
+                <div class="row">
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="exampleFormControlTextarea1" class="form-label">Terrain Description</label>
+                            <textarea class="form-control bg-transparent" name="terrain_description" id="exampleFormControlTextarea1" rows="3">{{products.product_description__terrain_description}}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlTextarea1" class="form-label">Strength Descriptipon</label>
+                            <textarea class="form-control bg-transparent" name="strength_description" id="exampleFormControlTextarea1" rows="3">{{products.product_description__perfomance_description}}</textarea>
+                        </div>
+
+                    </div>
+                    <div class="col-6">
+
+                        <div class="mb-3">
+                            <label for="exampleFormControlTextarea1" class="form-label">Perfomance Description</label>
+                            <textarea class="form-control bg-transparent" name="perfomance_description" id="exampleFormControlTextarea1" rows="3">{{products.product_description__perfomance_description}}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlTextarea1" class="form-label">Pricision Description</label>
+                            <textarea class="form-control bg-transparent" name="precision_description" id="exampleFormControlTextarea1" rows="3">{{products.product_description__precision_description}}</textarea>
+                        </div>
+                    </div>
+
+                </div>
+                <br>
+               
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <!-- add product start -->
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock adminsection %}

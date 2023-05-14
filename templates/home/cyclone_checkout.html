@@ -1,0 +1,265 @@
+{% extends 'cyclonebase.html' %}
+{% load static %}
+{% block cyclonecontant %}
+
+    <!--================Home Banner Area =================-->
+    <section class="banner_area">
+      <div class="banner_inner d-flex align-items-center">
+        <div class="container">
+          <div
+            class="banner_content d-md-flex justify-content-between align-items-center">
+            <div class="mb-3 mb-md-0">
+              <h2>Product Checkout</h2>
+              <p>Very us move be blessed multiply night</p>
+            </div>
+            <div class="page_link">
+              <a href="index.html">Home</a>
+              <a href="checkout.html">Product Checkout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--================End Home Banner Area =================-->
+
+    <!--================Checkout Area =================-->
+    <section>
+      <div class="container">
+        <form method="POST">
+        {% csrf_token %}
+        <div class="row mt-3">
+          <h3>Shipping information</h3>
+          <hr>
+
+
+          <div class="col-md-9">
+
+            <!-- iterative address listing start -->
+            {% if addresses %}
+            {% for address in addresses %}
+            <div class="card border-dark mb-3">
+              <div class="card-body text-dark row">
+                
+                <div class="form-check">
+                  <input class="form-check-input address_type_radio" type="radio" name="selected_address" id="address_option" value={{address.id}} aria-label="...">
+                  <h4>{{ address.address_type }}</h4>
+                </div>
+                <hr>
+                <div class="col-6">
+                  <p class="card-text">{{ address.address }},{{ address.place }}</p>
+                  <p>{{ address.district }}</p>
+                </div>
+                <div class="col-6">
+                  <p>{{ address.state }},{{ address.zip_cod }}</p>
+                  <p>{{ address.contact_number }}</p>
+                </div>
+                
+              </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+            <!-- iterative address listing end -->
+
+
+            <div class="card border-dark mb-3">
+              <a href="{% url 'addnewaddress' %}"><div class="card-header">+ Add new address</div></a>
+            </div>
+            
+            <div class="">
+              <h3>payment options</h3>
+              <hr>
+              <div class="card border-dark mb-3">
+                  <div class="card-header m-3">
+                    <input class="form-check-input" type="radio" name="selected_payment" value="Cash on delivery(COD)" id="payment_option">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                      <h4>Cash on delivery(COD)</h4>
+                    </label>
+                  </div>
+              </div>
+  
+              <hr>
+              <div class="card border-dark mb-3">
+                  <div class="card-header m-3">
+                    <input class="form-check-input"  type="radio" name="selected_payment" value="Net banking / UPI" id="payment_option">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                      <h4>Net banking / UPI</h4>
+                    </label>
+                  </div>
+              </div>
+  
+              <hr>
+              <div class="card border-dark mb-3">
+                  <div class="card-header m-3">
+                    <input class="form-check-input" type="radio" name="selected_payment" value="EMI" id="payment_option">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                      <h4>EMI</h4>
+                    </label>
+                  </div>
+              </div>
+            </div>
+          </div>
+
+          
+
+          
+          <div class="col-md-3">
+
+            <div class="card border-secondary mb-3" style="max-width: 20rem;">
+              <div class="card-header bg-transparent border-secondary"><h4>Review your order</h4></div>
+              <div class=" ">
+                <ul class="">
+
+                  
+                  <li>
+                    <div class="">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <td>Model</td>
+                            <td>price</td>
+                            <td>quantity</td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          
+                          <!-- iteratively display info start -->
+                          
+                          {% if cart_list %}
+                          {% for cart_item in cart_list %}
+                          <tr>
+                            <th scope="col">{{cart_item.category_id__product_id__model}}</th>
+                            <th scope="col">{{cart_item.category_id__seller_price}}</th>
+                            <th scope="col">{{cart_item.cartitem_quantity}}</th>
+                          </tr>
+                          {% endfor %}
+                          {% endif %}
+                          <!-- iteratively display info end -->
+                        </tbody>
+                      </table>
+                      
+                    </div>
+                    
+                    
+                  </li>
+                  
+                </ul>
+                
+              </div>
+            </div>
+
+
+            <div class="card border-success mb-3" style="max-width: 18rem;">
+              <div class="card-body text-success">
+                <h5 class="card-title">Applay discount coupen</h5>
+                <div class="d-flex">
+                  <input type="text" class="form-control" name="coupen_no" id="input_coupen_no" aria-describedby="" placeholder="">
+                  <button type="button" id="coupen_check_btn" class="btn btn-outline-success">Applay</button>
+                </div>
+                <p id="coupen_valiedation_msg"></p>
+              </div>
+            </div>
+
+            <div class="card border-secondary mb-3 sticky-top" style="max-width: 20rem;">
+              <div class="card-header bg-transparent border-secondary">Price detailes</div>
+              <div class="card-body ">
+                <ul class="">
+                  <li>
+                    <div class="d-flex justify-content-between">
+                      <p>Totel mrp(Inc.GST)</p>
+                      <p id="total_mrp" data-total_mrp={{total_mrp}}>{{total_mrp}}</p>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="d-flex justify-content-between">
+                      <p>Discount</p>
+                      <p id="discounted" data-discounted={{discounted}}>{{discounted}}</p>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="d-flex justify-content-between">
+                      <p>Coupen discount</p>
+                      <p id="applayed_coupen_amount">00</p>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="d-flex justify-content-between">
+                      <p>Delivery charge</p>
+                      <p id="delivery_charge">Free</p>
+                    </div>
+                  </li>
+                  <hr>
+                  <li>
+                    <div class="d-flex justify-content-between">
+                      <p>Total</p>
+                      <p id="gross_total">00</p>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="d-grid gap-2">
+                      <button class="btn btn-info" type="submit">Confirm order</button>
+                    </div>
+                  </li>
+                </ul>
+                
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </form>
+        
+
+      </div>
+
+      <script>
+        $(document).ready(function() {
+          let total_mrp = parseInt($("#total_mrp").data('total_mrp'))
+          let discounted = parseInt($("#discounted").data('discounted'))
+          let gross_total = total_mrp - discounted
+          $("#gross_total").text(gross_total)
+          
+          if (gross_total < 25000) {
+            $("#delivery_charge").text(249)
+          }
+          else{
+            $("#delivery_charge").text("Free")
+          }
+        })
+
+        $("#coupen_check_btn").on('click', function() {
+          console.log("coupen cutton check")
+          input_coupen_no = $("#input_coupen_no").val()
+          purchase_amount = $("#gross_total").text()
+          console.log(purchase_amount)
+          data = {input_coupen_no:input_coupen_no,purchase_amount:purchase_amount,csrfmiddlewaretoken: '{{ csrf_token }}'}
+          
+          $.ajax({
+            method:"POST",
+            url:"{% url 'coupencheck' %}",
+            data:data,
+            success: function(data) {
+              console.log(data.status)
+              console.log(data.message)
+              
+              if (data.status == 200) {
+                $("#coupen_valiedation_msg").text("coupen applayed")
+                $("#applayed_coupen_amount").text(data.amount)
+                $("#gross_total").text(parseInt(purchase_amount)-parseInt(data.amount))
+              }
+              else{
+                $("#coupen_valiedation_msg").text(data.message)
+                $("#applayed_coupen_amount").text(00)
+                $("#gross_total").text(purchase_amount)
+              }
+            }
+          })
+
+        })  
+
+
+      </script>
+
+    </section>
+    <!--================End Checkout Area =================-->
+    {% endblock cyclonecontant %}

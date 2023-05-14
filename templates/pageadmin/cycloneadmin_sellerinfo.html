@@ -1,0 +1,40 @@
+{% extends 'adminbase.html' %}
+
+{% load static %}
+
+
+{% block admintitle %}Admin | sellers{% endblock admintitle %}
+{% block logoutbutton %}
+<a class="btn btn-outline-secondary" href="{% url 'logout' %}" role="button"><img class="navimg" src="{% static 'Images/user.png' %}"  alt="">Logout</a>
+{% endblock logoutbutton %}
+
+
+{% block adminsection %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                
+                <a href="{% url 'dashboard' %}" class="list-group-item list-group-item-action">Dashboard</a>
+                <a href="{% url 'sellerinfo' %}" class="list-group-item list-group-item-action active">Sellers info</a>
+                <a href="{% url 'userinfo' %}" class="list-group-item list-group-item-action">Users info</a>
+                <a href="{% url 'products' %}" class="list-group-item list-group-item-action">Products</a>
+                <a href="{% url 'category' %}" class="list-group-item list-group-item-action">Category</a>
+                <a href="{% url 'orders' %}" class="list-group-item list-group-item-action">Orders</a>
+                <a href="{% url 'coupenmanagemant' %}" class="list-group-item list-group-item-action">Reports</a>
+                <a href="{% url 'reports' %}" class="list-group-item list-group-item-action">Reports</a>
+
+            </div>
+
+        </div>
+        <div class="col-md-9">
+            <h3>Seller info</h3>
+
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock adminsection %}

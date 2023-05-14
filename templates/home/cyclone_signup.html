@@ -1,0 +1,51 @@
+{% extends 'cyclonebase.html' %}
+{% block title %}Cyclone | home{% endblock title %}
+
+<!-- login section  -->
+{% block cyclonecontant %}
+
+<div class="bodyimg">
+    <div class="container">
+        <div class="row align-items-center vh-100">
+            <div class="col-6">
+                <h1>Create an Account</h1>
+                <p>Signup using your email id</p>
+            </div>
+            <div class="col-6 p-5 rounded-2 bg-dark opacity-75">
+                <h3>Signup</h3>
+                <hr>
+                <br>
+
+                <!-- signup form section start -->
+                <form method="POST">
+                {% csrf_token %}
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Email address</label>
+                      <input type="email" class="form-control bg-transparent" name="email" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="exampleInputPassword1" class="form-label">Password</label>
+                      <input type="password" class="form-control bg-transparent" name="password1" id="exampleInputPassword1">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control bg-transparent" name="password2" id="exampleInputPassword1">
+                      </div>
+                    <br>
+                    <div class="d-grid gap-2 userloginbtn">
+                        <button class="btn login_btn" type="submit">SUBMIT</button>
+                    </div>
+                    
+                    
+                </form>
+                <!-- signup form section end -->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock cyclonecontant %}

@@ -1,0 +1,143 @@
+{% extends 'cyclonebase.html' %}
+{% load static %}
+{% block cyclonecontant %}
+
+    <!--================Home Banner Area =================-->
+    <section class="banner_area">
+      <div class="banner_inner d-flex align-items-center">
+        <div class="container">
+          <div
+            class="banner_content d-md-flex justify-content-between align-items-center"
+          >
+            <div class="mb-3 mb-md-0">
+              <h2>Payment</h2>
+              <p>Grab your order now</p>
+            </div>
+            <div class="page_link">
+              <a href="index.html">Home</a>
+              <a href="checkout.html">Product Checkout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--================End Home Banner Area =================-->
+
+    <!--================Checkout Area =================-->
+    <section>
+      <div class="container">
+        <div class="row mt-3">
+
+          <!-- iterative address listing start -->
+          <div class="col-md-9">
+            <h3>payment options</h3>
+            <hr>
+            <div class="card border-dark mb-3">
+                <div class="card-header m-3">
+                  <input class="form-check-input" value="address_id" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                  <label class="form-check-label" for="flexRadioDefault1">
+                    <h4>Cash on delivery(COD)</h4>
+                  </label>
+                </div>
+            </div>
+
+            <hr>
+            <div class="card border-dark mb-3">
+                <div class="card-header m-3">
+                  <input class="form-check-input" value="address_id" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                  <label class="form-check-label" for="flexRadioDefault1">
+                    <h4>Net banking / UPI</h4>
+                  </label>
+                </div>
+            </div>
+
+            <hr>
+            <div class="card border-dark mb-3">
+                <div class="card-header m-3">
+                  <input class="form-check-input" value="address_id" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                  <label class="form-check-label" for="flexRadioDefault1">
+                    <h4>EMI</h4>
+                  </label>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-outline-success btn-lg">Pay</button>
+            </div>
+          </div>
+
+          <!-- iterative address listing end -->
+
+          <div class="col-md-3">
+
+            <div class="card border-secondary mb-3 sticky-top" style="max-width: 20rem;">
+              <div class="card-header bg-transparent border-secondary">Review your order</div>
+              <div class=" ">
+                <ul class="">
+
+                  <!-- iterative order items listing start-->
+                  <li>
+                    <div class="row">
+                      <div class="col-6">
+                        <img src="{% static 'Images/meteor.png' %}" alt="" style="height: 8rem;">
+                      </div>
+                      <div class="col-6">
+                        <p class="d-block m-1">company</p>
+                        <p class="d-block m-1">model</p>
+                        <p class="d-block m-1">price</p>
+                      </div>
+                    </div>
+                    <!-- iterative order items end -->
+                    
+                  </li>
+                  
+                </ul>
+                
+              </div>
+            </div>
+
+            <div class="card border-secondary mb-3 sticky-top" style="max-width: 20rem;">
+              <div class="card-header bg-transparent border-secondary">Price detailes</div>
+              <div class="card-body ">
+                <ul class="">
+                  <li>
+                    <div class="d-flex justify-content-between">
+                      <p>Totel mrp(Inc.GST)</p>
+                      <p>mrt totel</p>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="d-flex justify-content-between">
+                      <p>Discount</p>
+                      <p>amount</p>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="d-flex justify-content-between">
+                      <p>Delivery charge</p>
+                      <p>charfe if any</p>
+                    </div>
+                  </li>
+                  <hr>
+                  <li>
+                    <div class="d-flex justify-content-between">
+                      <p>Total</p>
+                      <p>amount</p>
+                    </div>
+                  </li>
+                  
+                </ul>
+                
+              </div>
+            </div>
+
+          </div>
+
+
+        </div>
+        
+
+      </div>
+
+    </section>
+    <!--================End Checkout Area =================-->
+    {% endblock cyclonecontant %}

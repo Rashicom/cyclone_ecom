@@ -1,0 +1,84 @@
+    {% extends 'adminbase.html' %}
+
+{% load static %}
+
+
+{% block admintitle %}Admin | products{% endblock admintitle %}
+{% block logoutbutton %}
+<a class="btn btn-outline-secondary" href="{% url 'logout' %}" role="button"><img class="navimg" src="{% static 'Images/user.png' %}"  alt="">Logout</a>
+{% endblock logoutbutton %}
+
+
+{% block adminsection %}
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                
+                <a href="{% url 'dashboard' %}" class="list-group-item list-group-item-action">Dashboard</a>
+                <a href="{% url 'sellerinfo' %}" class="list-group-item list-group-item-action">Sellers info</a>
+                <a href="{% url 'userinfo' %}" class="list-group-item list-group-item-action">Users info</a>
+                <a href="{% url 'products' %}" class="list-group-item list-group-item-action active">Products</a>
+                <a href="{% url 'category' %}" class="list-group-item list-group-item-action">Category</a>
+                <a href="{% url 'orders' %}" class="list-group-item list-group-item-action">Orders</a>
+                <a href="{% url 'coupenmanagemant' %}" class="list-group-item list-group-item-action">Reports</a>
+                <a href="{% url 'reports' %}" class="list-group-item list-group-item-action">Reports</a>
+
+            </div>
+
+        </div>
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between">
+                <h3>Products</h3>
+                <form class="d-flex">
+                  <input class="form-control me-2 bg-transparent" type="search" placeholder="Search" aria-label="Search">
+                  <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+            <hr>
+
+            <!-- add product button -->
+            <a class="btn btn-primary" href="{% url 'addproduct' %}" role="button">Add product</a>
+            
+            <!-- table for listing products -->
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">COMPANY</th>
+                    <th scope="col">MODEL</th>
+                    <th scope="col">BIKE TYPE</th>
+                    <th scope="col"></th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                    <!-- dispplay products iteratively -->
+                  {% if products %}
+                  {% for product in products %}
+                  <tr>
+                    <td>{{product.company}}</td>
+                    <td>{{product.model}}</td>
+                    <td>{{product.bike_type}}</td>
+                      
+                    <!-- edit and remove button -->
+                    <td>
+                      <a class="btn btn-outline-success" href="{% url 'editproduct' product.product_id %}" role="button">Edit</a>
+                      <a class="btn btn-outline-danger" href="{% url 'deleteproduct' product.product_id %}" role="button">Remove</a>
+                    </td>
+
+                  </tr>
+                  {% endfor %}
+                  {% endif %}
+
+                  <!-- here the products displays  -->
+                  <!-- puth the above tr inside for loop and replace value with data using jinja tag -->
+                
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{% endblock adminsection %}

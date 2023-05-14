@@ -1,0 +1,122 @@
+{% extends 'adminbase.html' %}
+
+{% load static %}
+
+
+{% block admintitle %}Admin | coupenmanagemant{% endblock admintitle %}
+{% block logoutbutton %}
+<a class="btn btn-outline-secondary" href="{% url 'logout' %}" role="button"><img class="navimg" src="{% static 'Images/user.png' %}"  alt="">Logout</a>
+{% endblock logoutbutton %}
+
+
+{% block adminsection %}
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                
+                <a href="{% url 'dashboard' %}" class="list-group-item list-group-item-action">Dashboard</a>
+                <a href="{% url 'sellerinfo' %}" class="list-group-item list-group-item-action">Sellers info</a>
+                <a href="{% url 'userinfo' %}" class="list-group-item list-group-item-action">Users info</a>
+                <a href="{% url 'products' %}" class="list-group-item list-group-item-action">Products</a>
+                <a href="{% url 'category' %}" class="list-group-item list-group-item-action">Category</a>
+                <a href="{% url 'orders' %}" class="list-group-item list-group-item-action">Orders</a>
+                <a href="{% url 'coupenmanagemant' %}" class="list-group-item list-group-item-action active">Reports</a>
+                <a href="{% url 'reports' %}" class="list-group-item list-group-item-action">Reports</a>
+
+            </div>
+
+        </div>
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between">
+                <h3>coupen managemant</h3>
+                <form class="d-flex">
+                  <input class="form-control me-2 bg-transparent" type="search" placeholder="Search" aria-label="Search">
+                  <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+            <hr>
+
+            <!-- add product button -->
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              New coupen
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add new coupen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="mb-3">
+                        <label for="" class="form-label">Coupen no</label>
+                        <input type="text" class="form-control" id="coupen_no" aria-describedby="">
+                      </div>
+                      <div class="mb-3">
+                        <label for="" class="form-label">coupen type</label>
+                        <select class="form-select" id="coupen_type" aria-label="Default select example">
+                          <option value="first order" selected>first order</option>
+                          <option value="normal 500 off">Normal 500 off</option>
+                          <option value="golden purchase">golden purchase</option>
+                          <option value="Silver purchase">Silver purchase</option>
+                          
+                        </select>
+                      </div>
+                      <div class="mb-3">
+                        <label for="" class="form-label">Discount</label>
+                        <input type="text" class="form-control" id="coupen_discount">
+                      </div>
+                      <div class="mb-3">
+                        <label for="" class="form-label">Expiry date</label>
+                        <input type="date" class="form-control" id="coupen_expiry_date">
+                      </div>
+                      <p class="text-danger" id="coupen_incomplete_mssg"></p>
+                      <button type="button" id="coupen_add_button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- table for listing products -->
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">COUPEN NO</th>
+                    <th scope="col">COUPEN_TYPE</th>
+                    <th scope="col">DISCOUNT</th>
+                    <th scope="col">EXPIRY DATE</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                    <!-- dispplay products iteratively -->
+                  {% if coupens %}
+                  {% for coupen in coupens %}
+                  <tr>
+                    <td>{{coupen.coupen_no}}</td>
+                    <td>{{coupen.coupen_type}}</td>
+                    <td>{{coupen.discount}}</td>
+                    <td>{{coupen.expiry_date}}</td> 
+                    
+                  </tr>
+                  {% endfor %}
+                  {% endif %}
+
+                  <!-- here the products displays  -->
+                  <!-- puth the above tr inside for loop and replace value with data using jinja tag -->
+                
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{% endblock adminsection %}

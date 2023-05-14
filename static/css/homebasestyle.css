@@ -1,0 +1,27 @@
+.test{
+    background-color: rgb(39, 39, 39);
+}
+.navimg{
+    width: 30px;
+    height: 30px;  
+}
+.bodyimg{
+    background-image: url(/static/Images/backwal.jpg);
+
+}
+.login_btn{
+    background-color: #F8673B;
+}
+.homebanerimg{
+    background-image: url(/static/Images/home_bannerimg.jpg);
+    
+}
+
+.checked {
+    
+    color: orange;
+}
+
+.xzoom:hover {
+    transform: scale(1.5);
+}

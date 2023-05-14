@@ -1,0 +1,181 @@
+{% extends 'cyclonebase.html' %}
+{% load static %}
+{% block cyclonecontant %}
+    <!--================Home Banner Area =================-->
+    <section class="banner_area">
+      <div class="banner_inner d-flex align-items-center">
+        <div class="container">
+          <div
+            class="banner_content d-md-flex justify-content-between align-items-center"
+          >
+            <div class="mb-3 mb-md-0">
+              <h2>Cart</h2>
+              <p>Very us move be blessed multiply night</p>
+            </div>
+            <div class="page_link">
+              <a href="index.html">Home</a>
+              <a href="cart.html">Cart</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--================End Home Banner Area =================-->
+
+    <!--================Cart Area =================-->
+    <section>
+      <div class="container">
+        <form method="POST">
+        {% csrf_token %}
+        <div class="row mt-3">
+
+          <div class="col-md-9">
+            <table class="table">
+              <tbody>
+                
+                
+                <!-- iterate listing start -->
+                {% if cart_data %}
+                {% for item in cart_data %}
+                
+                <tr>
+                  
+                  <td>
+                    <div class="row items">
+                      <input type="text" name="category_id[]" value="{{item.category_id}}" hidden>
+                      <div class="col-5">
+                        <img style="height: 15rem;" src="/media/{{item.image}}" alt=""> 
+                      </div>
+                      <div class="col-5">
+                        <div><h3>{{item.model}}</h3></div>
+                        <hr>
+                        <div class="row">
+                          <div class="col-3"> 
+                            <p>color</p>
+                            <i class="fa fa-circle" aria-hidden="true" style="color: red;"></i>
+                          </div>
+                          <div class="col-3">
+                            <p>frame size</p>
+                            <i class="fa fa-circle" aria-hidden="true"></i>
+                          </div>
+                          <div class="col-6">
+                            <p>Quantity</p>
+
+                            <div class="d-flex">
+                              <button class="btn btn-outline-light count_down" type="button" id="">-</button>
+                              <input type="text" name="category_quantity[]" min="1" step="1" value="1" data-id={{item.category_id}} class="form-control quantity_evnt" id="amountInput">
+                              <button class="btn btn-outline-light count_up" type="button" id="">+</button>
+                            </div>
+                            
+                          </div>
+
+                        </div>
+                        
+                        <div>
+                          <a class="wishbtn" role="button" data-id={{item.category_id}}><i class="fa fa-heart" style="color: rgb(245, 0, 0); font-size: 24px;" ></i></a>
+                        </div>
+                      </div>
+
+                      <div class="col-2">
+                        <div class="">
+                          <h4 class="price_event">{{ item.price }}</h4>
+                        </div>
+                        <div class="">
+                          <a class="addtocartbtn" role="button" data-id={{item.category_id}}><i class="fa fa-trash-o" style="font-size:24px"></i></a>
+                        </div>
+
+                      </div>
+
+                    </div>
+                  </td>
+                
+                </tr>
+                
+                {% endfor %}
+                {% endif %}
+                <!-- iterate listing end -->
+
+                
+
+                <tr>
+                  <td>
+                    <div class="row">
+                      <div class="col-5"></div>
+                      <div class="col-5">
+                        <h4>quantity</h4>
+                      </div>
+                      <div class="col-2">
+                        <h4 id="cart_items_qnty">0</h4>
+                        
+                        </div>
+                    </div>
+                  </td>
+                </tr>
+                
+                
+                <tr>
+                  <td>
+                    <div class="row">
+                      <div class="col-5"></div>
+                      <div class="col-5"><h4>Total</h4></div>
+                      <div class="col-2"><h4 id="cart_items_price">0</h4></div>
+                    </div>
+                  </td>
+                </tr>
+                
+              </tbody>
+            </table>
+          </div>
+
+          <div class="col-md-3">
+            <div class="card border-secondary mb-3 sticky-top" style="max-width: 20rem;">
+              <div class="card-header bg-transparent border-secondary">Price detailes</div>
+              <div class="card-body ">
+                <ul class="">
+                  <li>
+                    <div class="d-flex justify-content-between">
+                      <p>Totel mrp(Inc.GST)</p>
+                      <p>mrt totel</p>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="d-flex justify-content-between">
+                      <p>Discount</p>
+                      <p>amount</p>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="d-flex justify-content-between">
+                      <p>Delivery charge</p>
+                      <p id="delivery_charge">0</p>
+                    </div>
+                  </li>
+                  <hr>
+                  <li>
+                    <div class="d-flex justify-content-between">
+                      <p>Total</p>
+                      <p id="final_total_price">0</p>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="d-grid gap-2">
+                      <button class="btn btn-info" id="" type="submit">Proceed to checkout</button>
+                    </div>
+                  </li>
+                </ul>
+                
+              </div>
+            </div>
+
+          </div>
+
+
+        </div>
+      </form>
+
+      </div>
+
+    </section>
+    <!--================End Cart Area =================-->
+
+    {% endblock cyclonecontant %}

@@ -1,0 +1,377 @@
+from django.shortcuts import render,redirect
+from django.http import HttpResponse
+from django.contrib.auth import authenticate, login, logout
+from home.models import CustomUser,product,product_category,product_description,wishlist_items,cart_items,product_image,guest_cart_items,guest_wishlist_items
+from django.contrib import messages
+from django.conf import settings
+from django.core.mail import send_mail
+import random
+from django.contrib.sessions.models import Session
+from django.http.response import JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
+from django.views import View
+from django.contrib.auth.decorators import login_required
+
+
+# Create your views here.
+
+def cyclone_home(request):
+    return render(request,'cyclone_home.html')
+
+
+class cyclone_login(View):
+    def post(self,request):
+        """
+        before login the user must be a guest user, so we have to 
+        check any item added to cart or wishlist as a gust user
+        so we have to move all those items to users listwe are checking 
+        and exicuting the item transfer code just after checking the 
+        user creation and befor login, after the login the session id 
+        will be replaced and we cant the guest user table
+        """
+        
+        
+        # fetching cedencials from request
+        email = request.POST["email"]
+        password = request.POST["password"]
+        # validating the user is exixt or not
+        
+        user = authenticate(email = email, password = password)
+        if user is not None:
+            """
+            before login we have to fetch all items from cart and wishlist 
+            if any as a qust user
+            """
+                
+            try:
+                # fetching guest user instence
+                session_id = request.session.session_key
+                guestuser_instence = Session.objects.get(session_key = session_id)
+                    
+                # fetching newly create user instence
+                user_instence = CustomUser.objects.get(email = email)
+
+                # fetching guest cart items list and wishlist items
+                guest_cartitems = guest_cart_items.objects.filter(session_id = guestuser_instence)
+                guest_wishlist = guest_wishlist_items.objects.filter(session_id = guestuser_instence)
+                    
+                # transfering to user cart list
+                for cart_item in guest_cartitems:
+                    new_cartitem = cart_items(email = user_instence, category_id = cart_item.category_id, cartitem_quantity = cart_item.cartitem_quantity )
+                    new_cartitem.save()
+
+                # # transfering to user wish list
+                for wish_item in guest_wishlist:
+                    new_wishitem = wishlist_items(email = user_instence, category_id = wish_item.category_id)
+                    new_wishitem.save()
+            except:
+                print("exception found")
+                login(request,user)
+                return redirect("user")
+
+            login(request,user)
+            return redirect("user")
+        else:
+            messages.info(request,"User not found")
+    
+    def get(self,request):
+        
+        # if methord is get
+        return render(request,'cyclone_login.html')
+                 
+    
+    
+
+
+# generate otp and send to mail
+class cyclone_otpgenerator(View):
+
+    def post(self,request):
+        print("otp generator")
+        email = request.POST['email']
+    
+        # if the user not found return not found mssg 
+        try:
+            user = CustomUser.objects.get(email = email)
+        except CustomUser.DoesNotExist:
+            return JsonResponse({'status':'user not found'})
+    
+        if not user.is_active:
+            return JsonResponse({'status':'Unautherized user'})
+        
+        otp = random.randint(1000,9999)
+        user.user_otp = otp
+        user.save()
+
+        # send otp to email
+        subject = 'cyclone OTP'
+        message = 'Hello there! your OTP'+str(otp)
+        recipient = email
+        send_mail(subject,message,settings.EMAIL_HOST_USER,[recipient],fail_silently=False)
+        return JsonResponse({'status':'otp send to mail'})
+
+
+        
+
+# email otp varify and login
+class cyclone_otplogin(View):
+    
+    def post(self,request):
+        # validate the otp
+        email = request.POST['email']
+        otp = request.POST['otp']
+        user = CustomUser.objects.get(email = email)
+
+        # check the otp is matching or not
+        if user.user_otp == otp:
+            # delete otp from field
+            login(request,user)
+            return redirect("user")
+        else:
+            messages.info(request,"invalied otp")
+    
+    def get(self,request):
+        # if the request is get
+        return render(request,'cyclone_otplogin.html')
+
+
+class cyclone_category(View):
+    
+    def get(self,request):
+        #  fetch product quantiry color ..etc pending
+        products = product.objects.values("product_category__id","product_id","model","suspention","product_category__break_type","product_category__gear_type","product_category__mrp","product_category__is_discounted","product_category__seller_price","product_category__product_image__product_image")
+
+        return render(request,'cyclone_category.html',{'products':products})
+
+
+            
+
+class cyclone_contact(View):
+    def get(self,request):
+        return render(request,'cyclone_contact.html')
+
+class cyclone_blog(View):
+
+    def get(self,request):
+        return render(request,'cyclone_blog.html')
+
+class cyclone_tracking(View):
+    def get(self,request):
+        return render(request,'cyclone_tracking.html')
+    
+
+class cyclone_product(View):
+
+    def get(self,request,**kwargs):
+        category_id = kwargs['category_id'] 
+        product_details = product_category.objects.get(id = category_id)
+        
+        product_instence = product_details.product_id
+        product_dscpn = product_description.objects.get(product_id = product_instence)
+        product_pics = product_image.objects.filter(category_id = product_details) 
+
+        return render(request,'cyclone_product.html',{"product_details":product_details,'product_dscpn':product_dscpn,'product_pics':product_pics})
+
+
+
+# signup
+class cyclone_signup(View):
+
+    def post(self,request):
+
+        # fetching the signup data
+        email = request.POST["email"]
+        password1 = request.POST["password1"]
+        password2 = request.POST["password2"]
+        # password matching need tobe checked in the frontend
+        # already check the emaile exist or not when curser leave using ajax
+
+        user = CustomUser.objects.create_user(email=email,password=password1)
+        return   redirect('userlogin')
+    
+    def get(self,request):
+        return render(request,'cyclone_signup.html')
+
+
+# add to wishlist ajax call
+class cyclone_addtowishlist(View):
+
+    
+    def post(self,request):
+
+        category_id = request.POST['category_id']
+
+        # if quest user
+        if not request.user.is_authenticated:
+            session_id = request.session.session_key
+            
+            # if no session, we create a session to uniqely identify the user
+            if session_id is None:
+                request.session.create()
+            
+            # fetch info to add item to wishlist
+            guest_category_instence = product_category.objects.get(id=category_id)
+            guest_user_instence = Session.objects.get(session_key = request.session.session_key)
+            # if product already exixt in wishlist
+            if guest_wishlist_items.objects.filter(category_id = guest_category_instence, session_id = guest_user_instence).exists():
+                
+                # remove from wishlist
+                print("category exist in guest wishlist")
+                guest_wishlist_items.objects.filter(category_id = guest_category_instence,session_id = guest_user_instence).delete()
+                return JsonResponse({'status':'item removed from guest wishlist'})
+            
+            # if product not exist in guest wishlist
+            else:
+                
+                # add item to guest cart
+                new_guest_wishitem = guest_wishlist_items(category_id = guest_category_instence, session_id = guest_user_instence)
+                new_guest_wishitem.save()
+                return JsonResponse({'status':'item added to guest wishlist'})
+
+        
+        email = request.user.email
+
+        # fetching appropriate instence of the user and category
+        category_instence = product_category.objects.get(id=category_id)
+        user_instence = CustomUser.objects.get(email=email)
+        
+        # checking the item is already is in wishlist or not
+        # adding if only item not in list else remove from wishlist
+        if wishlist_items.objects.filter(category_id = category_id).exists():
+
+            # remove from wishlist
+            print("category exist in wishlist")
+            wishlist_items.objects.filter(category_id = category_id).delete()
+            return JsonResponse({'status':'item removed from wishlist'})
+        else:
+
+            # add to wishlist table
+            newwishitem = wishlist_items(category_id = category_instence, email = user_instence)
+            newwishitem.save()
+            return JsonResponse({'status':'item added to wishlist'})
+        
+
+
+    # if user not signed in
+    # need clarification
+    """we use get becouse its carring only product"""
+    def get(self,request):
+
+        # if user not signed inn
+        """
+        we have to store the wish list items 
+        in a temp position        
+        """
+        pass
+
+
+#add to cart ajax call
+class cyclone_addtocart(View):
+    
+    
+    def post(self,request):
+        """
+        if anonimous user try to add items to cart we create a uneque id for
+        the user and store cart items data in the quest_cart_items table
+        """
+        print("call to add to ccart")
+        category_id = request.POST['category_id']
+        # if quest user
+        if not request.user.is_authenticated:
+            session_id = request.session.session_key
+
+            # if no session, we create a session to uniqely identify the user
+            if session_id is None:
+                request.session.create()
+            
+            # fetch info to add item to cart
+            guest_category_instence = product_category.objects.get(id=category_id)
+            guest_user_instence = Session.objects.get(session_key = request.session.session_key)
+            
+            # if product already exixt in cart
+            if guest_cart_items.objects.filter(category_id = guest_category_instence, session_id = guest_user_instence).exists():
+                
+                # remove from wishlist
+                print("category exist in guest cart")
+                guest_cart_items.objects.filter(category_id = guest_category_instence,session_id = guest_user_instence).delete()
+                return JsonResponse({'status':'item removed from guest cart'})
+            
+            # if product not exist in guest cart
+            else:
+
+                # add item to guest cart
+                new_guest_cartitem = guest_cart_items(category_id = guest_category_instence, session_id = guest_user_instence)
+                new_guest_cartitem.save()
+                return JsonResponse({'status':'item added to guest cart'})
+
+
+        # if authenticated user
+        email = request.user.email
+
+        # fetching appropriate instence of the user and category
+        category_instence = product_category.objects.get(id=category_id)
+        user_instence = CustomUser.objects.get(email=email)
+
+        # checking the item is already is in cart or not
+        # adding if only item not in list else remove from cart
+        if cart_items.objects.filter(category_id = category_id, email = user_instence).exists():
+            
+            # remove from wishlist
+            print("category exist in cart")
+            cart_items.objects.filter(category_id = category_id, email = user_instence).delete()
+            return JsonResponse({'status':'item removed from cart'})
+
+        else:
+
+            # add to cart table
+            newcartitem = cart_items(category_id = category_instence, email = user_instence)
+            newcartitem.save()
+            return JsonResponse({'status':'item added to cart'})
+        
+
+    def get(self,request):
+
+        # if user not signed inn
+        """
+        we have to store the wish list items 
+        in a temp position        
+        """
+        pass
+
+
+class cyclone_wishlist(View):
+
+    def post(self,request):
+        pass
+
+    def get(self,request):
+
+        # if guest user
+        if not request.user.is_authenticated:
+            session_id = request.session.session_key
+
+            # if no session, we create a session to uniqely identify the user
+            if session_id is None:
+                request.session.create()
+
+            # wishlist items fetching from gust wish list
+            guest_user_instence = Session.objects.get(session_key = request.session.session_key)
+            wishlistitems = guest_wishlist_items.objects.filter(session_id = guest_user_instence)
+        
+        # if autherized user
+        else:
+            # wishlist items fetching from user wish list
+            email = request.user.email
+            wishlistitems = wishlist_items.objects.filter(email = email)
+        
+        # fetch and append values to an array which we are gonna render
+        wishlist_data = []
+        for item in wishlistitems:
+            product_cat = product_category.objects.get(id = item.category_id.id)
+            produc = product.objects.get(product_id = product_cat.product_id.product_id)
+            image = product_image.objects.get(category_id = product_cat.id)
+            wishlist_data.append({'company':produc.company,'model':produc.model,'category_id':item.category_id.id,'color':product_cat.color,'frame_size':product_cat.frame_size,'break_type':product_cat.break_type,'gear_type':product_cat.gear_type,'suspention':produc.suspention,'price':product_cat.seller_price,'image':image.product_image})   
+        
+        return render(request,'cyclone_wishlist.html',{'wishlist_data':wishlist_data})  
+
+    

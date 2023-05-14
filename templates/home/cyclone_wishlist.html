@@ -1,0 +1,85 @@
+{% extends 'cyclonebase.html' %}
+{% load static %}
+{% block cyclonecontant %}
+    <!--================Home Banner Area =================-->
+    <section class="banner_area">
+      <div class="banner_inner d-flex align-items-center">
+        <div class="container">
+          <div
+            class="banner_content d-md-flex justify-content-between align-items-center"
+          >
+            <div class="mb-3 mb-md-0">
+              <h2>Wishlist</h2>
+              <p>Grab your dream products</p>
+            </div>
+            <div class="page_link">
+              <a href="#">Home</a>
+              <a href="#">Cart</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--================End Home Banner Area =================-->
+
+    <!--================wishlist Area =================-->
+    <section>
+        <div class="container">
+            <div class="row">
+
+                <!-- iterative listing start -->
+                {% if wishlist_data %}
+                {% for item in wishlist_data %}
+                <div class="col-md-4">
+                    <div class="card p-3 m-2" style="width: 23rem;">
+                        <div class=""><h4 class="m-0">{{item.model}}</h4></div>
+                        <!-- star rating -->
+                        <div>
+                          <span class="fa fa-star checked"></span>
+                          <span class="fa fa-star checked"></span>
+                          <span class="fa fa-star checked"></span>
+                          <span class="fa fa-star"></span>
+                          <span class="fa fa-star"></span>
+                        </div>
+    
+                        <!-- color circle -->
+                        <div>
+                          <i class="fa fa-circle" aria-hidden="true"></i>
+                          <i class="fa fa-circle" aria-hidden="true"></i>
+                          <i class="fa fa-circle" aria-hidden="true"></i> 
+                        </div>
+                        <div class="">
+                          <img src="/media/{{item.image}}" class="card-img-top" alt="">
+                        </div>
+                        
+                        <div class="row">
+                          <div class="col-4 align-middle"><p>{{item.break_type}}</p></div>
+                          <div class="col-4 d-flex justify-content-center"><p>{{item.gear_type}}</p></div>
+                          <div class="col-4 d-flex justify-content-end"><p>{{item.suspention}}</p></div>
+    
+                        </div>
+                        <div class="d-flex justify-content-between">
+                          <h4 class="fw-bolder">₹{{item.price}}</h4>
+                          <a class="" href="#" role="">Compare with</a>
+                        </div>
+                        <!-- add some thicknes to hr tag -->
+                        <hr>
+                        
+                        <div class="d-grid gap-2">
+                          <a class="btn btn-outline-warning addtocartbtn" data-id={{item.category_id}} role="button">MOVE TO CART</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- iterative listing start -->
+            </div>
+        </div>
+
+
+    </section>
+
+
+    <!--================End wishlist Area =================-->
+
+    {% endblock cyclonecontant %}

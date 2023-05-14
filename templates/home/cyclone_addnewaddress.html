@@ -1,0 +1,118 @@
+{% extends 'cyclonebase.html' %}
+{% load static %}
+{% block cyclonecontant %}
+
+<!--================Home Banner Area =================-->
+<section class="banner_area">
+    <div class="banner_inner d-flex align-items-center">
+      <div class="container">
+        <div
+          class="banner_content d-md-flex justify-content-between align-items-center">
+          <div class="mb-3 mb-md-0">
+            <h2>My profile</h2>
+            <p>Welocome to the profile</p>
+          </div>
+          <div class="page_link">
+            <a href="#">Home</a>
+            <a href="#">My profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+<!--================End Home Banner Area =================-->
+
+
+<!--================start My profile Area =================-->
+
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="col-3">
+            <ul class="list-group sticky-top">
+                
+                <a class="m-2" href=""><li class="list-group-item">My order</li></a>
+                <a class="m-2" href=""><li class="list-group-item">My cart</li></a>
+                <a class="m-2" href=""><li class="list-group-item">My wishlist</li></a>
+                <a class="m-2" href=""><li class="list-group-item">Change password</li></a>    
+            </ul>
+        </div>
+        <div class="col-9">
+            <h4>Profile</h4>
+            <hr>
+            <div class="row border-secondary">
+              <div class="col-3">
+                <img src="{% static 'Images/user.png' %}" alt="" class="rounded-circle" style="height: 10rem;">
+              </div>
+              <div class="col-9 border border-secondary rounded p-3">
+                <div class=""><h3>{{user.first_name}}</h3></div>
+                <hr>
+                <div class="">
+                  <h5 class="">Email id : {{user.email}}</h5>
+                  <p>Last name : {{user.last_name}}</p>
+                  
+                </div>
+
+              </div>
+  
+            </div>
+            <br>
+            <h4>Add new address</h4>
+            <hr>
+            
+            <div class="my-3">
+                <form method="POST" class="row g-3">
+                    {% csrf_token %}
+                    <div class="col-md-6">
+                      <label for="inputEmail4" class="form-label">Address type</label>
+                      <select name="address_type" class="form-select">
+                        <option selected value="Home address">Home address</option>
+                        <option value="Office address">Office address</option>
+                        <option value="Temperery address">Temperery address</option>
+                        <option value="Other type">Other type</option>
+                      </select>
+                    </div>
+                    
+                    <div class="col-12">
+                      <label for="inputAddress" class="form-label">Address</label>
+                      <input type="text" class="form-control" name="user_address" placeholder="">
+                    </div>
+                    <div class="col-12">
+                      <label for="inputAddress2" class="form-label">Place</label>
+                      <input type="text" class="form-control" name="user_place" placeholder="">
+                    </div>
+                    <div class="col-md-6">
+                      <label for="inputCity" class="form-label">District</label>
+                      <input type="text" class="form-control" name="user_district">
+                    </div>
+                    <div class="col-md-4">
+                      <label for="inputState" class="form-label">State</label>
+                      <select name="user_state" class="form-select">
+                        <option selected>Kerala</option>
+                        <option>Thaminnadu</option>
+                        <option>Karnataka</option>
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                      <label for="inputZip" class="form-label">Zip</label>
+                      <input type="text" class="form-control" name="user_zip">
+                    </div>
+                    <div class="col-12">
+                        <label for="inputAddress2" class="form-label">contact number</label>
+                        <input type="number" class="form-control" name="user_contact_number" placeholder="">
+                      </div>
+                    <div class="col-12">
+                      <button type="submit" class="btn btn-primary">Sumbit</button>
+                    </div>
+                </form>
+            </div>
+            
+
+        </div>
+    </div>
+</div>
+
+<!--================start My profile Area =================-->
+
+
+{% endblock cyclonecontant %}

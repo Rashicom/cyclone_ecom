@@ -1,0 +1,54 @@
+{% extends 'adminbase.html' %}
+
+{% load static %}
+
+
+{% block admintitle %}Admin | login{% endblock admintitle %}
+{% block logoutbutton %}
+{% comment %} empty {% endcomment %}
+{% endblock logoutbutton %}
+
+
+{% comment %} main section start{% endcomment %}
+{% block adminsection %}
+
+<div>
+    <div class="container">
+        <div class="row"> 
+
+            <div class="col-6">
+                <h1>Admin Panal</h1>
+            </div>
+         
+
+            <div class="col-6 bg-dark">
+                <div class="p-5">
+                    
+                    <!-- admin lofin form -->
+                    <form method="POST">
+                    {% csrf_token %}
+                        <div class="mb-3">
+                          <label for="exampleInputEmail1" class="form-label">Email address</label>
+                          <input type="email" class="form-control" name ="email" id="exampleInputEmail1" aria-describedby="emailHelp">
+                          
+                        </div>
+                        <div class="mb-3">
+                          <label for="exampleInputPassword1" class="form-label">Password</label>
+                          <input type="password" class="form-control" name="password" id="exampleInputPassword1">
+                        </div>
+                        <button type="submit" class="btn bg-primary adminloginbtn">LOGIN</button>
+                    </form>
+                    
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock adminsection %}
+{% comment %} main section end {% endcomment %}
+                

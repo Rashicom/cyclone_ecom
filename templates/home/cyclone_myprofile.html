@@ -1,0 +1,137 @@
+{% extends 'cyclonebase.html' %}
+{% load static %}
+{% block cyclonecontant %}
+
+<!--================Home Banner Area =================-->
+<section class="banner_area">
+    <div class="banner_inner d-flex align-items-center">
+      <div class="container">
+        <div
+          class="banner_content d-md-flex justify-content-between align-items-center">
+          <div class="mb-3 mb-md-0">
+            <h2>My profile</h2>
+            <p>Welocome to the profile</p>
+          </div>
+          <div class="page_link">
+            <a href="#">Home</a>
+            <a href="#">My profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+<!--================End Home Banner Area =================-->
+
+
+<!--================start My profile Area =================-->
+
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="col-3">
+            <ul class="list-group sticky-top">
+                
+                <a class="m-2" href=""><li class="list-group-item">My order</li></a>
+                <a class="m-2" href="{% url 'cart' %}"><li class="list-group-item">My cart</li></a>
+                <a class="m-2" href="{% url 'wishlist' %}"><li class="list-group-item">My wishlist</li></a>
+                <a class="m-2" href=""><li class="list-group-item">Change password</li></a>    
+            </ul>
+        </div>
+        <div class="col-9">
+            <h4>Profile</h4>
+            <hr>
+            <div class="row border-secondary">
+              <div class="col-3">
+                <img src="{% static 'Images/user.png' %}" alt="" class="rounded-circle" style="height: 10rem;">
+              </div>
+              <div class="col-9 border border-secondary rounded p-3">
+                <div class=""><h3>{{user.first_name}}</h3></div>
+                <hr>
+                <div class="">
+                  <h5 class="">Email id : {{user.email}}</h5>
+                  <p>Last name : {{user.last_name}}</p>
+              
+                  <div class="accordion accordion-flush" id="accordionFlushExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="flush-headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                          <p>Edit info</p>
+                        </button>
+                      </h2>
+                      <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+                        <form>
+                          <div class="mb-3">
+                            <label for="" class="form-label">first name</label>
+                            <input type="text" class="form-control" id="userinfo_first_name" aria-describedby="" placeholder="">
+                      
+                          </div>
+                          <div class="mb-3">
+                            <label for="" class="form-label">last name</label>
+                            <input type="text" class="form-control" id="userinfo_last_name">
+                          </div>
+                          <div class="mb-3">
+                            <label for="" class="form-label">Contact number</label>
+                            <input type="number" class="form-control" id="userinfo_contact_number">
+                          </div>
+                          <div class="mb-3">
+                            <label for="" class="form-label">Gender</label>
+                            <select id="userinfo_gender" class="form-select">
+                              <option selected></option>
+                              <option >MALE</option>
+                              <option >FEMALE</option>
+                              <option >OTHER</option>
+                            </select>
+                          </div>
+                          
+                          <button type="button" id="userinfobtn" class="btn btn-primary">Submit</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+  
+            </div>
+            <br>
+            <h4>Addressbok</h4>
+            <hr>
+
+
+            <!-- iterative address listing start -->
+            {% if addresses %}
+            {% for address in addresses %}
+            <div class="card border-dark mb-3">
+              <div class="card-body text-dark row">
+                <div class="d-flex justify-content-between">
+                  <h5 class="card-title">{{address.address_type}}</h5>
+                  <button type="button" value={{address.id}} class="btn btn-outline-danger remove_addressbtn">Remove</button>
+                </div>
+                
+                <div class="col-6">
+                  <p class="card-text">{{address.address}},{{address.place}}</p>
+                  <p>{{address.district}}</p>
+                </div>
+                <div class="col-6">
+                  <p>{{address.state}},{{address.zip_cod}}</p>
+                  <p>{{address.contact_number}}</p>
+                </div>
+                
+              </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+            <!-- iterative address listing start -->
+
+            <div class="card border-dark mb-3">
+              <a href="{% url 'addnewaddress' %}"><div class="card-header">+ Add new address</div></a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--================start My profile Area =================-->
+
+
+{% endblock cyclonecontant %}
