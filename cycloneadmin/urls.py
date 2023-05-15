@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     path('', views.cycloneadmin_login, name="login"),
-    path('dashboard/',views.cycloneadmin_dashboard,name="dashboard"),
+    path('dashboard/',views.cycloneadmin_dashboard.as_view(),name="dashboard"),
     path('userinfo/',views.cycloneadmin_userinfo,name="userinfo"),
     path('sellerinfo/',views.cycloneadmin_sellerinfo,name="sellerinfo"),
     path('products/',views.cycloneadmin_products,name="products"),
@@ -18,6 +18,9 @@ urlpatterns = [
     path('deleteproduct/<int:product_id>',views.cycloneadmin_deleteproduct,name="deleteproduct"),
     path('edituseracces',views.cycloneadmin_edituseracces.as_view(),name="edituseracces"),
     path('coupenmanagemant/',views.coupenmanagemant.as_view(),name='coupenmanagemant'),
-    path('addcoupen/',views.cyclone_addcoupen.as_view(),name='addcoupen')
+    path('addcoupen/',views.cyclone_addcoupen.as_view(),name='addcoupen'),
+    path('orderupdation/',views.cycloneadmin_order_updation.as_view(),name='orderupdation'),
+    path('cancelorder/', views.cycloneadmin_cancel_order.as_view(),name='cancelorder')
+
 
 ]

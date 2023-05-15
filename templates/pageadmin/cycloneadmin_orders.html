@@ -12,6 +12,7 @@
 {% block adminsection %}
 
 <div class="container-fluid">
+    <br>
     <div class="row">
         <div class="col-md-3">
             <div class="list-group">
@@ -22,7 +23,7 @@
                 <a href="{% url 'products' %}" class="list-group-item list-group-item-action">Products</a>
                 <a href="{% url 'category' %}" class="list-group-item list-group-item-action">Category</a>
                 <a href="{% url 'orders' %}" class="list-group-item list-group-item-action active">Orders</a>
-                <a href="{% url 'coupenmanagemant' %}" class="list-group-item list-group-item-action">Reports</a>
+                <a href="{% url 'coupenmanagemant' %}" class="list-group-item list-group-item-action">Coupen managemant</a>
                 <a href="{% url 'reports' %}" class="list-group-item list-group-item-action">Reports</a>
 
             </div>
@@ -39,19 +40,24 @@
                     <th scope="col">Orderd on</th>
                     <th scope="col">Payment status</th>
                     <th scope="col">Order status</th>
+                    <th scope="col"></th>
 
                   </tr>
                 </thead>
                 <tbody>
                     <!-- iterate start -->
                     {% if orders %}
-                    {% for order in orders %}
+                    {% for order in orders %}    
                     <tr>
                         <td>{{order.order_no}}</th>
                         <td>{{order.email}}</td>
-                        <td>{{order.order_date}}</td>
+                        <td class="test">{{order.order_date}}</td>
                         <td>{{order.payment_status}}</td>
                         <td>{{order.order_status}}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary order_status_btn" value="{{order.order_no}}" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Update</button>
+                        </td>
+                        
                     </tr>
                     {% endfor %}
                     {% endif %}
@@ -62,8 +68,118 @@
 
 
         </div>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Current order status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between">
+                        <p>Order No</p>
+                        <p id="order_no_p"></p>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <p>Customer</p>
+                        <p id="email_p"></p>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <p>Ordered on</p>
+                        <p id="ordered_on_p"></p>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <p>Payment method</p>
+                        <p id="payment_method_p"></p>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <p>Payment status</p>
+                        <p id="payment_status_p"></p>
+                    </div>
+                    <hr>
+                    <h5>Update shipping status</h5>
+                    <div class="d-flex justify-content-between">
+                        <p>Current shipping status</p>
+                        <p id="order_status_p"></p>
+                    </div>
+                    <input type="text" id="input_order_update" class="form-control">
+
+
+                </div>
+                <div class="modal-footer">
+                <button type="button" id="order_cancel_btn"  class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel order</button>
+                <button type="button" id="order_update_btn"  class="btn btn-outline-primary" data-bs-dismiss="modal">Update</button>
+                </div>
+            </div>
+            </div>
+        </div>
     </div>
 
 </div>
+
+<script>
+    $(".order_status_btn").on('click', function() {
+        console.log("button clicked")
+        order_no = $(this).val()
+        $("#order_no_p").text(order_no)
+        data={order_no:order_no}
+
+
+        $.ajax({
+            method:"GET",
+            url:"{% url 'orderupdation' %}",
+            data:data,
+            success: function(data) {
+                $("#email_p").text(data.email)
+                $("#ordered_on_p").text(data.order_date)
+                $("#payment_method_p").text(data.payment_method)
+                $("#payment_status_p").text(data.payment_status)
+                $("#order_status_p").text(data.order_status)
+            }
+        })
+        
+    })
+
+    $("#order_cancel_btn").on('click', function() {
+        console.log("cancel btton clicked")
+        order_no = $("#order_no_p").text()
+        
+        data = {order_no:order_no, csrfmiddlewaretoken: '{{ csrf_token }}'}
+        $.ajax({
+            method:"POST",
+            url:"{% url 'cancelorder' %}",
+            data:data,
+            success: function(data) {
+                console.log("success")
+                console.log(data.status)
+                console.log(data.message)
+            }
+        })
+    })
+
+    $("#order_update_btn").on('click', function() {
+        console.log("updation btton clicked")
+        order_no = $("#order_no_p").text()
+        update_val = $("#input_order_update").val()
+
+        data = {order_no:order_no, update_val:update_val, csrfmiddlewaretoken: '{{ csrf_token }}'}
+        
+        $.ajax({
+            method:"POST",
+            url:"{% url 'orderupdation' %}",
+            data:data,
+            success: function(data) {
+                console.log("success")
+                console.log(data.status)
+                console.log(data.message)
+            }
+        })
+        
+    })
+
+
+</script>
 
 {% endblock adminsection %}

@@ -6,7 +6,9 @@ from django.contrib.auth.decorators import login_required
 from home.models import CustomUser,product,product_category,product_description,product_image,user_order,discount_coupen
 from django.views import View
 from django.http.response import JsonResponse
-
+from django.core import serializers
+from datetime import date, timedelta
+from django.db.models import Sum
 
 # Create your views here.
 
@@ -36,9 +38,17 @@ def cycloneadmin_logout(request):
     return redirect("login")
 
 
+class cycloneadmin_dashboard(View):
 
-def cycloneadmin_dashboard(request):
-    return render(request,'cycloneadmin_dashboard.html')
+    def get(self,request):
+        user_count = CustomUser.objects.filter(is_superuser = False).count()   
+        sales_today = user_order.objects.filter(order_date = date.today()).count()
+        total_shipment = user_order.objects.count()
+        total_revenue = user_order.objects.all().aggregate(Sum("payment_amount"))['payment_amount__sum']
+
+        dashboard_data = {"user_count":user_count,"sales_today":sales_today,"total_shipment":total_shipment,"total_revenue":total_revenue}
+    
+        return render(request,'cycloneadmin_dashboard.html',dashboard_data)
 
 
 
@@ -232,3 +242,31 @@ def cycloneadmin_deleteproduct(request,product_id):
     return redirect("products")
 
 
+class cycloneadmin_order_updation(View):
+
+    def get(self, request):
+        order_no = request.GET['order_no']
+        order = user_order.objects.get(order_no = order_no)
+        email = request.user.email
+        
+        return JsonResponse({"status":200,"order_no":order.order_no,"payment_method":order.payment_method,"payment_status":order.payment_status,"order_status":order.order_status,'email':email,'order_date':order.order_date})
+
+    def post(self, request):
+        order_no = request.POST['order_no']
+        update_val = request.POST['update_val']
+        try:
+            user_order.objects.filter(order_no = order_no).update(order_status = update_val)
+        except Exception:
+            return JsonResponse({'status':404,'message':'updation filed'})
+        return JsonResponse({'status':200,'message':'updaed'})
+
+class cycloneadmin_cancel_order(View):
+
+    def post(self, request):
+        order_no = request.POST['order_no']
+        try:
+            user_order.objects.filter(order_no = order_no).update(order_status = "cancelled by admin")
+        except Exception:
+            return JsonResponse({'status':404, 'messages':'cancelation filed'})
+
+        return JsonResponse({'status':200, 'messages':'order cancelled'})

@@ -47,6 +47,8 @@ class CustomUser(AbstractUser):
 
     objects = CustomUserManager()
 
+    
+
 # user address: user have multiple addresses
 # foreign key: mail, references: CustomUser
 class user_address(models.Model):
