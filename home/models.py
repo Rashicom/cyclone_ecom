@@ -142,6 +142,13 @@ class order_list(models.Model):
     category_id = models.ForeignKey(product_category, on_delete=models.CASCADE)
     order_quantity = models.IntegerField(default=1)
 
+
+class canceled_orders(models.Model):
+    order_no = models.ForeignKey(user_order, on_delete=models.CASCADE)
+    reason_of_cancel = models.TextField()
+    payment_return_option = models.CharField(max_length=50)
+
+
 # user order list 
 # one user can have multiple product in a single order
 class product_review(models.Model):

@@ -3,7 +3,7 @@ from django.contrib.auth import  authenticate,login, logout
 from django.views import View
 import random
 from django.http.response import JsonResponse
-from home.models import CustomUser,product,product_category,product_description,wishlist_items,cart_items,product_image,user_address,user_order,order_list
+from home.models import CustomUser,product,product_category,product_description,wishlist_items,cart_items,product_image,user_address,user_order,order_list,canceled_orders
 from django.core.exceptions import ObjectDoesNotExist
 from twilio.rest import Client
 from django.conf import settings
@@ -141,9 +141,16 @@ class user_cancel_order(View):
         order_no = request.POST['order_no']
         reason_of_cancel = request.POST['reason_of_cancel']
         payment_return_option = request.POST['payment_return_option']
+        order_no_instance = user_order.objects.get(order_no = order_no)
 
-        # update cancel table
-        
+        try:
+            new_cancel_order = canceled_orders(order_no = order_no_instance,reason_of_cancel = reason_of_cancel,payment_return_option = payment_return_option)
+            new_cancel_order.save()
+            update_status = user_order.objects.get(order_no = order_no)
+            update_status.order_status = "order canceled"
+            update_status.save()
+        except Exception:
+            return JsonResponse({'status':404, 'message':'cant cancel order'})
         return JsonResponse({'status':200, 'message':'order canceled'})
         
 
