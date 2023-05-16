@@ -108,36 +108,10 @@
                             <div class="progress-bar" style="width: 25%"></div>
                         </div>
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-outline-secondary my-4" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        <button type="button" value="{{order.order_no}}" class="btn btn-outline-secondary my-4 order_cancel" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                             Cancel order
                         </button>
                         
-                        <!-- Modal -->
-                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel">Cancel you order</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="mb-3">
-                                        <label for="" class="form-label">Reason of cancel</label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                                        <label for="" class="form-label">Payment return option</label>
-                                        <select class="form-select" aria-label="Default select example">
-                                            <option selected>Add to wallet</option>
-                                            <option value="1">Return to account</option>
-                                            <option value="2">Order another</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
                     </div>
                    
                   </div>
@@ -148,6 +122,34 @@
             {% endif %}
             <!-- orders iteratively listing end -->
 
+
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Cancel you order</h5>
+                    <p id = "order_no_p"></p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="" class="form-label">Reason of cancel</label>
+                            <input type="text" class="form-control" id="reason_of_cancel" aria-describedby="emailHelp">
+                            <label for="" class="form-label">Payment return option</label>
+                            <select class="form-select" id="payment_return_option" aria-label="Default select example">
+                                <option selected>Add to wallet</option>
+                                <option value="1">Return to account</option>
+                                <option value="2">Order another</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" id="order_cancel_btn" class="btn btn-secondary" data-bs-dismiss="modal">Submit</button>
+                    </div>
+                </div>
+                </div>
+            </div>
             
 
         </div>
@@ -156,5 +158,35 @@
 
 <!--================start My profile Area =================-->
 
+<script>
+
+    $(".order_cancel").on('click', function() {
+        console.log("first click")
+        let test = $(this).val()
+        $("#order_no_p").text(test)
+    })
+
+    $("#order_cancel_btn").on('click', function() {
+        console.log("cancel cutton clicked")
+        let order_no = $("#order_no_p").text()
+        let reason_of_cancel = $("#reason_of_cancel").val()
+        let payment_return_option = $("#payment_return_option").val()
+        
+        data = {order_no:order_no, reason_of_cancel:reason_of_cancel,payment_return_option:payment_return_option,csrfmiddlewaretoken: '{{ csrf_token }}'}
+
+        $.ajax({
+            method:"POST",
+            url:"{% url 'usercancelorder' %}",
+            data:data,
+            success: function(data) {
+                console.log(data.status)
+                console.log(data.message)
+            }
+
+
+        })
+        
+    })
+</script>
 
 {% endblock cyclonecontant %}

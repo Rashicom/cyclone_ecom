@@ -132,8 +132,20 @@ class cyclone_mobile_otp_generator(View):
         print(contact_number)
          
         return JsonResponse({'status':200, 'message':'otp has been send to your registerd mobile number'})
+    
+
+
+class user_cancel_order(View):
+
     def post(self,request):
-        pass
+        order_no = request.POST['order_no']
+        reason_of_cancel = request.POST['reason_of_cancel']
+        payment_return_option = request.POST['payment_return_option']
+
+        # update cancel table
+        
+        return JsonResponse({'status':200, 'message':'order canceled'})
+        
 
 def cyclone_deleteaddress(request):
     email = request.user.email
