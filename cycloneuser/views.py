@@ -3,10 +3,11 @@ from django.contrib.auth import  authenticate,login, logout
 from django.views import View
 import random
 from django.http.response import JsonResponse
-from home.models import CustomUser,product,product_category,product_description,wishlist_items,cart_items,product_image,user_address
+from home.models import CustomUser,product,product_category,product_description,wishlist_items,cart_items,product_image,user_address,user_order,order_list
 from django.core.exceptions import ObjectDoesNotExist
 from twilio.rest import Client
 from django.conf import settings
+from django.db.models import Sum
 
 # Create your views here.
 
@@ -28,7 +29,38 @@ class cyclone_user(View):
         user = CustomUser.objects.get(email = email)
         addresses = user_address.objects.filter(email = user)
         return render(request,'cyclone_myprofile.html',{'user':user,'addresses':addresses})
-        
+
+
+# user order details
+class cyclone_user_order(View):
+
+    def get(self, request):
+
+        # fetching basic info
+        email = request.user.email
+        user_instencce = CustomUser.objects.get(email = email)
+        orders = user_order.objects.filter(email = email)
+        order_data = []
+
+        # iteratively appending each order data to order data
+        for order in orders:
+            """
+            from each order we fetching order_no, qty and status
+            each order containing many items in it. so from orled list 
+            table filtering based on order id and all data append to 
+            the order_data table, and same iteratiing for all order
+            made by the specific user
+            """
+
+            order_no = order.order_no
+            order_status = order.order_status
+            order_quantity = order_list.objects.filter(order_no = order_no).aggregate(Sum('order_quantity'))['order_quantity__sum']
+            order_items = order_list.objects.filter(order_no = order_no).values("category_id__product_id__model","category_id__frame_size","category_id__color","order_quantity","category_id__seller_price")
+            order_data.append({"order_no":order_no,"order_status":order_status,"order_quantity":order_quantity,"order_items":order_items})
+
+        return render(request, 'cyclone_user_order.html', {"order_data":order_data})
+
+
 class cyclone_addnewaddress(View):
 
     def post(self,request):

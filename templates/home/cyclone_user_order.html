@@ -1,0 +1,160 @@
+{% extends 'cyclonebase.html' %}
+{% load static %}
+{% block cyclonecontant %}
+
+<!--================Home Banner Area =================-->
+<section class="banner_area">
+    <div class="banner_inner d-flex align-items-center">
+      <div class="container">
+        <div
+          class="banner_content d-md-flex justify-content-between align-items-center">
+          <div class="mb-3 mb-md-0">
+            <h2>My Orders</h2>
+            <p>Welocome to the profile</p>
+          </div>
+          <div class="page_link">
+            <a href="#">Home</a>
+            <a href="#">My profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+<!--================End Home Banner Area =================-->
+
+
+
+<!--================start My profile Area =================-->
+
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="col-3">
+            <ul class="list-group sticky-top">
+                
+                <a class="m-2" href="{% url 'userorder' %}"><li class="list-group-item">My order</li></a>
+                <a class="m-2" href="{% url 'cart' %}"><li class="list-group-item">My cart</li></a>
+                <a class="m-2" href="{% url 'wishlist' %}"><li class="list-group-item">My wishlist</li></a>
+                <a class="m-2" href=""><li class="list-group-item">Change password</li></a>    
+            </ul>
+        </div>
+        <div class="col-9">
+            <h4>My orders</h4>
+            <hr>
+            
+            <!-- orders iteratively listing start -->
+            {% if order_data %}
+            {% for order in order_data %}
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+                <div class="accordion-item">
+                    <table class="table">
+                        <tbody>
+                          <tr>
+                            <td>Order No:{{order.order_no}}</td>
+                            <td>Quantity:{{order.order_quantity}}</td>
+                            <td>Order status:{{order.order_status}}</td>
+                          </tr>
+                          
+                        </tbody>
+                      </table>
+                  <h2 class="accordion-header" id="">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse_{{order.order_no}}" aria-expanded="false" aria-controls="flush-collapseOne">
+                      Order info & Manage your order
+                    </button>
+                  </h2>
+                  <div id="flush-collapse_{{order.order_no}}" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                        <h5>products</h5>
+                        <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">Model</th>
+                                <th scope="col">Frame size</th>
+                                <th scope="col">Color</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Price</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                <!-- order items iteratively list here start -->
+                                {% for item in order.order_items %}
+                                <tr>
+                                    <td>{{item.category_id__product_id__model}}</td>
+                                    <td>{{item.category_id__frame_size}}</td>
+                                    <td>{{item.category_id__color}}</td>
+                                    <td>{{item.order_quantity}}</td>
+                                    <td>{{item.category_id__seller_price}}</td>
+                                </tr>
+                                {% endfor %}
+
+                              <!-- order items iteratively list here start -->
+                            </tbody>
+                        </table>
+                        <br>
+                        <h5>Shipping status</h5>
+                        <div class="progress" role="progressbar" aria-label="Example 1px high" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="height: 1px">
+                            <div class="progress-bar" style="width: 25%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between my-2">
+                            <p class="rounded-pill border-bottom border-primary p-1">order placed</p>
+                            <p class="rounded-pill border-bottom border-primary p-1">Packed by seller</p>
+                            <p class="rounded-pill border-bottom border-primary p-1">Shipped</p>
+                            <p class="rounded-pill border-bottom border-primary p-1">arrived nearest</p>
+                            <p class="rounded-pill border-bottom border-primary p-1">out of delivery</p>
+                            <p class="rounded-pill border-bottom border-primary p-1">Delivered</p>
+
+                        </div>
+                        <div class="progress" role="progressbar" aria-label="Example 20px high" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="height: 20px">
+                            <div class="progress-bar" style="width: 25%"></div>
+                        </div>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-outline-secondary my-4" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                            Cancel order
+                        </button>
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Cancel you order</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="" class="form-label">Reason of cancel</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                                        <label for="" class="form-label">Payment return option</label>
+                                        <select class="form-select" aria-label="Default select example">
+                                            <option selected>Add to wallet</option>
+                                            <option value="1">Return to account</option>
+                                            <option value="2">Order another</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                   
+                  </div>
+                </div>
+                
+            </div>
+            {% endfor %}
+            {% endif %}
+            <!-- orders iteratively listing end -->
+
+            
+
+        </div>
+    </div>
+</div>
+
+<!--================start My profile Area =================-->
+
+
+{% endblock cyclonecontant %}

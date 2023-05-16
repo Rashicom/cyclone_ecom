@@ -140,7 +140,7 @@ class user_order(models.Model):
 class order_list(models.Model):
     order_no = models.ForeignKey(user_order,on_delete=models.CASCADE)
     category_id = models.ForeignKey(product_category, on_delete=models.CASCADE)
-
+    order_quantity = models.IntegerField(default=1)
 
 # user order list 
 # one user can have multiple product in a single order

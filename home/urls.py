@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
     path('',views.cyclone_home,name='home'),
     path('userlogin/',views.cyclone_login.as_view(),name='userlogin'),
-    path('category/',views.cyclone_category.as_view(),name='category'),
+    path('categories/',views.cyclone_category.as_view(),name='categories'),
     path('contact/',views.cyclone_contact.as_view(),name='contact'),
     path('blog/',views.cyclone_blog.as_view(),name='blog'),
     path('tracking/',views.cyclone_tracking.as_view(),name='tracking'),
