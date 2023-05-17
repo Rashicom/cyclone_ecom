@@ -68,14 +68,18 @@ class cyclone_checkout(View):
 
         # fetching data from the request
         email = request.user.email
-        selected_address = request.POST['selected_address']
-        selected_payment = request.POST['selected_payment']
+        try:
+            selected_address = request.POST['selected_address']
+            selected_payment = request.POST['selected_payment']
+        except Exception:
+            return redirect("checkout")
+
         coupen_no = request.POST['coupen_no']
-        
-        coupen_instence = discount_coupen.objects.filter(coupen_no = coupen_no).exists()
-        if coupen_instence:
+        if coupen_no:
+            coupen_instence = discount_coupen.objects.get(coupen_no = coupen_no)
             coupen_discount = coupen_instence.discount
         else:
+            coupen_instence = None
             coupen_discount = 0 
 
         # fetching objects corresponding to the request data 
@@ -97,14 +101,25 @@ class cyclone_checkout(View):
         payment_amount = total_seller_price - coupen_discount + delivery_charge
 
         # placing order in the order table
-        new_order = user_order(email = user,payment_method = selected_payment, payment_status = payment_status, order_status = "checkout not completed", to_address = to_address, mrp_amount = mrp_amount, seller_discount = seller_discount, coupen_discount = coupen_discount, delivery_charge = delivery_charge, payment_amount = payment_amount)
+        order_status = "checkout not completed"
+        new_order = user_order(email = user,payment_method = selected_payment, payment_status = payment_status, order_status = order_status, to_address = to_address, mrp_amount = mrp_amount, seller_discount = seller_discount, coupen_discount = coupen_discount, delivery_charge = delivery_charge, payment_amount = payment_amount)
         new_order.save()
 
+        print("order table updated")
+
+        order_product_list = cart_items.objects.filter(email = email)
+        #listing placed orders produsts to order list
+        for product in order_product_list:
+            new_order_item = order_list(order_no = new_order, category_id = product.category_id, order_quantity = product.cartitem_quantity)
+            new_order_item.save()
+        
+        print("order list table updated")
+        # put the used coupen to applayed coupen list to avoide not use in the next order conflict
         if coupen_instence:
             add_coupen = applyed_coupen(email = user,order_no = new_order,coupen_no = coupen_instence)
             add_coupen.save()
 
-        print("order table updated")
+        print("coupen table updated")
         order_no = new_order.order_no
         print(order_no)
 
@@ -168,22 +183,32 @@ class cyclone_ordersummery(View):
 
     def get(self,request):
         
+        # fetching_data
         email = request.user.email
         order_no = request.session.get('order_no')
+
+        # fetching data for rendering order summery
         order_price = user_order.objects.get(order_no = order_no)
         seller_price = order_price.mrp_amount - order_price.seller_discount
         saved = order_price.seller_discount + order_price.coupen_discount
         address = user_order.objects.filter(order_no = order_no).values('payment_method','to_address__address_type','to_address__address','to_address__place','to_address__district','to_address__state','to_address__zip_cod','to_address__contact_number','mrp_amount','coupen_discount','delivery_charge','payment_amount')
         cart_list = cart_items.objects.filter(email = email).values('category_id__seller_price','category_id__mrp','category_id__frame_size','category_id__color', 'cartitem_quantity', 'category_id__product_id__model', 'category_id__product_id__company',) 
-
-
+        discount = order_price.seller_discount + order_price.coupen_discount
         payment_anount = order_price.payment_amount
-        print(payment_anount)
+        
+
+        # if payment methosd is cod render order summory without paymant option 
+        order = user_order.objects.get(order_no = order_no)
+        if order.payment_method == "Cash on delivery(COD)":
+            return render(request,'cyclone_cod_ordersummery.html',{"address_data":address, "cart_list":cart_list,"order_no":order_no,"seller_price":seller_price,"saved":saved,"discount":discount})
+
+        # else continue for summery with paymanet
+        # payment initialization
         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
         DATA = {"amount": payment_anount*100,"currency": "INR","payment_capture":1}
         payment = client.order.create(data=DATA)
         print(payment)
-        return render(request,'cyclone_order_summery.html',{"address_data":address, "cart_list":cart_list,"order_no":order_no,"seller_price":seller_price,"saved":saved,"payment":payment,"key_id":settings.RAZORPAY_KEY_ID})
+        return render(request,'cyclone_order_summery.html',{"address_data":address, "cart_list":cart_list,"order_no":order_no,"seller_price":seller_price,"saved":saved,"discount":discount,"payment":payment,"key_id":settings.RAZORPAY_KEY_ID})
     
 class cyclone_coupen_check(View):
     

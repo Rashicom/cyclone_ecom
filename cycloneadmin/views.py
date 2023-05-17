@@ -112,7 +112,7 @@ def cycloneadmin_addcategory(request):
 
         # product image
         product_picture = request.POST['product_image']
-
+        
         # update all the information , not a good practce
         # only update changed fields using ajax
         

@@ -7,5 +7,5 @@ urlpatterns = [
     path('quantitycheck/',views.quantitycheck.as_view(),name='quantitycheck'),
     path('ordersummery/',views.cyclone_ordersummery.as_view(),name='ordersummery'),
     path('coupencheck/',views.cyclone_coupen_check.as_view(), name='coupencheck'),
-    path('paymentsuccess',views.cyclone_payment_success.as_view(),name = "paymentsuccess")
+    path('paymentsuccess/',views.cyclone_payment_success.as_view(),name = "paymentsuccess")
 ]

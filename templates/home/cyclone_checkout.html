@@ -217,14 +217,19 @@
           let total_mrp = parseInt($("#total_mrp").data('total_mrp'))
           let discounted = parseInt($("#discounted").data('discounted'))
           let gross_total = total_mrp - discounted
-          $("#gross_total").text(gross_total)
           
+          // checking delivery charge applicable or not
           if (gross_total < 25000) {
             $("#delivery_charge").text(249)
+            gross_total += 249
           }
+
           else{
             $("#delivery_charge").text("Free")
           }
+
+          // updating gross total fild after checking delivery charge
+          $("#gross_total").text(gross_total)
         })
 
         $("#coupen_check_btn").on('click', function() {
