@@ -53,8 +53,9 @@ class cyclone_cart(View):
         for item in cart:
             product_cat = product_category.objects.get(id = item.category_id.id)
             produc = product.objects.get(product_id = product_cat.product_id.product_id)
+            #need to add mutiple images
             image = product_image.objects.get(category_id = product_cat.id)
-            cart_data.append({'company':produc.company,'model':produc.model,'category_id':item.category_id.id,'color':product_cat.color,'frame_size':product_cat.frame_size,'price':product_cat.seller_price,'mrp':product_cat.mrp,'quantity':product_cat.quantity,'image':image.product_image})   
+            cart_data.append({'company':produc.company,'model':produc.model,'category_id':item.category_id.id,'color':product_cat.color,'frame_size':product_cat.frame_size,'price':product_cat.seller_price ,'mlt_mrp':product_cat.mrp * item.cartitem_quantity,'quantity':product_cat.quantity,'image':image.product_image,'item_qty':item.cartitem_quantity,"mult_price":product_cat.seller_price * item.cartitem_quantity})   
         
         return render(request,'cyclone_cart.html',{'cart_data':cart_data})    
 
@@ -136,9 +137,9 @@ class quantitycheck(View):
         category_id = request.POST['category_id']
         item = product_category.objects.get(id = category_id)
         if int(item.quantity) < int(needed_quantity):
-            return JsonResponse({'status':'quantity exceeded'})
+            return JsonResponse({'status':404,'message':'quantity exceeded'})
         else:
-            return JsonResponse({'status':'quantity available'})
+            return JsonResponse({'status':200,'message':'quantity available'})
     
 class cyclone_ordersummery(View):
     

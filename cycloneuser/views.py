@@ -95,6 +95,7 @@ class cyclone_forgotpassword(View):
         except ObjectDoesNotExist:
             return JsonResponse({'status':404, 'message':'invalied email'})
         if user.user_otp == otp:
+            
             return JsonResponse({'status':200,'message':'proceed to password redirect'})
         return JsonResponse({'status':409, 'message':'invalied otp'})
 
@@ -119,7 +120,6 @@ class cyclone_mobile_otp_generator(View):
         if to_number == "":
             return JsonResponse({'status':401,'message':'no registered mobile number'})
 
-        
 
         client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
         message = client.messages.create(
@@ -127,9 +127,10 @@ class cyclone_mobile_otp_generator(View):
                               from_='+16085915072',
                               to= '+91'+str(to_number)
                           )
+
         # sendig the otp to the registered contact number
         contact_number = user.contact_number
-        print(contact_number)
+        print(otp)
          
         return JsonResponse({'status':200, 'message':'otp has been send to your registerd mobile number'})
     
@@ -153,6 +154,15 @@ class user_cancel_order(View):
             return JsonResponse({'status':404, 'message':'cant cancel order'})
         return JsonResponse({'status':200, 'message':'order canceled'})
         
+
+class cyclone_user_password_reset(View):
+    
+    def get(self, request):
+
+        return render(request, 'cyclone_password_reset.html')
+
+    def post(self, requset):
+        pass
 
 def cyclone_deleteaddress(request):
     email = request.user.email

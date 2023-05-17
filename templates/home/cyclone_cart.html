@@ -63,7 +63,7 @@
 
                             <div class="d-flex">
                               <button class="btn btn-outline-light count_down" type="button" id="">-</button>
-                              <input type="text" name="category_quantity[]" min="1" step="1" value="1" data-id={{item.category_id}} class="form-control quantity_evnt" id="amountInput">
+                              <input type="text" name="category_quantity[]" min="1" step="1" value="{{item.item_qty}}" data-id={{item.category_id}} class="form-control quantity_evnt" id="amountInput">
                               <button class="btn btn-outline-light count_up" type="button" id="">+</button>
                             </div>
                             
@@ -79,6 +79,11 @@
                       <div class="col-2">
                         <div class="">
                           <h4 class="price_event">{{ item.price }}</h4>
+
+                          <!-- hidden elements to calculate total price and mrp -->
+                          <p class="multiplied_price" hidden>{{item.mult_price}}</p>
+                          <p class="item_mrp" hidden>{{item.mlt_mrp}}</p>
+
                         </div>
                         <div class="">
                           <a class="addtocartbtn" role="button" data-id={{item.category_id}}><i class="fa fa-trash-o" style="font-size:24px"></i></a>
@@ -96,18 +101,18 @@
                 <!-- iterate listing end -->
 
                 
-
+                
                 <tr>
                   <td>
                     <div class="row">
                       <div class="col-5"></div>
                       <div class="col-5">
                         <h4>quantity</h4>
+                        <p class="text-danger" id="quantity_exceeded_msg"></p>
                       </div>
                       <div class="col-2">
                         <h4 id="cart_items_qnty">0</h4>
-                        
-                        </div>
+                      </div>
                     </div>
                   </td>
                 </tr>
@@ -135,13 +140,13 @@
                   <li>
                     <div class="d-flex justify-content-between">
                       <p>Totel mrp(Inc.GST)</p>
-                      <p>mrt totel</p>
+                      <p id="total_mrp">0</p>
                     </div>
                   </li>
                   <li>
                     <div class="d-flex justify-content-between">
                       <p>Discount</p>
-                      <p>amount</p>
+                      <p id="total_discount">0</p>
                     </div>
                   </li>
                   <li>
@@ -178,4 +183,130 @@
     </section>
     <!--================End Cart Area =================-->
 
+
+    <script>
+
+
+      //cart quantity varing trigger calculation
+    $(document).ready(function() {
+        
+
+      // price and quantity show fot one item when page render
+      var total_quantity = 0
+      var total_price = 0
+      var total_mrp = 0
+
+      /*
+      calculating total quantity, total price and total mrp to show
+      the total values in the respective fields when the page is loaded
+      */
+      //total seller price
+      $(".quantity_evnt").each(function() {
+          total_quantity += parseInt($(this).val())
+      })
+
+      //total quantity
+      $(".multiplied_price").each(function() {
+          total_price += parseInt($(this).text())
+      })
+
+      //total mrp
+      $(".item_mrp").each(function() {
+          total_mrp += parseInt($(this).text())
+      })
+
+      // after calculating the total puting this value in to the respective fields
+      $("#cart_items_qnty").text(total_quantity)
+      $("#cart_items_price").text(total_price)
+      $("#total_mrp").text(total_mrp)
+
+      // discount is the difference of mrp and price
+      $("#total_discount").text(total_mrp - total_price)
+
+      //checking total price fot delivery charde is applicable or not
+      if (total_price < 25000) {
+          $("#delivery_charge").text(249)
+          $("#final_total_price").text(total_price + 249)
+      }
+      else{
+          $("#delivery_charge").text("Free")
+          $("#final_total_price").text(total_price)
+      }
+
+
+      // quantity trigger based value changing
+      /* when user change the quantity we ahve to calculate quantity and price of
+      each product and calculate the sum of it, so we are creating a dom make_list
+      called cart_items to access the price and quantity */
+      let cart_items = $(".items")
+      $(".quantity_evnt").on('change', function() {
+          total_quantity = 0
+          total_price = 0
+          total_mrp = 0
+
+          //fetching the category_id to check entered qnty is available or not
+          let category_id = $(this).data('id')
+          let needed_quantity = parseInt($(this).val())
+          
+          data = {category_id:category_id, needed_quantity:needed_quantity, csrfmiddlewaretoken: '{{ csrf_token }}'}
+
+          // ajaxing to check the needed qty is available or not
+          $.ajax({
+
+              url: "{% url 'quantitycheck' %}",
+              method: "POST",
+              data:data,
+
+              success: function(data) {
+                  console.log("sucsess")
+                  console.log(data.status)
+
+                  if (data.status == 200) {
+
+                      $("#quantity_exceeded_msg").text("")
+                      //iterate over a list
+                      cart_items.each(function() {
+
+                          // access one fiels using this
+                          var item = $(this)
+                          // total quantity iteratively incremented
+                          // total price iteratively added item quantity times item price
+                          total_quantity += parseInt(item.find(".quantity_evnt").val())
+                          total_price += parseInt(item.find(".price_event").text()) * parseInt(item.find(".quantity_evnt").val())
+                          total_mrp += parseInt(item.find(".item_mrp").text()) * parseInt(item.find(".quantity_evnt").val())
+
+                      })  
+
+                      // after the calculation updte the total price and qnty field
+                      $("#cart_items_qnty").text(total_quantity)
+                      $("#cart_items_price").text(total_price)
+                      $("#total_mrp").text(total_mrp)
+
+                      // discount is the defference of mrp and price
+                      $("#total_discount").text(total_mrp - total_price)
+                      
+                      //checking total price to find delivery charge applictble or not
+                      if (total_price < 25000) {
+                          $("#delivery_charge").text(249)
+                          $("#final_total_price").text(total_price + 249)
+                      }
+
+                      else{
+                          $("#delivery_charge").text(0)
+                          $("#final_total_price").text(total_price)
+                      }
+                      
+                  }
+
+                  else{
+                      // show limit exceede msg
+                      $("#quantity_exceeded_msg").text(data.message)
+                      console.log("limit exceeded")
+                  }
+              }
+          })
+      })    
+    })
+
+    </script>
     {% endblock cyclonecontant %}
