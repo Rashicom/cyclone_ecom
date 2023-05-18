@@ -88,18 +88,24 @@
         <div class="col-md-4">
           <div class="single-product">
             <div class="product-img">
-              <img class="img-fluid w-100" src="/media/{{product.image}}" alt="" />
+              <a href="{% url 'product' product.category_id %}">
+                <img class="img-fluid w-100" src="/media/{{product.image}}" alt="" />
+              </a>
+
+              <!-- buttons addto-cart and wishlist start -->
               <div class="p_icon">
                 <a href="#" role="button">
                   <i class="ti-eye"></i>
                 </a>
-                <a href="#" role="button">
+                <a class="wishbtn" data-id={{product.category_id}} role="button">
                   <i class="ti-heart"></i>
                 </a>
-                <a href="#" role="button">
+                <a class="addtocartbtn" data-id={{product.category_id}} role="button">
                   <i class="ti-shopping-cart"></i>
                 </a>
               </div>
+              <!-- buttons addto-cart and wishlist start -->
+
             </div>
             <div class="product-btm">
               <a href="#" class="d-block">
@@ -152,11 +158,13 @@
           <div class="new_product">
             <h5 class="text-uppercase">collection of 2023</h5>
             <h3 class="text-uppercase">{{first_product.model}}</h3>
-            <div class="">
+            
+            <a href="{% url 'product' first_product.category_id %}">
               <img class="img-fluid" src="/media/{{first_product.image}}" alt="" />
-            </div>
+            </a>
+            
             <h4>₹{{first_product.seller_price}}</h4>
-            <a href="#" class="main_btn">Add to cart</a>
+            <a class="main_btn addtocartbtn" data-id={{first_product.category_id}} role="button">Add to cart</a>
           </div>
         </div>
         <!-- resently added one product  latest new prodect start-->
@@ -174,15 +182,17 @@
             <div class="col-md-6">
               <div class="single-product">
                 <div class="product-img">
-                  <img class="img-fluid w-100" src="/media/{{new_product.image}}" alt="" />
-                  <div class="p_icon">
+                  <a href="{% url 'product' new_product.category_id %}">
+                    <img class="img-fluid w-100" src="/media/{{new_product.image}}" alt="" />
+                  </a>
+                    <div class="p_icon">
                     <a href="#">
                       <i class="ti-eye"></i>
                     </a>
-                    <a href="#">
+                    <a class="wishbtn" data-id={{new_product.category_id}} role="button">
                       <i class="ti-heart"></i>
                     </a>
-                    <a href="#">
+                    <a class="addtocartbtn" data-id={{new_product.category_id}} role="button">
                       <i class="ti-shopping-cart"></i>
                     </a>
                   </div>
@@ -235,15 +245,17 @@
         <div class="col-6 col-md-3">
           <div class="single-product">
             <div class="product-img">
-              <img class="img-fluid w-100" src="/media/{{rated_product.image}}" alt="" />
-              <div class="p_icon">
+              <a href="{% url 'product' rated_product.category_id %}">
+                <img class="img-fluid w-100" src="/media/{{rated_product.image}}" alt="" />
+              </a>
+                <div class="p_icon">
                 <a href="#">
                   <i class="ti-eye"></i>
                 </a>
-                <a href="#">
+                <a class="wishbtn" data-id={{rated_product.category_id}} role="button">
                   <i class="ti-heart"></i>
                 </a>
-                <a href="#">
+                <a class="addtocartbtn" data-id={{rated_product.category_id}} role="button">
                   <i class="ti-shopping-cart"></i>
                 </a>
               </div>
