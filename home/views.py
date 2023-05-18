@@ -15,8 +15,73 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+# home page
 def cyclone_home(request):
-    return render(request,'cyclone_home.html')
+    """
+    we have to fetch filtered data such as newly added feachered
+    products offere products and so on to show in the main page
+    which is home where user enter first
+    """
+
+    """<<<<<<<<<<<<feacherd producs>>>>>>>>>>>>>>>"""
+    # fetching 3 products of different companies for featured product html area
+    featured_pruducts = product_category.objects.order_by("product_id__company").distinct("product_id__company")[:3] 
+    
+    # appending product details and imagest tp products
+    products = []
+    for f_product in featured_pruducts:
+        """
+        image returns a query set which contains list of items
+        so we need first image from firsl list([:1])
+        for accessing first list data([0])
+        for accessig the dict value ["product_image"]
+        """
+        image = product_image.objects.filter(category_id = f_product).values("product_image")[:1][0]["product_image"]
+        products.append({"category_id":f_product.id,"model":f_product.product_id.model,"seller_price":f_product.seller_price,"mrp":f_product.mrp,"image":image})
+    
+
+    """<<<<<<<<<<<<new 5 producs>>>>>>>>>>>>>>>"""
+
+    # fetching first 5 newly added items
+    firstfive_products = product_category.objects.order_by("added_date")[:5]
+    
+    # appending new product details and imagest tp new products table
+    new_products = []
+    for n_product in firstfive_products:
+        """
+        image returns a query set which contains list of items
+        so we need first image from firsl list([:1])
+        for accessing first list data([0])
+        for accessig the dict value ["product_image"]
+        """
+        image = product_image.objects.filter(category_id = n_product).values("product_image")[:1][0]["product_image"]
+        new_products.append({"category_id":n_product.id,"model":n_product.product_id.model,"seller_price":n_product.seller_price,"mrp":n_product.mrp,"image":image})
+    
+    # popoing first product(most new produt) from 5 product to show it seperately in html
+    # rest of the list size is 4 now
+    first_product = new_products.pop(0)
+
+
+    """<<<<<<<<<<<<most rated 8 producs>>>>>>>>>>>>>>>"""
+
+    # fetching most rated 8 products (need to compleate)
+    # now just fetching random products
+    rated_pruducts = product_category.objects.all()
+    
+    # appending product details and imagest tp products
+    most_rated_products = []
+    for r_product in rated_pruducts:
+        """
+        image returns a query set which contains list of items
+        so we need first image from firsl list([:1])
+        for accessing first list data([0])
+        for accessig the dict value ["product_image"]
+        """
+        image = product_image.objects.filter(category_id = r_product).values("product_image")[:1][0]["product_image"]
+        most_rated_products.append({"category_id":r_product.id,"model":r_product.product_id.model,"seller_price":r_product.seller_price,"mrp":r_product.mrp,"image":image})
+    
+    return render(request,'cyclone_home.html',{"products":products, "new_products":new_products,"first_product":first_product,"most_rated_products":most_rated_products})
+
 
 
 class cyclone_login(View):
@@ -29,7 +94,6 @@ class cyclone_login(View):
         user creation and befor login, after the login the session id 
         will be replaced and we cant the guest user table
         """
-        
         
         # fetching cedencials from request
         email = request.POST["email"]
@@ -212,6 +276,7 @@ class cyclone_addtowishlist(View):
             # fetch info to add item to wishlist
             guest_category_instence = product_category.objects.get(id=category_id)
             guest_user_instence = Session.objects.get(session_key = request.session.session_key)
+            
             # if product already exixt in wishlist
             if guest_wishlist_items.objects.filter(category_id = guest_category_instence, session_id = guest_user_instence).exists():
                 
