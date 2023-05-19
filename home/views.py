@@ -359,7 +359,7 @@ class cyclone_addtocart(View):
                 # remove from wishlist
                 print("category exist in guest cart")
                 guest_cart_items.objects.filter(category_id = guest_category_instence,session_id = guest_user_instence).delete()
-                return JsonResponse({'status':'item removed from guest cart'})
+                return JsonResponse({'status':200,'message':'item removed from cart'})
             
             # if product not exist in guest cart
             else:
@@ -367,7 +367,7 @@ class cyclone_addtocart(View):
                 # add item to guest cart
                 new_guest_cartitem = guest_cart_items(category_id = guest_category_instence, session_id = guest_user_instence)
                 new_guest_cartitem.save()
-                return JsonResponse({'status':'item added to guest cart'})
+                return JsonResponse({'status':200,'message':'item added to cart'})
 
 
         # if authenticated user
@@ -384,14 +384,14 @@ class cyclone_addtocart(View):
             # remove from wishlist
             print("category exist in cart")
             cart_items.objects.filter(category_id = category_id, email = user_instence).delete()
-            return JsonResponse({'status':'item removed from cart'})
+            return JsonResponse({'status':200,'message':'item removed from cart'})
 
         else:
 
             # add to cart table
             newcartitem = cart_items(category_id = category_instence, email = user_instence)
             newcartitem.save()
-            return JsonResponse({'status':'item added to cart'})
+            return JsonResponse({'status':200,'message':'item added to cart'})
         
 
     def get(self,request):

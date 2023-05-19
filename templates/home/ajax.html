@@ -1,3 +1,4 @@
+
 <script>
     
     $("#otpbtn").click(function() {
@@ -55,6 +56,8 @@
             success: function(data) {
                 console.log("sucsess")
                 console.log(data.status)
+                toastr.success("Record Updated", "good" ,{timeOut: 500} )
+                
             }
 
         })
