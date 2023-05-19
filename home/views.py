@@ -85,6 +85,7 @@ def cyclone_home(request):
 
 
 class cyclone_login(View):
+
     def post(self,request):
         """
         before login the user must be a guest user, so we have to 
@@ -124,10 +125,15 @@ class cyclone_login(View):
                     new_cartitem = cart_items(email = user_instence, category_id = cart_item.category_id, cartitem_quantity = cart_item.cartitem_quantity )
                     new_cartitem.save()
 
-                # # transfering to user wish list
+                # transfering to user wish list
                 for wish_item in guest_wishlist:
                     new_wishitem = wishlist_items(email = user_instence, category_id = wish_item.category_id)
                     new_wishitem.save()
+                
+                if request.session.get('guest_user_cartredirect'):
+                    login(request,user)
+                    return redirect("cart")
+
             except:
                 print("exception found")
                 login(request,user)
@@ -283,7 +289,7 @@ class cyclone_addtowishlist(View):
                 # remove from wishlist
                 print("category exist in guest wishlist")
                 guest_wishlist_items.objects.filter(category_id = guest_category_instence,session_id = guest_user_instence).delete()
-                return JsonResponse({'status':'item removed from guest wishlist'})
+                return JsonResponse({'status':200,'message':'item removed from guest wishlist'})
             
             # if product not exist in guest wishlist
             else:
@@ -291,7 +297,7 @@ class cyclone_addtowishlist(View):
                 # add item to guest cart
                 new_guest_wishitem = guest_wishlist_items(category_id = guest_category_instence, session_id = guest_user_instence)
                 new_guest_wishitem.save()
-                return JsonResponse({'status':'item added to guest wishlist'})
+                return JsonResponse({'status':200,'message':'item added to guest wishlist'})
 
         
         email = request.user.email
@@ -307,13 +313,13 @@ class cyclone_addtowishlist(View):
             # remove from wishlist
             print("category exist in wishlist")
             wishlist_items.objects.filter(category_id = category_id).delete()
-            return JsonResponse({'status':'item removed from wishlist'})
+            return JsonResponse({'status':200,'message':'item removed from wishlist'})
         else:
 
             # add to wishlist table
             newwishitem = wishlist_items(category_id = category_instence, email = user_instence)
             newwishitem.save()
-            return JsonResponse({'status':'item added to wishlist'})
+            return JsonResponse({'status':200,'message':'item added to wishlist'})
         
 
 

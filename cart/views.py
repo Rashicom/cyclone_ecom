@@ -15,13 +15,11 @@ class cyclone_cart(View):
 
     def post(self,request):
 
-        # need some changes here, we dont want to collect all data from from the front end
-        # all is in cart list, just place that list
-        category_id_list = request.POST.getlist('category_id[]')
-        category_quantity_list = request.POST.getlist('category_quantity[]')
-        order_list = []
-        for i in range(len(category_id_list)):
-            cart_items.objects.filter(category_id = category_id_list[i]).update(cartitem_quantity = category_quantity_list[i])
+        # if the quest is try to checkout, after the redirection,
+        # we have to bring the user back to car insted of profile page
+        if not request.user.is_authenticated:
+            request.session['guest_user_cartredirect'] = True
+            
         return redirect("checkout")
     
     def get(self,request):
@@ -154,6 +152,21 @@ class quantitycheck(View):
         if int(item.quantity) < int(needed_quantity):
             return JsonResponse({'status':404,'message':'quantity exceeded'})
         else:
+
+            # for authenticated user
+            if request.user.is_authenticated:
+                email = request.user.email
+                update_qty = cart_items.objects.get(email = email, category_id = category_id)
+                update_qty.cartitem_quantity = needed_quantity
+                update_qty.save()
+                return JsonResponse({'status':200,'message':'quantity available'})
+            
+            # for quest user
+            else:
+                session_id = request.session.session_key
+                update_guest_qty = guest_cart_items.objects.get(session_id = session_id, category_id = category_id)
+                update_guest_qty.cartitem_quantity = needed_quantity
+                update_guest_qty.save()
             return JsonResponse({'status':200,'message':'quantity available'})
     
 class cyclone_ordersummery(View):

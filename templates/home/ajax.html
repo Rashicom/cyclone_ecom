@@ -1,6 +1,6 @@
 
 <script>
-    
+    toastr.options.timeOut = 500
     $("#otpbtn").click(function() {
         console.log("button clicked")
         let email = $("#email").val()
@@ -39,6 +39,8 @@
             success: function(data) {
                 console.log("sucsess")
                 console.log(data.status)
+                
+                toastr.info(data.message,{timeOut: 500})
             }
 
         })
@@ -56,7 +58,13 @@
             success: function(data) {
                 console.log("sucsess")
                 console.log(data.status)
-                toastr.success("Record Updated", "good" ,{timeOut: 500} )
+                /*this remove table row after it deleteaddress in only cart page
+                but the same class we are using in many pages may be interfier with
+                other ids so. copy past this for every pages,
+                also make sure is that a good practice or not 
+                */
+                $("#"+category_id+"").remove()
+                toastr.info(data.message,{timeOut: 500})
                 
             }
 

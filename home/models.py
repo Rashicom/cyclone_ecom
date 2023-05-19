@@ -175,8 +175,8 @@ class guest_wishlist_items(models.Model):
     session_id = models.ForeignKey(Session,on_delete=models.CASCADE)
     
 
-
 """<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<COUPEN MODEL>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"""
+
 
 # discount_coupen
 class discount_coupen(models.Model):
