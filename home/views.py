@@ -134,7 +134,7 @@ class cyclone_login(View):
                     login(request,user)
                     return redirect("cart")
 
-            except:
+            except Exception:
                 print("exception found")
                 login(request,user)
                 return redirect("user")
@@ -143,6 +143,7 @@ class cyclone_login(View):
             return redirect("user")
         else:
             messages.info(request,"User not found")
+            return redirect("userlogin")
     
     def get(self,request):
         

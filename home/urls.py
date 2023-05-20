@@ -17,4 +17,4 @@ urlpatterns = [
     path('wishlist/',views.cyclone_wishlist.as_view(),name='wishlist')
     
     
-]   
+]       

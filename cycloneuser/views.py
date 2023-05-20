@@ -8,6 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from twilio.rest import Client
 from django.conf import settings
 from django.db.models import Sum
+from django.contrib import messages
 
 # Create your views here.
 
@@ -39,7 +40,7 @@ class cyclone_user_order(View):
         # fetching basic info
         email = request.user.email
         user_instencce = CustomUser.objects.get(email = email)
-        orders = user_order.objects.filter(email = email)
+        orders = user_order.objects.filter(email = email).order_by('-order_no')
         order_data = []
 
         # iteratively appending each order data to order data
@@ -89,16 +90,15 @@ class cyclone_forgotpassword(View):
     
     def post(self,request):
         email = request.POST['email']
-        otp = request.POST['otp']
-        try:
-            user = CustomUser.objects.get(email = email)
-        except ObjectDoesNotExist:
-            return JsonResponse({'status':404, 'message':'invalied email'})
+        otp = request.POST['mobile_otp']
+        user = CustomUser.objects.get(email = email)
+       
         if user.user_otp == otp:
-            
-            return JsonResponse({'status':200,'message':'proceed to password redirect'})
-        return JsonResponse({'status':409, 'message':'invalied otp'})
-
+            request.session['email'] = email
+            return redirect("userpasswordreset")
+        else:
+            messages.info(request, "Wrong otp")
+            return redirect("forgotpassword")
 
 
 # otp gerator and send to mobile
@@ -162,7 +162,20 @@ class cyclone_user_password_reset(View):
         return render(request, 'cyclone_password_reset.html')
 
     def post(self, requset):
-        pass
+        """
+        password double check compleated in the front end
+        so we have to reset the password
+        """
+        password = requset.POST['password1']
+        email = requset.session['email']
+        print(password)
+        print(email)
+        new_password = CustomUser.objects.get(email = email)
+        new_password.set_password(str(password))
+        new_password.save()
+        return redirect("userlogin")
+        
+
 
 def cyclone_deleteaddress(request):
     email = request.user.email

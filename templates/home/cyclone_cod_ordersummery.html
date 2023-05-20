@@ -30,7 +30,7 @@
           <div class="col-md-9">
 
             <div class="card text-dark bg-light mb-3">
-                <div class="card-header">Order no: {{order_no}}</div>
+                <div class="card-header"><h4>Order no:</h4><h4 id="cod_placing_order_no">{{order_no}}</h4></div>
 
                 <!-- iterateively display oroducts -->
                 {% if cart_list %}
@@ -167,7 +167,7 @@
                   </li>
                   <li>
                     <div class="d-grid gap-2">
-                      <button class="btn btn-info" id="">Place order</button>
+                      <button class="btn btn-info" id="cod_place_orders">Place order</button>
                     </div>
                   </li>
                 </ul>
@@ -187,4 +187,27 @@
     </section>
     <!--================End Checkout Area =================-->
 
+    <script>
+      $("#cod_place_orders").on('click', function() {
+        console.log("cod order placing button")
+        var order_no = $("#cod_placing_order_no").text()
+        
+        data = {order_no : order_no, csrfmiddlewaretoken: '{{ csrf_token }}'}
+
+        $.ajax({
+          method:"POST",
+          url:"{% url 'codplaceorder' %}",
+          data:data,
+          success: function(data) {
+            console.log("code excicuted success")
+            console.log(data.status)
+
+            if (data.status == 200) {
+              window.location.href = "{% url 'paymentsuccess' order_no %}"
+            }
+          }
+        })
+
+      })
+    </script>
     {% endblock cyclonecontant %}

@@ -34,6 +34,11 @@
                         
                     </div>
                     <br>
+                    {% if messages %}
+                    {% for info in messages %}
+                    <p class="text-danger">{{info}}</p>
+                    {% endfor %}
+                    {% endif %}
                     <div class="d-grid gap-2 userloginbtn">
                         <button class="btn login_btn" id="loginbtn" type="submit">SUBMIT</button>
                     </div>

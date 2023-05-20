@@ -45,14 +45,14 @@
             <!-- orders iteratively listing start -->
             {% if order_data %}
             {% for order in order_data %}
-            <div class="accordion accordion-flush" id="accordionFlushExample">
+            <div class="accordion accordion-flush border border-success border-4" id="accordionFlushExample">
                 <div class="accordion-item">
                     <table class="table">
                         <tbody>
                           <tr>
                             <td>Order No:{{order.order_no}}</td>
                             <td>Quantity:{{order.order_quantity}}</td>
-                            <td>Order status:{{order.order_status}}</td>
+                            <td>Order status :{{order.order_status}}</td>
                           </tr>
                           
                         </tbody>
@@ -118,6 +118,7 @@
                 </div>
                 
             </div>
+            <br>
             {% endfor %}
             {% endif %}
             <!-- orders iteratively listing end -->
@@ -181,6 +182,8 @@
             success: function(data) {
                 console.log(data.status)
                 console.log(data.message)
+                toastr.options.timeOut = 500
+                toastr.info(data.message)
             }
 
 

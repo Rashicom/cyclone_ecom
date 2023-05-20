@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.contrib.sessions.models import Session
 import razorpay
 from django.conf import settings
+import datetime
 
 # Create your views here.
 
@@ -197,6 +198,8 @@ class quantitycheck(View):
                 update_guest_qty.save()
             return JsonResponse({'status':200,'message':'quantity available'})
     
+
+
 class cyclone_ordersummery(View):
     
     def post(self,request):
@@ -283,5 +286,22 @@ class cyclone_coupen_check(View):
 
 class cyclone_payment_success(View):
 
-    def get(self, request):
-        return render(request,'cyclone_payment_success.html')
+    def get(self, request,order_no):
+        delivery_date = datetime.datetime.now().date() + datetime.timedelta(days=7)
+
+        return render(request,'cyclone_payment_success.html',{"order_no":order_no,"delivery_date":delivery_date})
+
+
+
+# cod order placing
+class cyclone_codplaceorder(View):
+
+    def post(self, request):
+        order_no = request.POST["order_no"]
+        order_status = "order placed"
+        new_order = user_order.objects.get(order_no = order_no)
+        new_order.order_status = order_status
+        new_order.save()
+        return JsonResponse({'status':200,'message':'order placed'})
+        
+
