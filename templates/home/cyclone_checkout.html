@@ -61,9 +61,66 @@
             <!-- iterative address listing end -->
 
 
-            <div class="card border-dark mb-3">
-              <a href="{% url 'addnewaddress' %}"><div class="card-header">+ Add new address</div></a>
+            <!-- new address section start -->
+            <div class="accordion" id="accordionExample">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Add a new address to deliver your product
+                  </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+
+                    <div class="row">
+
+                      <div class="col-md-6">
+                        <label for="inputEmail4" class="form-label">Address type</label>
+                        <select name="address_type" class="form-select">
+                          <option selected value="Home address">Home address</option>
+                          <option value="Office address">Office address</option>
+                          <option value="Temperery address">Temperery address</option>
+                          <option value="Other type">Other type</option>
+                        </select>
+                      </div>
+                      
+                      <div class="col-12">
+                        <label for="inputAddress" class="form-label">Address</label>
+                        <input type="text" class="form-control" name="user_address" placeholder="">
+                      </div>
+                      <div class="col-12">
+                        <label for="inputAddress2" class="form-label">Place</label>
+                        <input type="text" class="form-control" name="user_place" placeholder="">
+                      </div>
+                      <div class="col-md-6">
+                        <label for="inputCity" class="form-label">District</label>
+                        <input type="text" class="form-control" name="user_district">
+                      </div>
+                      <div class="col-md-4">
+                        <label for="inputState" class="form-label">State</label>
+                        <select name="user_state" class="form-select">
+                          <option selected>Kerala</option>
+                          <option>Thaminnadu</option>
+                          <option>Karnataka</option>
+                        </select>
+                      </div>
+                      <div class="col-md-2">
+                        <label for="inputZip" class="form-label">Zip</label>
+                        <input type="text" class="form-control" name="user_zip">
+                      </div>
+                      <div class="col-12">
+                          <label for="inputAddress2" class="form-label">contact number</label>
+                          <input type="text" class="form-control" name="user_contact_number" placeholder="">
+                        </div>
+                      
+                    </div>
+                    
+
+                  </div>
+                </div>
+              </div>   
             </div>
+            <!-- new address section start -->
             
             <div class="">
               <h3>payment options</h3>

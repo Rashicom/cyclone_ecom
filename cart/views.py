@@ -66,11 +66,34 @@ class cyclone_checkout(View):
 
         # fetching data from the request
         email = request.user.email
-        try:
+        user = CustomUser.objects.get(email=email)
+        selected_payment = request.POST['selected_payment']
+
+        # if ther is no selected address fetch new adddress
+        if not 'selected_address' in request.POST:
+            """
+            fetch new address fields and save the new addess
+            to the database and also deliver item to this address
+            """
+            address_type = request.POST['address_type']
+            user_home_address = request.POST['user_address']
+            user_place = request.POST['user_place']
+            user_district = request.POST['user_district']
+            user_state = request.POST['user_state']
+            user_zip = request.POST['user_zip']
+            user_contact_number = request.POST['user_contact_number']
+
+            # creating new address in database
+            new_address = user_address(email = user, address_type = address_type, address = user_home_address, place = user_place, district = user_district, state = user_state, zip_cod = user_zip, contact_number = user_contact_number)
+            new_address.save()
+
+            # setting new address as delivery address
+            selected_address = new_address.id
+        
+        # else there is a address is selected
+        else:
             selected_address = request.POST['selected_address']
-            selected_payment = request.POST['selected_payment']
-        except Exception:
-            return redirect("checkout")
+
 
         coupen_no = request.POST['coupen_no']
         if coupen_no:
@@ -81,21 +104,26 @@ class cyclone_checkout(View):
             coupen_discount = 0 
 
         # fetching objects corresponding to the request data 
-        user = CustomUser.objects.get(email=email)
+        
         to_address = user_address.objects.get(id = selected_address)
         payment_status = "pending"
 
         cart_list = cart_items.objects.filter(email = email).values('category_id__seller_price','category_id__mrp', 'category_id', 'cartitem_quantity', 'category_id__product_id__model') 
         mrp_amount = 0
         total_seller_price = 0 
+
+        # calculate this using agragate function
         for item in cart_list:
             total_seller_price += int(item['category_id__seller_price'])
             mrp_amount += int(item['category_id__mrp'])
         seller_discount = mrp_amount - total_seller_price
+        
+        # checking delivery charge valied or not
         if total_seller_price < 25000:
             delivery_charge = 249
         else:
             delivery_charge = 0
+
         payment_amount = total_seller_price - coupen_discount + delivery_charge
 
         # placing order in the order table

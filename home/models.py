@@ -59,7 +59,7 @@ class user_address(models.Model):
     district = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
     zip_cod = models.IntegerField()
-    contact_number = models.BigIntegerField()
+    contact_number = models.CharField(max_length=12)
 
 
 # product table 
