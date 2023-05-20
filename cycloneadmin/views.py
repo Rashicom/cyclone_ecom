@@ -217,6 +217,7 @@ class coupenmanagemant(View):
         coupens = discount_coupen.objects.values("coupen_no","coupen_type","discount","expiry_date")
         return render(request,'cycloneadmin_coupen_managemant.html',{'coupens':coupens})
 
+
 class cyclone_addcoupen(View):
     
     # admin coupen add request
@@ -228,12 +229,26 @@ class cyclone_addcoupen(View):
         coupen_type = request.POST['coupen_type']
         coupen_discount = request.POST['coupen_discount']
         coupen_expiry_date = request.POST['coupen_expiry_date']
-      
+
+        # checking the coupen already exixt or not
+        if discount_coupen.objects.filter(coupen_no = coupen_no).exists():
+            return JsonResponse({'status':409, 'message':'coupen already exist'})    
+
         # updating data base
         new_coupen = discount_coupen(coupen_no = coupen_no,coupen_type = coupen_type,discount = coupen_discount, expiry_date = coupen_expiry_date)
         new_coupen.save()
 
         return JsonResponse({'status':200, 'message':'coupen updated'})
+
+
+# delete coupen
+class cycloneadmin_deletecoupen(View):
+    
+    def post(self, request):
+        coupen_no = request.POST['coupen_no']
+        discount_coupen.objects.get(coupen_no = coupen_no).delete()
+        return JsonResponse({'status':200,'message':'coupen removed successfully'})
+
 
 
 # delete product recorde

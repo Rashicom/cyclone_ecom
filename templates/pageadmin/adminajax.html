@@ -33,34 +33,7 @@
         })
     })
 
-    $("#coupen_add_button").on('click', function() {
-        console.log("coupen add button nclicked")
-        coupen_no = $("#coupen_no").val()
-        coupen_type = $("#coupen_type").val()
-        coupen_discount = $("#coupen_discount").val()
-        coupen_expiry_date = $("#coupen_expiry_date").val()
-        if (coupen_no=="" || coupen_type=="" || coupen_discount=="" || coupen_expiry_date==""){
-            $("#coupen_incomplete_mssg").text("incompleate field")
-        }
-        else{
-            data = {coupen_no:coupen_no,coupen_type:coupen_type,coupen_discount:coupen_discount,coupen_expiry_date:coupen_expiry_date,csrfmiddlewaretoken: '{{ csrf_token }}'}
-
-            $.ajax({
-                url: "{% url 'addcoupen' %}",
-                method: "POST",
-                data:data,
-                success: function(data) {
-                    console.log("code exicuted success")
-                    console.log(data.status)
-                    console.log(data.message)
-
-                }
-            })
-        }
-
-
-
-    })
+    
 
 
 </script>
