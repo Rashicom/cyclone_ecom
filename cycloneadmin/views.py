@@ -47,8 +47,11 @@ class cycloneadmin_dashboard(View):
         total_revenue = user_order.objects.all().aggregate(Sum("payment_amount"))['payment_amount__sum']
         category_sales = order_list.objects.values('category_id__product_id__bike_type').annotate(Count('category_id__product_id__bike_type'))
         day_sale = order_list.objects.values('order_no__order_date').annotate(item_sum = Sum('order_quantity'))
-        dashboard_data = {"user_count":user_count,"sales_today":sales_today,"total_shipment":total_shipment,"total_revenue":total_revenue,"category_sales":category_sales,"day_sale":day_sale}
+        total_revenue_status = user_order.objects.values('order_date').annotate(date_total_revenue = Sum('payment_amount'))
 
+        dashboard_data = {"user_count":user_count,"sales_today":sales_today,"total_shipment":total_shipment,"total_revenue":total_revenue,"category_sales":category_sales,"day_sale":day_sale,"total_revenue_status":total_revenue_status}
+        
+        
         return render(request,'cycloneadmin_dashboard.html',dashboard_data)
 
 

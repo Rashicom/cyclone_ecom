@@ -160,10 +160,10 @@
     new Chart(trc,{
         type: 'line',
         data: {
-            labels: ['jan', 'Feb', 'Mar', 'April', 'May','June'],
+            labels: [{% for date in total_revenue_status %} '{{date.order_date}}', {% endfor %}],
             datasets: [{
               label: 'Total revenue',
-              data: [12, 11, 3, 5, 5, 15],
+              data: [{% for date_revenue in total_revenue_status %} {{date_revenue.date_total_revenue}}, {% endfor %}],
               fill: false,
               borderColor: 'rgb(75, 192, 192)',
               tension: 0.1
