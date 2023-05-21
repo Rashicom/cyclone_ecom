@@ -3,12 +3,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
-from home.models import CustomUser,product,product_category,product_description,product_image,user_order,discount_coupen
+from home.models import CustomUser,product,product_category,product_description,product_image,user_order,discount_coupen,order_list
 from django.views import View
 from django.http.response import JsonResponse
 from django.core import serializers
 from datetime import date, timedelta
-from django.db.models import Sum
+from django.db.models import Sum, Count
 
 # Create your views here.
 
@@ -45,8 +45,9 @@ class cycloneadmin_dashboard(View):
         sales_today = user_order.objects.filter(order_date = date.today()).count()
         total_shipment = user_order.objects.count()
         total_revenue = user_order.objects.all().aggregate(Sum("payment_amount"))['payment_amount__sum']
-
-        dashboard_data = {"user_count":user_count,"sales_today":sales_today,"total_shipment":total_shipment,"total_revenue":total_revenue}
+        category_sales = order_list.objects.values('category_id__product_id__bike_type').annotate(Count('category_id__product_id__bike_type'))
+        
+        dashboard_data = {"user_count":user_count,"sales_today":sales_today,"total_shipment":total_shipment,"total_revenue":total_revenue,"category_sales":category_sales}
     
         return render(request,'cycloneadmin_dashboard.html',dashboard_data)
 
