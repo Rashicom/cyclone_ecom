@@ -12,6 +12,7 @@
 {% block adminsection %}
 
 <div class="container-fluid">
+    <br>
     <div class="row">
         <div class="col-md-3">
             <div class="list-group">
@@ -30,11 +31,66 @@
         </div>
         <div class="col-md-9">
             <h3>Reports</h3>
+            <hr>
 
+            <div class="card text-dark bg-light mb-3">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <p class="m-3">Generate report from</p>
+                        <input id="report_from" class="m-3" type="date" min="">
+                        <p class="m-3">To</p>
+                        <input id="report_to" class="m-3" type="date">
+                    </div>
+                    <button type="button" id="generate_sales_report" class="btn btn-secondary">Generate</button>
+                    <p id="report_msg"></p>
+                </div>
+            </div>
+            
+            <div class="card text-dark bg-light mb-3">
+                <div class="card-header">Report</div>
+                <div class="card-body">
+                    <table class="table">
+                        <tbody>
+
+                          <tr>
+                            <td>Mark</td>
+                            <td>@mdo</td>
+                          </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
         </div>
     </div>
 
 </div>
+
+<script>
+    $("#generate_sales_report").on('click', function() {
+        console.log("report generating button")
+        var from_date = $("#report_from").val()
+        var to_date = $("#report_to").val()
+        
+        if (from_date == "" || to_date == "") {
+            $("#report_msg").text("Give a date")
+        }
+        else{
+            $("#report_msg").text("")
+        }
+        data = {from_date:from_date, to_date:to_date}
+
+        $.ajax({
+            method:"GET",
+            url:"{% url 'reportgenerator' %}",
+            data:data,
+            success: function(data) {
+                console.log("code run success")
+                console.log(data.status)
+            }            
+        })
+    })
+</script>
 
 {% endblock adminsection %}

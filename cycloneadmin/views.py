@@ -9,6 +9,7 @@ from django.http.response import JsonResponse
 from django.core import serializers
 from datetime import date, timedelta
 from django.db.models import Sum, Count
+import json
 
 # Create your views here.
 
@@ -300,3 +301,23 @@ class cycloneadmin_cancel_order(View):
             return JsonResponse({'status':404, 'messages':'cancelation filed'})
 
         return JsonResponse({'status':200, 'messages':'order cancelled'})
+
+
+class cycloneadmin_report_generator(View):
+    
+    def get(self,request):
+
+        # this returning sales report to admin
+        from_date = request.GET['from_date']
+        to_date = request.GET['to_date']
+
+        total_shipments = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date).count()
+        total_business = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date).aggregate(business_amnt = Sum('payment_amount')) 
+        total_cod_order = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date,payment_method = "Cash on delivery(COD)").count()
+        total_payed_orders = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date,payment_method = "Net banking / UPI").count()
+        canceled_orders = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date,order_status = "order canceled").count()
+        total_users = CustomUser.objects.count() - 1
+        total_product_quantity = product_category.objects.aggregate(product_count = Sum("quantity"))
+        
+        report = {"total_shipments":total_shipments,"total_business":total_business,"total_cod_order":total_cod_order,"total_payed_orders":total_payed_orders,"canceled_orders":canceled_orders,"total_users":total_users,"total_product_quantity":total_product_quantity}
+        return JsonResponse({'status':200,"report":report})

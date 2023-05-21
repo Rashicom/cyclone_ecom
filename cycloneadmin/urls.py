@@ -21,7 +21,7 @@ urlpatterns = [
     path('addcoupen/',views.cyclone_addcoupen.as_view(),name='addcoupen'),
     path('deletecoupen/',views.cycloneadmin_deletecoupen.as_view(),name='deletecoupen'),
     path('orderupdation/',views.cycloneadmin_order_updation.as_view(),name='orderupdation'),
-    path('cancelorder/', views.cycloneadmin_cancel_order.as_view(),name='cancelorder')
-
+    path('cancelorder/', views.cycloneadmin_cancel_order.as_view(),name='cancelorder'),
+    path('reportgenerator/',views.cycloneadmin_report_generator.as_view(),name="reportgenerator")
 
 ]
