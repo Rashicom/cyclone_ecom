@@ -73,7 +73,7 @@ class product(models.Model):
     suspention = models.CharField(max_length=50)
     internal_cabling = models.BooleanField(choices=[(True,'yes'),(False,'no')])
     gender_cat = models.CharField(max_length=50, choices=[('MALEL','MALE'),('FEMALE','FEMALE'),('UNISEX','UNISEX')])
-
+    
 
 # product_catogery table for different colors and other product categories
 # forign : key product_id, reference: product table

@@ -109,9 +109,12 @@ def cycloneadmin_addcategory(request):
         seller_price = request.POST['seller_price']
         quantity = request.POST['quantity']
         is_discounted = request.POST['is_discounted']
+        
 
         # product image
         product_picture = request.POST['product_image']
+        product_picture_2 = request.POST['product_image_2']
+        product_picture_3 = request.POST['product_image_3']
         
         # update all the information , not a good practce
         # only update changed fields using ajax
@@ -122,6 +125,15 @@ def cycloneadmin_addcategory(request):
             new_category.save()  
             new_image = product_image(category_id = new_category, product_image = product_picture)  
             new_image.save()
+
+            if product_picture_2:
+                new_image_2 = product_image(category_id = new_category, product_image = product_picture_2)  
+                new_image_2.save()
+
+            if product_picture_3:
+                new_image_3 = product_image(category_id = new_category, product_image = product_picture_3)  
+                new_image_3.save()
+
         except product.DoesNotExist:
             messages.info(request,"such product does not exist")
             return redirect("addcategory")
@@ -133,9 +145,8 @@ def cycloneadmin_addcategory(request):
 def cycloneadmin_editcategory(request,category_id):
 
     productcat = product_category.objects.get(id = category_id)
-    
+    print(productcat.is_discounted)
     return render(request,'cycloneadmin_editcategory.html',{"productcat":productcat})
-
 
 
 

@@ -37,8 +37,11 @@
                 
                 <!-- outside of the loop paste first pic as active -->
                 <!-- rest of the pic loop inside the loop with out active tag -->
-                {% for pics in product_pics %}
                 <div class="carousel-item active xzoom">
+                  <img src="/media/{{product_first_pic}}" class="img-fluid" alt="">
+                </div>
+                {% for pics in product_pics %}
+                <div class="carousel-item xzoom">
                   <img src="/media/{{pics.product_image}}" class="img-fluid" alt="">
                 </div>
                 {% endfor %}

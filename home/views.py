@@ -210,9 +210,25 @@ class cyclone_category(View):
     
     def get(self,request):
         #  fetch product quantiry color ..etc pending
-        products = product.objects.values("product_category__id","product_id","model","suspention","product_category__break_type","product_category__gear_type","product_category__mrp","product_category__is_discounted","product_category__seller_price","product_category__product_image__product_image")
+        # products = product.objects.values("product_category__id","product_id","model","suspention","product_category__break_type","product_category__gear_type","product_category__mrp","product_category__is_discounted","product_category__seller_price","product_category__product_image__product_image")
 
-        return render(request,'cyclone_category.html',{'products':products})
+        cart_products =  product_category.objects.all()
+
+        cart_items = []
+        for item in cart_products:
+            category_id = item.id
+            color = item.color
+            break_type = item.break_type
+            gear_type = item.gear_type
+            mrp = item.mrp
+            seller_price = item.seller_price
+            is_discounted = item.is_discounted
+            model = item.product_id.model
+            suspention = item.product_id.suspention
+            image = product_image.objects.filter(category_id = item).values("product_image")[:1][0]["product_image"]
+            cart_items.append({"category_id":category_id, "color":color,"break_type":break_type,"gear_type":gear_type,"mrp":mrp,"seller_price":seller_price,"is_discounted":is_discounted,"model":model,"suspention":suspention,"image":image})
+
+        return render(request,'cyclone_category.html',{'cart_items':cart_items})
 
 
             
@@ -239,9 +255,10 @@ class cyclone_product(View):
         
         product_instence = product_details.product_id
         product_dscpn = product_description.objects.get(product_id = product_instence)
-        product_pics = product_image.objects.filter(category_id = product_details) 
-
-        return render(request,'cyclone_product.html',{"product_details":product_details,'product_dscpn':product_dscpn,'product_pics':product_pics})
+        product_first_pic = product_image.objects.filter(category_id = product_details).values('product_image')[:1][0]['product_image']
+        product_pics = product_image.objects.filter(category_id = product_details)[1:]
+        
+        return render(request,'cyclone_product.html',{"product_details":product_details,'product_dscpn':product_dscpn,'product_pics':product_pics,'product_first_pic':product_first_pic})
 
 
 
@@ -441,7 +458,7 @@ class cyclone_wishlist(View):
         for item in wishlistitems:
             product_cat = product_category.objects.get(id = item.category_id.id)
             produc = product.objects.get(product_id = product_cat.product_id.product_id)
-            image = product_image.objects.get(category_id = product_cat.id)
+            image = product_image.objects.filter(category_id = product_cat.id)[:1][0]
             wishlist_data.append({'company':produc.company,'model':produc.model,'category_id':item.category_id.id,'color':product_cat.color,'frame_size':product_cat.frame_size,'break_type':product_cat.break_type,'gear_type':product_cat.gear_type,'suspention':produc.suspention,'price':product_cat.seller_price,'image':image.product_image})   
         
         return render(request,'cyclone_wishlist.html',{'wishlist_data':wishlist_data})  

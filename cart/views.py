@@ -53,7 +53,7 @@ class cyclone_cart(View):
             product_cat = product_category.objects.get(id = item.category_id.id)
             produc = product.objects.get(product_id = product_cat.product_id.product_id)
             #need to add mutiple images
-            image = product_image.objects.get(category_id = product_cat.id)
+            image = product_image.objects.filter(category_id = product_cat.id)[:1][0]
             cart_data.append({'company':produc.company,'model':produc.model,'category_id':item.category_id.id,'color':product_cat.color,'frame_size':product_cat.frame_size,'price':product_cat.seller_price ,'mlt_mrp':product_cat.mrp * item.cartitem_quantity,'quantity':product_cat.quantity,'image':image.product_image,'item_qty':item.cartitem_quantity,"mult_price":product_cat.seller_price * item.cartitem_quantity})   
         
         return render(request,'cyclone_cart.html',{'cart_data':cart_data})    

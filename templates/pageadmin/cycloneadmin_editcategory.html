@@ -45,7 +45,7 @@
                         <!-- select company for adding categories -->
                     
                         <h4>company</h4>
-                        <p>company</p>
+                        <p>{{productcat.product_id.company}}</p>
 
                     </div>
 
@@ -54,9 +54,8 @@
                         <!-- select model for adding categories -->
                         
                         <h4>model</h4>
-                        <p>company</p>
+                        <p>{{productcat.product_id.model}}</p>
                     </div>
-
                   
                 </div>
                 <br>
@@ -70,15 +69,14 @@
                         <!-- frame size -->
                         <label>Frame size</label>
                         <select class="form-control bg-transparent" name="frame_size" id="exampleFormControlSelect1">
-                            <option>35</option>
-                            <option>38</option>
-                            <option>41</option>
-                            <option>43</option>
-                            <option>46</option>
-                            <option>48</option>
-                            <option>53</option>
-                            <option>56</option>
-
+                            <option {% if productcat.frame_size == 35 %}selected{% endif %}>35</option>
+                            <option {% if productcat.frame_size == 38 %}selected{% endif %}>38</option>
+                            <option {% if productcat.frame_size == 41 %}selected{% endif %}>41</option>
+                            <option {% if productcat.frame_size == 43 %}selected{% endif %}>43</option>
+                            <option {% if productcat.frame_size == 46 %}selected{% endif %}>46</option>
+                            <option {% if productcat.frame_size == 48 %}selected{% endif %}>48</option>
+                            <option {% if productcat.frame_size == 53 %}selected{% endif %}>53</option>
+                            <option {% if productcat.frame_size == 56 %}selected{% endif %}>56</option>
 
                         </select>
                         <br>
@@ -86,13 +84,13 @@
                         <!--  color -->
                         <label>Color</label>
                         <select class="form-control bg-transparent" name="color" id="exampleFormControlSelect1">
-                            <option>black</option>
-                            <option>white</option>
-                            <option>blue</option>
-                            <option>green</option>
-                            <option>red</option>
-                            <option>orange</option>
-                            <option>violet</option>
+                            <option {% if productcat.color == "black" %}selected{% endif %}>black</option>
+                            <option {% if productcat.color == "white" %}selected{% endif %}>white</option>
+                            <option {% if productcat.color == "blue" %}selected{% endif %}>blue</option>
+                            <option {% if productcat.color == "green" %}selected{% endif %}>green</option>
+                            <option {% if productcat.color == "red" %}selected{% endif %}>red</option>
+                            <option {% if productcat.color == "orange" %}selected{% endif %}>orange</option>
+                            <option {% if productcat.color == "violet" %}selected{% endif %}>violet</option>
                             
                         </select>
                     </div>
@@ -101,16 +99,16 @@
                         <!-- break type -->
                         <label>Break type</label>
                         <select class="form-select bg-transparent" name="break_type" aria-label="Default select example">
-                            <option selected value="mechanical break">mechanical break</option>
-                            <option value="disc break">disc break</option>
-                            <option value="hydroulic break">hydroulic break</option>
+                            <option {% if productcat.break_type == "mechanical break" %}selected{% endif %} value="mechanical break">mechanical break</option>
+                            <option {% if productcat.break_type == "disc break" %}selected{% endif %} value="disc break">disc break</option>
+                            <option {% if productcat.break_type == "hydroulic break" %}selected{% endif %} value="hydroulic break">hydroulic break</option>
                             
                         </select>
                         <br>
 
                         <!-- gear type -->
                         <label>Gear type</label>
-                        <input type="text" name="gear_type" class="bg-transparent prodctfld d-block" placeholder="Enter company name">
+                        <input type="text" name="gear_type" class="bg-transparent prodctfld d-block" placeholder="Enter company name" value="{{productcat.gear_type}}">
                         
                     </div>
                 </div>
@@ -122,6 +120,9 @@
                 <hr>
                 <br>
                 <input type="file" name="product_image">
+                <input type="file" name="product_image_2">
+                <input type="file" name="product_image_3">
+
                 <br><br>
 
                 <br>
@@ -133,36 +134,35 @@
 
                 <!-- mrp -->
                 <label>MRP</label>
-                <input type="text" name="mrp" class="bg-transparent prodctfld d-block" placeholder="Enter company name">
+                <input type="text" name="mrp" class="bg-transparent prodctfld d-block" placeholder="Enter company name" value="{{productcat.mrp}}">
                 <br>
 
                 <!-- selling price -->
                 <label>Selling price</label>
-                <input type="text" name="seller_price" class="bg-transparent prodctfld d-block" placeholder="Enter company name">
+                <input type="text" name="seller_price" class="bg-transparent prodctfld d-block" placeholder="Enter company name" value="{{productcat.seller_price}}">
                 <br>
 
                 <!-- quantity -->
                 <label>Quantity</label>
-                <input type="text" name="quantity" class="bg-transparent prodctfld d-block" placeholder="Enter company name">
+                <input type="text" name="quantity" class="bg-transparent prodctfld d-block" placeholder="Enter company name" value="{{productcat.quantity}}">
                 <br>
 
                 <!-- is discounted -->
                 <label for="">is the product in discount category ?</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" {% if productcat.is_discounted == True %}checked{% endif %}>
                     <label class="form-check-label" for="flexRadioDefault1">
                       Yes
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" {% if productcat.is_discounted == False %}checked{% endif %}>
                     <label class="form-check-label" for="flexRadioDefault2">
                       No
                     </label>
                 </div>
                   
                  <br>
-                
                
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
