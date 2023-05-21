@@ -144,10 +144,10 @@
     new Chart(lnx,{
         type: 'line',
         data: {
-            labels: ['jan', 'Feb', 'Mar', 'April', 'May','June'],
+            labels: [{% for day in day_sale %} '{{day.order_no__order_date}}', {% endfor %}],
             datasets: [{
               label: '# of Votes',
-              data: [12, 11, 3, 5, 5, 15],
+              data: [{% for day in day_sale %} {{day.item_sum}}, {% endfor %}],
               fill: false,
               borderColor: 'rgb(75, 192, 192)',
               tension: 0.1
