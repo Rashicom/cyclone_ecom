@@ -258,7 +258,7 @@ class cyclone_product(View):
         product_first_pic = product_image.objects.filter(category_id = product_details).values('product_image')[:1][0]['product_image']
         product_pics = product_image.objects.filter(category_id = product_details)[1:]
         
-        return render(request,'cyclone_product.html',{"product_details":product_details,'product_dscpn':product_dscpn,'product_pics':product_pics,'product_first_pic':product_first_pic})
+        return render(request,'cyclone_product.html',{"product_details":product_details,'product_dscpn':product_dscpn,'product_pics':product_pics,'product_first_pic':product_first_pic,'category_id':category_id})
 
 
 

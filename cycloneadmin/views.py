@@ -10,6 +10,12 @@ from django.core import serializers
 from datetime import date, timedelta
 from django.db.models import Sum, Count
 import json
+import reportlab
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+from django.http import FileResponse
+import io
 
 # Create your views here.
 
@@ -227,11 +233,52 @@ def cycloneadmin_editproduct(request,product_id):
     products = product.objects.select_related("product_id").values("company","model","wheel_size","suspention","internal_cabling","bike_type","gender_cat","product_description__terrain_description","product_description__strength_description","product_description__perfomance_description","product_description__precision_description").get(product_id = product_id)
     return render(request,'cycloneadmin_editproduct.html',{"products":products})
 
-class coupenmanagemant(View):
+class cycloneadmin_coupenmanagemant(View):
 
     def get(self, request):
         coupens = discount_coupen.objects.values("coupen_no","coupen_type","discount","expiry_date")
         return render(request,'cycloneadmin_coupen_managemant.html',{'coupens':coupens})
+
+
+
+class cycloneadmin_offer_management(View):
+    
+    def get(self, request):
+
+        offer_list = product_category.objects.filter(is_discounted = True).values('product_id__company','product_id__model','mrp','seller_price')
+    
+        return render(request, 'cycloneadmin_offer_management.html',{"offer_list":offer_list})
+
+
+class cycloneadmin_add_offer(View):
+
+    def post(self, request):
+        """
+        if the offer model is none it means we have to put offer
+        to the all models in that product. else that specific products only
+        """
+
+        offer_company = request.POST['offer_company']
+        offer_model = request.POST['offer_model']
+        offer_price = request.POST['offer_price']
+        print('request hit')
+        # if offer for specific products
+        if offer_model:
+
+            new_offer_item = product_category.objects.filter(product_id__company = offer_company, product_id__model = offer_model)
+            # if the product not found
+            if len(new_offer_item ) == 0 :
+                return JsonResponse({'status':404,'message':'product not found'})
+
+            
+            return JsonResponse({'status':200,'message':'products added to offer category'})
+        
+        # offer for all model in the product
+        else:
+            pass
+
+
+        
 
 
 class cyclone_addcoupen(View):
@@ -312,12 +359,49 @@ class cycloneadmin_report_generator(View):
         to_date = request.GET['to_date']
 
         total_shipments = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date).count()
-        total_business = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date).aggregate(business_amnt = Sum('payment_amount')) 
+        total_business = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date).aggregate(Sum('payment_amount'))['payment_amount__sum']
         total_cod_order = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date,payment_method = "Cash on delivery(COD)").count()
         total_payed_orders = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date,payment_method = "Net banking / UPI").count()
         canceled_orders = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date,order_status = "order canceled").count()
         total_users = CustomUser.objects.count() - 1
-        total_product_quantity = product_category.objects.aggregate(product_count = Sum("quantity"))
+        total_product_quantity = product_category.objects.aggregate(Sum("quantity"))['quantity__sum']
         
         report = {"total_shipments":total_shipments,"total_business":total_business,"total_cod_order":total_cod_order,"total_payed_orders":total_payed_orders,"canceled_orders":canceled_orders,"total_users":total_users,"total_product_quantity":total_product_quantity}
         return JsonResponse({'status':200,"report":report})
+
+
+class pdf_report_downloader(View):
+
+    def get(self, request):
+
+        buffer = io.BytesIO()
+        pdf = canvas.Canvas(buffer, pagesize=letter, bottomup=0)
+        
+        textobj = pdf.beginText()
+        textobj.setTextOrigin(inch,inch)
+        
+        lines= [
+            "total shipments :",
+            "total business :",
+            "total cod order :",
+            "total payed orders :",
+            "canceled orders :",
+            "total users :",
+            "total product quantity :"
+        ]
+
+        for line in lines:
+            textobj.textLine(line)
+        
+        pdf.drawText(textobj)
+        pdf.showPage()
+        pdf.save()
+        buffer.seek(0)
+        return FileResponse(buffer, as_attachment=True, filename="report.pdf")
+
+ 
+class excel_report_downloader(View):
+    
+    def get(self, request):
+        pass
+

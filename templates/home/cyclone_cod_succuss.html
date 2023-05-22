@@ -1,0 +1,60 @@
+{% extends 'cyclonebase.html' %}
+{% load static %}
+{% block cyclonecontant %}
+
+    <!--================Home Banner Area =================-->
+    <section class="banner_area">
+      <div class="banner_inner d-flex align-items-center">
+        <div class="container">
+          <div
+            class="banner_content d-md-flex justify-content-between align-items-center">
+            <div class="mb-3 mb-md-0">
+              <h2>Order Placed successfully</h2>
+              <p>You product will dispatch shortly</p>
+            </div>
+            <div class="page_link">
+              <a href="index.html">Home</a>
+              <a href="checkout.html">Product Checkout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--================End Home Banner Area =================-->
+
+    <div class="container">
+        <div class="d-flex justify-content-center">
+            <div class="rounded-circle p-5">
+                <h2>Payment success</h2>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <div class="card text-white bg-success mb-3" style="max-width: 25rem;">
+                <div class="card-header">order success</div>
+                <div class="card-body">
+                  <h5 class="card-title">Your order has been successfully placed </h5>
+                  <table class="card-title">
+                    <tr>
+                        <td>Order no</td>
+                        <td>{{order_no}}</td>
+                    </tr>
+                    <tr>
+                        <td>Delivery expected : </td>
+                        <td>{{delivery_date}}</td>
+                    </tr>
+                    
+                  </table>
+                  <a href="{% url 'home' %}"><h4 class="">Continue on shopping >></h4></a>
+                </div>
+              </div>
+        </div>
+
+        
+
+    </div>
+
+
+
+    <!--================Checkout Area =================-->
+    
+    {% endblock cyclonecontant %}

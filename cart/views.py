@@ -288,13 +288,20 @@ class cyclone_payment_success(View):
 
     def get(self, request,order_no):
         delivery_date = datetime.datetime.now().date() + datetime.timedelta(days=7)
+        order_status = user_order.objects.get(order_no = order_no)
+        order_status.payment_status = "payed"
+        order_status.save()
 
         return render(request,'cyclone_payment_success.html',{"order_no":order_no,"delivery_date":delivery_date})
 
-
-
+# cod sucsess page rendering
+class cyclone_cod_success(View):
+    
+    def get(self, request, order_no):
+        return render(request,'cyclone_cod_succuss.html')
+        
 # cod order placing
-class cyclone_codplaceorder(View):
+class cyclone_cod_placeorder(View):
 
     def post(self, request):
         order_no = request.POST["order_no"]

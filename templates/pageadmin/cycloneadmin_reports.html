@@ -24,6 +24,7 @@
                 <a href="{% url 'category' %}" class="list-group-item list-group-item-action">Category</a>
                 <a href="{% url 'orders' %}" class="list-group-item list-group-item-action">Orders</a>
                 <a href="{% url 'coupenmanagemant' %}" class="list-group-item list-group-item-action">Coupen managemant</a>
+                <a href="{% url 'offermanagement' %}" class="list-group-item list-group-item-action">Offer managemant</a>
                 <a href="{% url 'reports' %}" class="list-group-item list-group-item-action active">Reports</a>
 
             </div>
@@ -53,13 +54,48 @@
                         <tbody>
 
                           <tr>
-                            <td>Mark</td>
-                            <td>@mdo</td>
+                            <td>total shipments</td>
+                            <td id="total_shipments">data</td>
+                          </tr>
+                          <tr>
+                            <td>total business</td>
+                            <td id="total_business">data</td>
+                          </tr>
+                          <tr>
+                            <td>total cod order</td>
+                            <td id="total_cod_order">data</td>
+                          </tr>
+                          <tr>
+                            <td>total payed orders</td>
+                            <td id="total_payed_orders">data</td>
+                          </tr>
+                          <tr>
+                            <td>canceled orders</td>
+                            <td id="canceled_orders">data</td>
+                          </tr>
+                          <tr>
+                            <td>total users</td>
+                            <td id="total_users">data</td>
+                          </tr>
+                          <tr>
+                            <td>total product quantity</td>
+                            <td id="total_product_quantity">data</td>
                           </tr>
 
                         </tbody>
                     </table>
                 </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-8 d-flex justify-content-end">
+                    <h4>Download report</h4>
+                </div>
+                <div class="col-4 d-flex justify-content-end">
+                    <a role="button" href="{% url 'excelreportdownloader' %}" class="btn btn-primary mx-3">EXCEL</a>
+                    <a role="button" href="{% url 'pdfreportdownloader' %}" class="btn btn-primary mx-3">PDF</a>
+                </div>
+
             </div>
 
         </div>
@@ -75,6 +111,7 @@
         
         if (from_date == "" || to_date == "") {
             $("#report_msg").text("Give a date")
+            return
         }
         else{
             $("#report_msg").text("")
@@ -88,9 +125,22 @@
             success: function(data) {
                 console.log("code run success")
                 console.log(data.status)
+
+                $("#total_shipments").text(data.report['total_shipments'])
+                $("#total_business").text(data.report['total_business'])
+                $("#total_cod_order").text(data.report['total_cod_order'])
+                $("#total_payed_orders").text(data.report['total_payed_orders'])
+                $("#canceled_orders").text(data.report['canceled_orders'])
+                $("#total_users").text(data.report['total_users'])
+                $("#total_product_quantity").text(data.report['total_product_quantity'])
+                
+                
             }            
         })
     })
+
+
+
 </script>
 
 {% endblock adminsection %}
