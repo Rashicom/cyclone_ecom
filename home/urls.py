@@ -1,5 +1,7 @@
 from django.urls import path,include
 from . import views
+from django.contrib.auth.decorators import login_required
+
 
 urlpatterns = [
     path('',views.cyclone_home,name='home'),
@@ -14,7 +16,8 @@ urlpatterns = [
     path('otpgenerator/',views.cyclone_otpgenerator.as_view(),name='otpgenerator'),
     path('addtowishlist/',views.cyclone_addtowishlist.as_view(),name='addtowishlist'),
     path('addtocart/',views.cyclone_addtocart.as_view(),name='addtocart'),
-    path('wishlist/',views.cyclone_wishlist.as_view(),name='wishlist')
+    path('wishlist/',views.cyclone_wishlist.as_view(),name='wishlist'),
+    path('addcomment/',(views.cyclone_add_comment.as_view()),name='addcomment')
     
     
 ]       

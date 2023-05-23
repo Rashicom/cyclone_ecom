@@ -175,33 +175,77 @@
         
       </div>
 
-
-      <div class="bg-light">
-        <div class="container">
-          <h2 class="p-3">Detailed specifications</h2>
-          <div class="row">
-            <div class="col-6">detailes</div>
-            <div class="col-6">picture or chart</div>
-          </div>
-        </div>
-      </div>
-
       <div class="">
         <div class="container">
-          <div class="p-3">
+          <div class="">
             <h2 class="">Customer Reviews</h2>
             <p>how we are rated</p>
             <hr>
           </div>
-          <div>riview and star tating</div>
-          
+
+
+          <div class="card text-dark bg-light mb-3">
+
+            <!-- comment iterate start -->
+
+            <div class="card-body">
+              <div class="d-flex">
+                <h5 class="card-title">User name</h5>
+                <h5 class="mx-3">star rating</h5>
+              </div>
+              <p class="card-text">here we are write the commetsa</p>
+            </div>
+
+            <!-- comment iterate end -->
+
+          </div>
+
+          <!-- add comments start-->
+
+          <div class="card border-light mb-3">
+            <div class="card-body">
+              <h5 class="card-title">star rating</h5>
+              <label for="exampleFormControlTextarea1" class="form-label">Comment</label>
+              <textarea class="form-control" id="user_comment" rows="3"></textarea>
+              <button type="button" id="add_comment" class="btn btn-primary my-2">Primary</button>
+            </div>
+          </div>
+
+          <!-- add comments start-->
+
         </div>
       </div>
     </div>
     <!--================End Single Product Area =================-->
 
     <script>
-      
+      $("#add_comment").on('click', function() {
+        console.log("add comment")
+        var comment = $("#user_comment").val()
+        var category_id = '{{category_id}}'
+
+        // user need to be loged in to comment 
+        // if not loged in redirect to the login page
+        {% if not user.is_authenticated %}
+          window.location.href = {% url 'userlogin' %}
+        {% endif %}
+
+
+        data = {category_id:category_id, comment:comment, csrfmiddlewaretoken: '{{ csrf_token }}'}
+        $.ajax({
+          method:"POST",
+          url:"{% url 'addcomment' %}",
+          data:data,
+
+          success: function(data) {
+            console.log("success")
+            console.log(data.status)
+            
+            
+
+          }
+        })
+      })
     </script>
     
     {% endblock cyclonecontant %}

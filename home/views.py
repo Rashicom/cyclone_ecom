@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
-from home.models import CustomUser,product,product_category,product_description,wishlist_items,cart_items,product_image,guest_cart_items,guest_wishlist_items
+from home.models import CustomUser,product,product_category,product_description,wishlist_items,cart_items,product_image,guest_cart_items,guest_wishlist_items,product_review
 from django.contrib import messages
 from django.conf import settings
 from django.core.mail import send_mail
@@ -11,6 +11,10 @@ from django.http.response import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import View
 from django.contrib.auth.decorators import login_required
+
+# Ai model for text sentiment
+from textblob import TextBlob
+
 
 
 # Create your views here.
@@ -463,4 +467,34 @@ class cyclone_wishlist(View):
         
         return render(request,'cyclone_wishlist.html',{'wishlist_data':wishlist_data})  
 
-    
+
+class cyclone_add_comment(View):
+
+    def post(self, request):
+        
+        # fetching info of comment comment user and product_id
+        email = request.user.email
+        user_instence = CustomUser.objects.get(email = email)
+        category_id = request.POST['category_id']
+        category_instence = product_category.objects.get(id = category_id)
+        comment = request.POST['comment']
+        
+        # usign textblob ai analyze coment behaviour
+        # and generate a auto star rank fot the product
+        """
+        blob is returning polarity and subjuctivity. the polarity is 
+        a value between -1 and +1 represnt the behaviour of the comment
+        we are converting the value to a ranking scale number between 0 and 5
+        """
+        #  make an object and correct the speling mistakes
+        blob = TextBlob(comment).correct()
+        polarity = blob.polarity
+
+        # converting to ranking scale number between 0 and 5
+        rank =  int(((polarity+1)/2)*5)
+        
+        # update comment table
+        new_review = product_review(category_id = category_instence, email = user_instence, star_rank = rank, product_comment = comment)
+        new_review.save()
+        
+        return JsonResponse({'status':200,'message':'comment updatd'})

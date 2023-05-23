@@ -46,7 +46,6 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
-
     
 
 # user address: user have multiple addresses
