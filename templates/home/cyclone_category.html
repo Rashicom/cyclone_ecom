@@ -31,6 +31,19 @@
           <!-- <<<<<<<<<<<right area start>>>>>>>>>>>>>>>> -->
           <div class="col-lg-9">
             
+            <div class="">
+              <label for="customRange2" class="form-label">Price range</label>
+              <input type="range" class="form-range" min="0" max="5" id="">
+              <div class="d-flex justify-content-between">
+                <p>Below 10k</p>
+                <p>20k</p>
+                <p>30k</p>
+                <p>40k</p>
+                <p>50k</p>
+                <p>Above 50k</p>
+              </div>
+            </div>
+
             <div class="latest_product_inner">
               <div class="row">
                 
@@ -111,7 +124,7 @@
             </div>
           </div>
           <!-- <<<<<<<<<<<right area end >>>>>>>>>>>>>>>> -->
-
+          
 
           <div class="col-lg-3">
             <div class="left_sidebar_area">
@@ -120,28 +133,39 @@
                   <h3>Browse Categories</h3>
                 </div>
                 <div class="widgets_inner">
-                  <ul class="list">
-                    <li>
-                      <a href="#">Mountain bikes</a>
-                    </li>
-                    <li>
-                      <a href="#">Hybrid bikes</a>
-                    </li>
-                    <li>
-                      <a href="#">Road bikes</a>
-                    </li>
-                    <li>
-                      <a href="#">Ladies bikes</a>
-                    </li>
-                    <li>
-                      <a href="#">Kids bikes</a>
-                    </li>
-                    <li>
-                      <a href="#">Unisex bikes</a>
-                    </li>
-                   
-                  </ul>
-                </div>
+
+                  <div class="form-check my-2">
+                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="mountain_bikes" id="">
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Mountain Bikes
+                    </label>
+                  </div>
+                  <div class="form-check my-2">
+                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="road_bikes" id="">
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Road Bikes
+                    </label>
+                  </div>
+                  <div class="form-check my-2">
+                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="hybrid_bikes" id="">
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Hybrid bikes
+                    </label>
+                  </div>
+                  <div class="form-check my-2">
+                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="ladies_bikes" id="">
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Ladies Bikes
+                    </label>
+                  </div>
+                  <div class="form-check my-2">
+                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="kids_bikes" id="" >
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Kids Bikes
+                    </label>
+                  </div>
+
+                </div> 
               </aside>
 
               <aside class="left_widgets p_filter_widgets">
@@ -149,23 +173,38 @@
                   <h3>Product Brand</h3>
                 </div>
                 <div class="widgets_inner">
-                  <ul class="list">
-                    <li>
-                      <a href="#">Hero</a>
-                    </li>
-                    <li>
-                      <a href="#">Firefox</a>
-                    </li>
-                    <li class="active">
-                      <a href="#">Trinix</a>
-                    </li>
-                    <li>
-                      <a href="#">Java</a>
-                    </li>
-                    <li>
-                      <a href="#">Navioc</a>
-                    </li>
-                  </ul>
+                  
+                  <div class="form-check my-2">
+                    <input class="form-check-input filter_checkbox" data-filter="company" type="checkbox" value="firefox" id="">
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Firefox
+                    </label>
+                  </div>
+                  <div class="form-check my-2">
+                    <input class="form-check-input filter_checkbox" data-filter="company" type="checkbox" value="hero" id="">
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Hero
+                    </label>
+                  </div>
+                  <div class="form-check my-2">
+                    <input class="form-check-input filter_checkbox" data-filter="company" type="checkbox" value="java" id="">
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Java
+                    </label>
+                  </div>
+                  <div class="form-check my-2">
+                    <input class="form-check-input filter_checkbox" data-filter="company" type="checkbox" value="trinix" id="">
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Trinix
+                    </label>
+                  </div>
+                  <div class="form-check my-2">
+                    <input class="form-check-input filter_checkbox" data-filter="company" type="checkbox" value="b_twin" id="" >
+                    <label class="form-check-label" for="flexCheckChecked">
+                      B twin
+                    </label>
+                  </div>
+
                 </div>
               </aside>
 
@@ -174,46 +213,88 @@
                   <h3>Color Filter</h3>
                 </div>
                 <div class="widgets_inner">
-                  <ul class="list">
-                    <li>
-                      <a href="#">Black</a>
-                    </li>
-                    <li>
-                      <a href="#">Black Leather</a>
-                    </li>
-                    <li class="active">
-                      <a href="#">Black with red</a>
-                    </li>
-                    <li>
-                      <a href="#">Gold</a>
-                    </li>
-                    <li>
-                      <a href="#">Spacegrey</a>
-                    </li>
-                  </ul>
+                  
+                  <div class="form-check my-2">
+                    <input class="form-check-input filter_checkbox" data-filter="color" type="checkbox" value="black" id="">
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Black
+                    </label>
+                  </div>
+                  <div class="form-check my-2">
+                    <input class="form-check-input filter_checkbox" data-filter="color" type="checkbox" value="white" id="">
+                    <label class="form-check-label" for="flexCheckChecked">
+                      White
+                    </label>
+                  </div>
+                  <div class="form-check my-2">
+                    <input class="form-check-input filter_checkbox" data-filter="color" type="checkbox" value="blue" id="">
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Blue
+                    </label>
+                  </div>
+                  <div class="form-check my-2">
+                    <input class="form-check-input filter_checkbox" data-filter="color" type="checkbox" value="red" id="">
+                    <label class="form-check-label " for="flexCheckChecked">
+                      Red
+                    </label>
+                  </div>
+                  <div class="form-check my-2">
+                    <input class="form-check-input filter_checkbox" data-filter="color" type="checkbox" value="yellow" id="" >
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Yellow
+                    </label>
+                  </div>
+
                 </div>
               </aside>
 
-              <aside class="left_widgets p_filter_widgets">
-                <div class="l_w_title">
-                  <h3>Price Filter</h3>
-                </div>
-                <div class="widgets_inner">
-                  <div class="range_item">
-                    <div id="slider-range"></div>
-                    <div class="">
-                      <label for="amount">Price : </label>
-                      <input type="text" id="amount" readonly />
-                    </div>
-                  </div>
-                </div>
-              </aside>
+              
             </div>
           </div>
         </div>
       </div>
     </section>
     <!--================End Category Product Area =================-->
+    <script>
 
+      $(".filter_checkbox").on('click', function() {
+        console.log("filter check box clsicked")
+        var bike_type = []
+        var brand = []
+        var color = []
+
+        $(".filter_checkbox:checked").each(function() {
+          var filter_cat = $(this).data('filter')
+
+          if ( filter_cat == "bike_type") {
+            bike_type.push($(this).val())
+          }
+          else if( filter_cat == "company"){
+            brand.push($(this).val())
+          }
+          else if( filter_cat == "color") {
+            color.push($(this).val())
+          }
+        })
+
+        console.log(bike_type)
+        console.log(brand)
+        console.log(color)
+        data = {"bike_type":bike_type, "brand":brand, "color":color}
+
+        $.ajax({
+          method:"GET",
+          url:"{% url '#' %}",
+          data:data,
+          
+          success: function(data) {
+            console.log("code run success")
+            
+          }
+        })
+        
+      })
+
+    </script>
     
 {% endblock cyclonecontant %}

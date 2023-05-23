@@ -499,3 +499,6 @@ class cyclone_add_comment(View):
         new_review.save()
         
         return JsonResponse({'status':200,'message':'comment updatd'})
+
+
+    
