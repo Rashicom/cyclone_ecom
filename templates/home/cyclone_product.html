@@ -187,15 +187,19 @@
           <div class="card text-dark bg-light mb-3">
 
             <!-- comment iterate start -->
+            {% if product_reviews %}
+            {% for review in product_reviews %}
 
             <div class="card-body">
               <div class="d-flex">
-                <h5 class="card-title">User name</h5>
-                <h5 class="mx-3">star rating</h5>
+                <h5 class="card-title">{{review.email__first_name}}</h5>
+                <h5 class="mx-3">{{review.star_rank}}</h5>
               </div>
-              <p class="card-text">here we are write the commetsa</p>
+              <p class="card-text">{{review.product_comment}}</p>
             </div>
 
+            {% endfor %}
+            {% endif %}
             <!-- comment iterate end -->
 
           </div>
@@ -240,8 +244,9 @@
           success: function(data) {
             console.log("success")
             console.log(data.status)
-            
-            
+            if (data.status == 200) {
+              toastr.info(data.message,{timeOut: 500})
+            }
 
           }
         })
