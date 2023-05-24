@@ -17,8 +17,10 @@ urlpatterns = [
     path('addtowishlist/',views.cyclone_addtowishlist.as_view(),name='addtowishlist'),
     path('addtocart/',views.cyclone_addtocart.as_view(),name='addtocart'),
     path('wishlist/',views.cyclone_wishlist.as_view(),name='wishlist'),
-    path('addcomment/',(views.cyclone_add_comment.as_view()),name='addcomment'),
+    path('addcomment/',views.cyclone_add_comment.as_view(),name='addcomment'),
     path('addstarrate/',views.cyclone_add_star_rating.as_view(), name='addstarrate'),
-    path('categoryfilter/',views.cyclone_category_filter.as_view(), name='categoryfilter')
+    path('categoryfilter/',views.cyclone_category_filter.as_view(), name='categoryfilter'),
+    path('contactadmin/',views.cyclone_contact_cyclone.as_view(), name='contactadmin'),
+    path('tackorder/',views.cyclone_track_order.as_view(), name='tackorder')
     
 ]       

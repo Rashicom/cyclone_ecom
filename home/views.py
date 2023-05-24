@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
-from home.models import CustomUser,product,product_category,product_description,wishlist_items,cart_items,product_image,guest_cart_items,guest_wishlist_items,product_review
+from home.models import CustomUser,product,product_category,product_description,wishlist_items,cart_items,product_image,guest_cart_items,guest_wishlist_items,product_review, user_order
 from django.contrib import messages
 from django.conf import settings
 from django.core.mail import send_mail
@@ -624,3 +624,28 @@ class cyclone_category_filter(View):
         render_html = render_to_string('filter_category.html', {'cart_items':cart_items})
         # json responce to ajax request
         return JsonResponse({'status':200,'html':render_html})
+
+
+class cyclone_track_order(View):
+
+    def get(self, requset):
+        email = requset.user.email
+        order_id = requset.GET['order_id']
+        order_detailes = user_order.objects.get(order_no = order_id, email = email)
+        
+        return JsonResponse({'status':200, "order_id":order_detailes.order_no, "order_status":order_detailes.order_status, "payment_status":order_detailes.payment_status}) 
+
+
+
+# cantact page send email
+class cyclone_contact_cyclone(View):
+
+    def post(self, request):
+
+        # fetching data
+        name = request.POST['name']
+        email = request.POST['email']
+        subject = request.POST['subject']
+        message = request.POST['message']
+
+        return JsonResponse({'status':200})
