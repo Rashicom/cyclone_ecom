@@ -17,7 +17,7 @@ urlpatterns = [
     path('addtowishlist/',views.cyclone_addtowishlist.as_view(),name='addtowishlist'),
     path('addtocart/',views.cyclone_addtocart.as_view(),name='addtocart'),
     path('wishlist/',views.cyclone_wishlist.as_view(),name='wishlist'),
-    path('addcomment/',(views.cyclone_add_comment.as_view()),name='addcomment')
-    
+    path('addcomment/',(views.cyclone_add_comment.as_view()),name='addcomment'),
+    path('categoryfilter/',views.cyclone_category_filter.as_view(), name='categoryfilter')
     
 ]       

@@ -32,8 +32,11 @@
           <div class="col-lg-9">
             
             <div class="">
-              <label for="customRange2" class="form-label">Price range</label>
-              <input type="range" class="form-range" min="0" max="5" id="">
+              <div class="form-check form-switch">
+                <input class="form-check-input filter_checkbox" id="price_filter_checkbox" type="checkbox" role="switch" id="">
+                <label class="form-check-label" for="flexSwitchCheckChecked">Applay price filter</label>
+              </div>
+              <input type="range" class="form-range filter_checkbox" id="price_range" min="1" max="6" id="">
               <div class="d-flex justify-content-between">
                 <p>Below 10k</p>
                 <p>20k</p>
@@ -45,7 +48,7 @@
             </div>
 
             <div class="latest_product_inner">
-              <div class="row">
+              <div class="row" id="filter_section">
                 
                 {% if cart_items %}
                 {% for product in cart_items %}
@@ -135,31 +138,31 @@
                 <div class="widgets_inner">
 
                   <div class="form-check my-2">
-                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="mountain_bikes" id="">
+                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="mountain bike" id="">
                     <label class="form-check-label" for="flexCheckDefault">
                       Mountain Bikes
                     </label>
                   </div>
                   <div class="form-check my-2">
-                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="road_bikes" id="">
+                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="road bike" id="">
                     <label class="form-check-label" for="flexCheckChecked">
                       Road Bikes
                     </label>
                   </div>
                   <div class="form-check my-2">
-                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="hybrid_bikes" id="">
+                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="hybrid bike" id="">
                     <label class="form-check-label" for="flexCheckDefault">
                       Hybrid bikes
                     </label>
                   </div>
                   <div class="form-check my-2">
-                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="ladies_bikes" id="">
+                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="ladies bike" id="">
                     <label class="form-check-label" for="flexCheckChecked">
                       Ladies Bikes
                     </label>
                   </div>
                   <div class="form-check my-2">
-                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="kids_bikes" id="" >
+                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="kids bike" id="" >
                     <label class="form-check-label" for="flexCheckChecked">
                       Kids Bikes
                     </label>
@@ -258,14 +261,20 @@
     <script>
 
       $(".filter_checkbox").on('click', function() {
-        console.log("filter check box clsicked")
         var bike_type = []
         var brand = []
         var color = []
+        var price_filtered_val = []
 
+        if ($("#price_filter_checkbox").is(':checked')) {
+          price_filtered_val.push($("#price_range").val() )
+
+        }
+
+        
         $(".filter_checkbox:checked").each(function() {
           var filter_cat = $(this).data('filter')
-
+          
           if ( filter_cat == "bike_type") {
             bike_type.push($(this).val())
           }
@@ -280,15 +289,18 @@
         console.log(bike_type)
         console.log(brand)
         console.log(color)
-        data = {"bike_type":bike_type, "brand":brand, "color":color}
+        console.log(price_filtered_val)
+
+        data = {bike_type:bike_type, brand:brand, color:color,price_filtered_val:price_filtered_val ,csrfmiddlewaretoken: '{{ csrf_token }}'}
 
         $.ajax({
-          method:"GET",
-          url:"{% url '#' %}",
+          method:"POST",
+          url:"{% url 'categoryfilter' %}",
           data:data,
           
           success: function(data) {
             console.log("code run success")
+            $("#filter_section").html(data.html)
             
           }
         })

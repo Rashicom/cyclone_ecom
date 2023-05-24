@@ -67,7 +67,7 @@ class product(models.Model):
     product_id = models.AutoField(primary_key=True)
     model = models.CharField(max_length=50)
     company = models.CharField(max_length=50)
-    bike_type = models.CharField(max_length=50, choices=[('mountain bike','mountain bike'),('road bik','road bike'),('hybrid','hybrid'),('kids bike','kids bike'),])
+    bike_type = models.CharField(max_length=50, choices=[('mountain bike','mountain bike'),('road bike','road bike'),('hybrid bike','hybrid bike'),('kids bike','kids bike'),('ladies bike','ladies bike')])
     wheel_size = models.IntegerField()
     suspention = models.CharField(max_length=50)
     internal_cabling = models.BooleanField(choices=[(True,'yes'),(False,'no')])

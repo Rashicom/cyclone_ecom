@@ -11,6 +11,7 @@ from django.http.response import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import View
 from django.contrib.auth.decorators import login_required
+from django.template.loader import render_to_string
 
 # Ai model for text sentiment
 from textblob import TextBlob
@@ -213,9 +214,8 @@ class cyclone_otplogin(View):
 class cyclone_category(View):
     
     def get(self,request):
-        #  fetch product quantiry color ..etc pending
-        # products = product.objects.values("product_category__id","product_id","model","suspention","product_category__break_type","product_category__gear_type","product_category__mrp","product_category__is_discounted","product_category__seller_price","product_category__product_image__product_image")
 
+        # products = product.objects.values("product_category__id","product_id","model","suspention","product_category__break_type","product_category__gear_type","product_category__mrp","product_category__is_discounted","product_category__seller_price","product_category__product_image__product_image")
         cart_products =  product_category.objects.all()
 
         cart_items = []
@@ -502,3 +502,59 @@ class cyclone_add_comment(View):
 
 
     
+class cyclone_category_filter(View):
+
+    def post(self, request):
+        """
+        fetching list of info from the ajax request
+        to filter both list containing its filter 
+        values
+        """
+        # fetch list from request
+        bike_types = request.POST.getlist('bike_type[]')
+        brands = request.POST.getlist('brand[]')
+        colors = request.POST.getlist('color[]')
+        price_filtered_val = request.POST.getlist('price_filtered_val[]')
+        """
+        fetch the products from the data base by applaying these
+        array of filteres. every list contains. its mutliple filter values
+        eg: color list contains multiple colors to filter
+        """ 
+        # fetch data from data base by applaying this list of filters
+        cart_products =  product_category.objects.all()
+
+        # filter by list of data
+        if len(bike_types) > 0:
+            cart_products = cart_products.filter(product_id__bike_type__in = bike_types)
+        
+        if len(brands) > 0:
+            cart_products = cart_products.filter(product_id__company__in = brands)
+        
+        if len(colors) > 0:
+            cart_products = cart_products.filter(color__in = colors)
+
+        if len(price_filtered_val) > 0: 
+            if price_filtered_val == '6':
+                cart_products = cart_products.filter(seller_price__gte = int(price_filtered_val[0])*10000)
+            else:
+                cart_products = cart_products.filter(seller_price__lte = int(price_filtered_val[0])*10000)
+                
+        # creating a list of requred field for response from filtered data
+        cart_items = []
+        for item in cart_products:
+            category_id = item.id
+            color = item.color  
+            break_type = item.break_type
+            gear_type = item.gear_type
+            mrp = item.mrp
+            seller_price = item.seller_price
+            is_discounted = item.is_discounted
+            model = item.product_id.model
+            suspention = item.product_id.suspention
+            image = product_image.objects.filter(category_id = item).values("product_image")[:1][0]["product_image"]
+            cart_items.append({"category_id":category_id, "color":color,"break_type":break_type,"gear_type":gear_type,"mrp":mrp,"seller_price":seller_price,"is_discounted":is_discounted,"model":model,"suspention":suspention,"image":image})
+
+
+        print(cart_items)
+        render_html = render_to_string('filter_category.html', {'cart_items':cart_items})
+        return JsonResponse({'status':200,'html':render_html})
