@@ -121,6 +121,7 @@ class wishlist_items(models.Model):
 
 
 # user order table
+# one user can have multiple product in a single order
 class user_order(models.Model):
     order_no = models.AutoField(primary_key=True)
     email = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
@@ -148,8 +149,7 @@ class canceled_orders(models.Model):
     payment_return_option = models.CharField(max_length=50)
 
 
-# user order list 
-# one user can have multiple product in a single order
+# product review and star rating
 class product_review(models.Model):
     category_id = models.ForeignKey(product_category,on_delete=models.CASCADE)
     email = models.ForeignKey(CustomUser,on_delete=models.CASCADE)

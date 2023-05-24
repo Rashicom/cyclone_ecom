@@ -469,6 +469,7 @@ class cyclone_wishlist(View):
         return render(request,'cyclone_wishlist.html',{'wishlist_data':wishlist_data})  
 
 
+# product commenting
 class cyclone_add_comment(View):
 
     def post(self, request):
@@ -479,7 +480,7 @@ class cyclone_add_comment(View):
         category_id = request.POST['category_id']
         category_instence = product_category.objects.get(id = category_id)
         comment = request.POST['comment']
-        
+
         # usign textblob ai analyze coment behaviour
         # and generate a auto star rank fot the product
         """
@@ -494,14 +495,60 @@ class cyclone_add_comment(View):
         # converting to ranking scale number between 0 and 5
         rank =  int(((polarity+1)/2)*5)
         
-        # update comment table
-        new_review = product_review(category_id = category_instence, email = user_instence, star_rank = rank, product_comment = comment)
-        new_review.save()
+        # check if there any comment or star rating alredy exist
+        new_review_exixts = product_review.objects.filter(email = user_instence, category_id = category_id)
+        
+        # if user alredy commented or stare rated update it
+        if new_review_exixts:
+            new_review = product_review.objects.get(email = email, category_id = category_id)
+            new_review.star_rank = rank
+            new_review.product_comment = comment
+            new_review.save()
+        
+        # else create new one
+        else:
+            new_review = product_review(category_id = category_instence, email = user_instence, star_rank = rank, product_comment = comment)
+            new_review.save()
         
         return JsonResponse({'status':200,'message':'comment updatd'})
 
 
-    
+# star rating
+class cyclone_add_star_rating(View):
+
+    def post(self, request):
+        """
+        add the star rating if there is no rating and update if the user
+        already rated befor
+        """
+
+        # fetching data and creatintin user instance to update star rating
+        star_rate_value = request.POST['star_rate_value']
+        category_id = request.POST['category_id']
+        email = request.user.email
+        category_instance = product_category.objects.get(id = category_id)
+        user_instance = CustomUser.objects.get(email = email)
+
+        # checking the user already commented or star rated
+        new_review_exist = product_review.objects.filter(email = user_instance, category_id = category_id).exists()
+        
+        # if review exists update
+        if new_review_exist:
+            new_review = product_review.objects.get(email = user_instance, category_id = category_id)
+            new_review.star_rank = star_rate_value
+            new_review.save()
+        
+        # else review not excist, create one without any comment
+        else:
+            new_review = product_review(email = user_instance, category_id = category_instance, star_rank = star_rate_value)
+            new_review.save()
+
+        # update table to new star rating
+        return JsonResponse({'status':200,'message':'your rating has been recorded' })
+
+
+
+# category filter ajax request   
 class cyclone_category_filter(View):
 
     def post(self, request):
@@ -533,12 +580,23 @@ class cyclone_category_filter(View):
         if len(colors) > 0:
             cart_products = cart_products.filter(color__in = colors)
 
+        # filter by price filter
         if len(price_filtered_val) > 0: 
+            """
+            the price values comes in a list. the list value contains only one value
+            we can pass this as a string, but we pass it as a list even it contains only
+            one value inorder to simplify the filtering process. all the other values are
+            passing like list, but in contains multiple values. price scale value between
+            1 and 6. so we have to multiply by 10000 to perform filter. and inorder to fetch 
+            the first value from the list we use [0].
+            """
+
             if price_filtered_val == '6':
                 cart_products = cart_products.filter(seller_price__gte = int(price_filtered_val[0])*10000)
             else:
                 cart_products = cart_products.filter(seller_price__lte = int(price_filtered_val[0])*10000)
-                
+
+        # filtered rows go through the for loop to fetch need info only from it    
         # creating a list of requred field for response from filtered data
         cart_items = []
         for item in cart_products:
@@ -552,9 +610,17 @@ class cyclone_category_filter(View):
             model = item.product_id.model
             suspention = item.product_id.suspention
             image = product_image.objects.filter(category_id = item).values("product_image")[:1][0]["product_image"]
+
+            # appdending all the needed info to the cart_items list as a dict
             cart_items.append({"category_id":category_id, "color":color,"break_type":break_type,"gear_type":gear_type,"mrp":mrp,"seller_price":seller_price,"is_discounted":is_discounted,"model":model,"suspention":suspention,"image":image})
 
-
-        print(cart_items)
+        """
+        filter_category.html is a small part of html that we have to change in the main page
+        so compaign this part html by the filtered data using render_to_string function
+        this is how we pass html through a jason respose.
+        this part of html reach in the fromt end ajax success and update the part of html
+        """
+        # compaingning part of html and data
         render_html = render_to_string('filter_category.html', {'cart_items':cart_items})
+        # json responce to ajax request
         return JsonResponse({'status':200,'html':render_html})

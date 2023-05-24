@@ -1,27 +1,44 @@
 .test{
     background-color: rgb(39, 39, 39);
 }
+
 .navimg{
     width: 30px;
     height: 30px;  
+
 }
+
 .bodyimg{
     background-image: url(/static/Images/backwal.jpg);
 
 }
+
+
 .login_btn{
     background-color: #F8673B;
 }
+
+
 .homebanerimg{
     background-image: url(/static/Images/home_bannerimg.jpg);
     
 }
 
-.checked {
-    
+
+.checked {   
     color: orange;
 }
 
+/* product image hover zooming effect */
 .xzoom:hover {
     transform: scale(1.5);
 }
+
+.star_rate_radio {
+    width: 17px;
+    height: 17px;       
+    cursor: pointer;
+    opacity: 0;
+}
+
+

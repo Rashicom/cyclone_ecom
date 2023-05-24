@@ -221,16 +221,16 @@
               <div class="d-flex">
                 <h5 class="m-2">Rate the product</h5>
                 <span class="m-1">
-                  <input class="position-absolute" type="radio" name="flexRadioDefault" id="" value="1">
-                  <span class="fa fa-star checked"></span>
-                  <input class="position-absolute" type="radio" name="flexRadioDefault" id="" value="2">
-                  <span class="fa fa-star checked"></span>
-                  <input class="position-absolute" type="radio" name="flexRadioDefault" id="" value="3">
-                  <span class="fa fa-star"></span>
-                  <input class="position-absolute" type="radio" name="flexRadioDefault" id="" value="4">
-                  <span class="fa fa-star"></span>
-                  <input class="position-absolute" type="radio" name="flexRadioDefault" id="" value="5">
-                  <span class="fa fa-star"></span>
+                  <input class="position-absolute star_rate_radio" type="radio" name="flexRadioDefault" id="" value="1">
+                  <span class="fa fa-star" id="star_1"></span>
+                  <input class="position-absolute star_rate_radio" type="radio" name="flexRadioDefault" id="" value="2">
+                  <span class="fa fa-star" id="star_2"></span>
+                  <input class="position-absolute star_rate_radio" type="radio" name="flexRadioDefault" id="" value="3">
+                  <span class="fa fa-star" id="star_3"></span>
+                  <input class="position-absolute star_rate_radio" type="radio" name="flexRadioDefault" id="" value="4">
+                  <span class="fa fa-star" id="star_4"></span>
+                  <input class="position-absolute star_rate_radio" type="radio" name="flexRadioDefault" id="" value="5">
+                  <span class="fa fa-star" id="star_5"></span>
                 </span>
               </div>
               
@@ -248,8 +248,11 @@
     <!--================End Single Product Area =================-->
 
     <script>
+
+      // submit comment button
       $("#add_comment").on('click', function() {
-        console.log("add comment")
+        
+        //fetching info
         var comment = $("#user_comment").val()
         var category_id = '{{category_id}}'
 
@@ -259,8 +262,10 @@
           window.location.href = {% url 'userlogin' %}
         {% endif %}
 
-
+        // data for ajaxing
         data = {category_id:category_id, comment:comment, csrfmiddlewaretoken: '{{ csrf_token }}'}
+        
+        // ajaxing to update comment
         $.ajax({
           method:"POST",
           url:"{% url 'addcomment' %}",
@@ -275,6 +280,57 @@
 
           }
         })
+      })
+
+
+      // star rating button 
+      $(".star_rate_radio").on('click', function() {
+        console.log("star rating button")
+        // fetching the curresponding value of the check button
+        var star_rate_value = $(this).val()
+        var category_id = '{{category_id}}'
+
+        // when the user check we have to change the star color till the check value
+        if (star_rate_value >= 1) {
+          $("#star_1").addClass("checked")
+        }
+        if (star_rate_value >= 2) {
+          $("#star_2").addClass("checked")
+        }
+        if (star_rate_value >= 3) {
+          $("#star_3").addClass("checked")
+        }
+        if (star_rate_value >= 4) {
+          $("#star_4").addClass("checked")
+        }
+        if (star_rate_value >= 5) {
+          $("#star_4").addClass("checked")
+        }
+
+        // user need to be loged in to rate this 
+        // if not loged in redirect to the login page
+        {% if not user.is_authenticated %}
+          window.location.href = {% url 'userlogin' %}
+        {% endif %}
+
+        data = {star_rate_value:star_rate_value, category_id:category_id, csrfmiddlewaretoken: '{{ csrf_token }}'}
+        
+        //ajaxing to update or replace
+        //if the user already rated replace it with new star rate value
+        $.ajax({
+
+          method: "POST",
+          url: "{% url 'addstarrate' %}",
+          data:data,
+          
+          success: function(data) {
+            console.log("code run success")
+            toastr.info(data.message,{timeOut: 500})
+
+          }
+        })
+
+
       })
     </script>
     
