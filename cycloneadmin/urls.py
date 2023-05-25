@@ -10,6 +10,7 @@ urlpatterns = [
     path('category/',views.cycloneadmin_category,name = "category"),
     path('addcategory/',views.cycloneadmin_addcategory,name = "addcategory"),
     path('editcategory/<int:category_id>',views.cycloneadmin_editcategory,name = 'editcategory'),
+    path('deletecategory/',views.cycloneadmin_delete_category.as_view(), name='deletecategory'),
     path('orders/',views.cycloneadmin_orders,name="orders"),
     path('reports/',views.cycloneadmin_reports,name="reports"),
     path('logout/',views.cycloneadmin_logout,name="logout"),

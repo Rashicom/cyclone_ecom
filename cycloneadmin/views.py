@@ -160,11 +160,21 @@ def cycloneadmin_addcategory(request):
     return render(request,'cycloneadmin_addcategory.html',{'products':products})
 
 
+
 def cycloneadmin_editcategory(request,category_id):
 
     productcat = product_category.objects.get(id = category_id)
     print(productcat.is_discounted)
     return render(request,'cycloneadmin_editcategory.html',{"productcat":productcat})
+
+
+class cycloneadmin_delete_category(View):
+
+    def get(self, request):
+        
+        category_id = request.GET['category_id']
+        product_category.objects.get(id = category_id).delete()
+        return JsonResponse({'status':200,'message':'category successfully deleted'})
 
 
 
@@ -459,3 +469,5 @@ class csv_report_downloader(View):
         writer.writerow(["total_product_quantity",total_product_quantity])
 
         return response
+
+    

@@ -56,6 +56,8 @@
                     <th scope="col">STOCK</th>
 
                     <th scope="col"></th>
+                    <th scope="col"></th>
+
 
                   </tr>
                 </thead>
@@ -77,6 +79,9 @@
                     <td>
                       <a class="btn btn-outline-success" href="{% url 'editcategory' category.id %}" role="button">Edit</a>
                     </td>
+                    <td>
+                      <button type="button" class="btn btn-outline-danger delete_category_item" data-id={{category.id}} >Delete</button>
+                    </td>
                   </tr>
                   {% endfor %}
                   {% endif %}
@@ -91,4 +96,30 @@
 
 </div>
 
+<script>
+  $(".delete_category_item").on('click', function() {
+    console.log("delete category item")
+    var category_id = $(this).data('id')
+    
+    data = {category_id:category_id}
+
+    $.ajax({
+
+      method: "GET",
+      url: "{% url 'deletecategory' %}",
+      data: data,
+
+      success: function(data) {
+        
+        console.log("code run success")
+        console.log(data.status)
+        toastr.info(data.message,{timeOut: 500})
+      
+      }
+    })
+
+  })
+</script>
+
 {% endblock adminsection %}
+
