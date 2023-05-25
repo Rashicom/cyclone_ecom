@@ -147,10 +147,11 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER =  'rashid.kp484@gmail.com'
 EMAIL_HOST_PASSWORD = 'lleutusawwvvjnjh'
 
-# media root config
 
-MEDIA_URL = '/media/'
+# media root config
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_URL = '/media/'
+
 
 # Razor payment integration
 RAZORPAY_KEY_ID = 'rzp_test_jZvlBVA7lGbY2k'

@@ -34,7 +34,10 @@
 
                 <div class="col-md-4">
                     <div class="card p-3 m-2" style="width: 23rem;">
-                        <div class=""><h4 class="m-0">{{item.model}}</h4></div>
+                        <div class="d-flex justify-content-between">
+                          <h4 class="m-0">{{item.model}}</h4>
+                          <button type="button" class="btn-close wishbtn" data-id={{item.category_id}}></button>
+                        </div>
                         <!-- star rating -->
                         <div>
                           <span class="fa fa-star checked"></span>

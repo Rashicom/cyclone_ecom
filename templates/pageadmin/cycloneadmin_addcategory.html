@@ -38,7 +38,7 @@
             <hr>
             <br>
             <!-- add category start -->
-            <form method="POST">
+            <form enctype="multipart/form-data" method="POST">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col">
@@ -134,7 +134,7 @@
                 <h5>Image section</h5>
                 <hr>
                 <br>
-                <input type="file" name="product_image">
+                <input type="file" name="product_image_1">
                 <input type="file" name="product_image_2">
                 <input type="file" name="product_image_3">
                 <br><br>
@@ -188,4 +188,16 @@
 
 </div>
 
+<script>
+
+    $(document).ready(function() {
+        console.log("document load")
+        {% if messages %}
+            {% for message in messages %}
+            console.log("message")
+            toastr.info("{{message}}")
+            {% endfor %}
+        {% endif %}
+    })
+</script>
 {% endblock adminsection %}

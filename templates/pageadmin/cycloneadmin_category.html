@@ -66,16 +66,16 @@
                   {% for category in categories %}
                   <tr>
                     
-                    <td>{{category.company}}</td>
-                    <td>{{category.model}}</td>
-                    <td>{{category.product_category__frame_size}}</td>
-                    <td>{{category.product_category__break_type}}</td>
-                    <td>{{category.product_category__color}}</td>
-                    <td>{{category.product_category__gear_type}}</td>
-                    <td>{{category.product_category__quantity}}</td>
+                    <td>{{category.product_id__company}}</td>
+                    <td>{{category.product_id__model}}</td>
+                    <td>{{category.frame_size}}</td>
+                    <td>{{category.break_type}}</td>
+                    <td>{{category.color}}</td>
+                    <td>{{category.gear_type}}</td>
+                    <td>{{category.quantity}}</td>
                     <!-- edit and remove button -->
                     <td>
-                      <a class="btn btn-outline-success" href="{% url 'editcategory' category.product_category__id %}" role="button">Edit</a>
+                      <a class="btn btn-outline-success" href="{% url 'editcategory' category.id %}" role="button">Edit</a>
                     </td>
                   </tr>
                   {% endfor %}

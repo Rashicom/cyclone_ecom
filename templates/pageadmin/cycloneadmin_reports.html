@@ -42,7 +42,21 @@
                         <p class="m-3">To</p>
                         <input id="report_to" class="m-3" type="date">
                     </div>
-                    <button type="button" id="generate_sales_report" class="btn btn-secondary">Generate</button>
+                    <div class="row">
+                        <div class="col-6">
+                            <button type="button" id="generate_sales_report" class="btn btn-secondary">Generate</button>
+                        </div>
+                        <div class="col-6 d-flex justify-content-between">
+                            <div>
+                                <h5>Download report :</h5>
+                            </div>
+                            <div>
+                                <a role="button" href="{% url 'excelreportdownloader' %}" class="btn btn-primary mx-3">EXCEL</a>
+                                <a role="button" href="{% url 'pdfreportdownloader' %}" class="btn btn-primary mx-3">PDF</a>
+                            </div>
+                        </div>
+
+                    </div>
                     <p id="report_msg"></p>
                 </div>
             </div>
@@ -87,17 +101,6 @@
                 </div>
             </div>
             
-            <div class="row">
-                <div class="col-8 d-flex justify-content-end">
-                    <h4>Download report</h4>
-                </div>
-                <div class="col-4 d-flex justify-content-end">
-                    <a role="button" href="{% url 'excelreportdownloader' %}" class="btn btn-primary mx-3">EXCEL</a>
-                    <a role="button" href="{% url 'pdfreportdownloader' %}" class="btn btn-primary mx-3">PDF</a>
-                </div>
-
-            </div>
-
         </div>
     </div>
 

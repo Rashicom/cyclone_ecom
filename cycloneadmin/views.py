@@ -98,8 +98,10 @@ def cycloneadmin_products(request):
 def cycloneadmin_category(request):
     # fetching data from database to  list out categories
     # product and product_catogories are joined to fetch the data
-    categories = product.objects.select_related("product_id").values("product_id","company","model","product_category__frame_size","product_category__break_type","product_category__color","product_category__gear_type","product_category__quantity","product_category__id")
-
+    
+    # categories = product.objects.select_related("product_id").values("product_id","company","model","product_category__frame_size","product_category__break_type","product_category__color","product_category__gear_type","product_category__quantity","product_category__id")
+    categories = product_category.objects.values("product_id__company","product_id__model","frame_size","break_type","color","gear_type","quantity","id")
+    
     return render(request,'cycloneadmin_category.html',{"categories":categories})
 
 
@@ -123,12 +125,14 @@ def cycloneadmin_addcategory(request):
         
 
         # product image
-        product_picture = request.POST['product_image']
-        product_picture_2 = request.POST['product_image_2']
-        product_picture_3 = request.POST['product_image_3']
-        
+        product_picture = request.FILES.get('product_image_1')
+        product_picture_2 = request.FILES.get('product_image_2')
+        product_picture_3 = request.FILES.get('product_image_3')
         # update all the information , not a good practce
         # only update changed fields using ajax
+        print(product_picture)
+        print(product_picture_2)
+        print(product_picture_3)
         
         try:
             product_id = product.objects.get(company = company, model = model)
@@ -144,10 +148,13 @@ def cycloneadmin_addcategory(request):
             if product_picture_3:
                 new_image_3 = product_image(category_id = new_category, product_image = product_picture_3)  
                 new_image_3.save()
-
+            
         except product.DoesNotExist:
             messages.info(request,"such product does not exist")
             return redirect("addcategory")
+       
+        messages.info(request,"new category successfully added")   
+        return redirect("addcategory")
 
     products = product.objects.values('company','model')
     return render(request,'cycloneadmin_addcategory.html',{'products':products})
@@ -174,33 +181,38 @@ def cycloneadmin_reports(request):
 
 
 
+class cycloneadmin_addproduct(View):
 
-def cycloneadmin_addproduct(request):
+    def get(self, request):
+        return render(request,'cycloneadmin_addproduct.html')
 
-    # fetch data if the request is post
-    if request.method == "POST":
-        
-        # for product table
-        company = request.POST['company']
-        model = request.POST['model']
-        wheel_size = request.POST['wheel_size']
-        suspention = request.POST['suspention']
-        internal_cabling = request.POST['internal_cabling']
-        bike_type = request.POST['bike_type']
-        gender_cat = request.POST['gender_cat']
+    def post(self, request):
 
-        # for product_description table
-        terrain_description = request.POST['terrain_description']
-        strength_description = request.POST['strength_description']
-        perfomance_description = request.POST['perfomance_description']
-        precision_description = request.POST['precision_description']
-        
-        newproduct = product(company = company, model = model, wheel_size = wheel_size, suspention = suspention, internal_cabling = internal_cabling, bike_type = bike_type, gender_cat = gender_cat)
-        newproduct.save()
-        newdescription = product_description(product_id = newproduct, terrain_description = terrain_description, strength_description = strength_description, perfomance_description = perfomance_description, precision_description = precision_description)
-        newdescription.save()
+        # fetch data if the request is post
+        if request.method == "POST":
+            
+            # for product table
+            company = request.POST['company']
+            model = request.POST['model']
+            wheel_size = request.POST['wheel_size']
+            suspention = request.POST['suspention']
+            internal_cabling = request.POST['internal_cabling']
+            bike_type = request.POST['bike_type']
+            gender_cat = request.POST['gender_cat']
 
-    return render(request,'cycloneadmin_addproduct.html')
+            # for product_description table
+            terrain_description = request.POST['terrain_description']
+            strength_description = request.POST['strength_description']
+            perfomance_description = request.POST['perfomance_description']
+            precision_description = request.POST['precision_description']
+            
+            newproduct = product(company = company, model = model, wheel_size = wheel_size, suspention = suspention, internal_cabling = internal_cabling, bike_type = bike_type, gender_cat = gender_cat)
+            newproduct.save()
+            newdescription = product_description(product_id = newproduct, terrain_description = terrain_description, strength_description = strength_description, perfomance_description = perfomance_description, precision_description = precision_description)
+            newdescription.save()
+
+            messages.info(request,"New Product added successfully")
+            return redirect("addproduct")        
 
 
 
