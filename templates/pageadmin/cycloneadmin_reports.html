@@ -51,8 +51,8 @@
                                 <h5>Download report :</h5>
                             </div>
                             <div>
-                                <a role="button" href="{% url 'excelreportdownloader' %}" class="btn btn-primary mx-3">EXCEL</a>
-                                <a role="button" href="{% url 'pdfreportdownloader' %}" class="btn btn-primary mx-3">PDF</a>
+                                <button type="button" id="csv_report_generator" class="btn btn-primary mx-3">EXCEL</button>
+                                <button type="button" id="pdf_report_generator" class="btn btn-primary mx-3">PDF</button>
                             </div>
                         </div>
 
@@ -140,6 +140,34 @@
                 
             }            
         })
+    })
+
+
+    $("#pdf_report_generator").on('click', function() {
+        console.log("pdf generator")
+        var from_date = $("#report_from").val()
+        var to_date = $("#report_to").val()
+
+        if (from_date == "" || to_date == "") {
+            toastr.warning("please provide valied dates")
+            return
+        }
+
+        var url = "{% url 'pdfreportdownloader' %}?from_date=" + from_date + "&to_date=" + to_date
+        window.location.href = url;
+    })
+
+    $("#csv_report_generator").on('click', function() {
+        console.log("csv_generator")
+        var from_date = $("#report_from").val()
+        var to_date = $("#report_to").val()
+        
+        if (from_date == "" || to_date == "") {
+            toastr.warning("please provide valied dates")
+            return
+        }
+
+        window.location.href = "{% url 'csvreportdownloader' %}?from_date=" + from_date + "&to_date=" + to_date
     })
 
 

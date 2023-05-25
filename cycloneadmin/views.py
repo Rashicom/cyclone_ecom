@@ -10,12 +10,12 @@ from django.core import serializers
 from datetime import date, timedelta
 from django.db.models import Sum, Count
 import json
-import reportlab
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
 import io
+import csv
 
 # Create your views here.
 
@@ -386,6 +386,19 @@ class pdf_report_downloader(View):
 
     def get(self, request):
 
+        # fetching data from the url
+        from_date = request.GET['from_date']
+        to_date = request.GET['to_date']
+
+        # fetching data from data base by filtering with the date range
+        total_shipments = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date).count()
+        total_business = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date).aggregate(Sum('payment_amount'))['payment_amount__sum']
+        total_cod_order = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date,payment_method = "Cash on delivery(COD)").count()
+        total_payed_orders = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date,payment_method = "Net banking / UPI").count()
+        canceled_orders = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date,order_status = "order canceled").count()
+        total_users = CustomUser.objects.count() - 1
+        total_product_quantity = product_category.objects.aggregate(Sum("quantity"))['quantity__sum']
+        
         buffer = io.BytesIO()
         pdf = canvas.Canvas(buffer, pagesize=letter, bottomup=0)
         
@@ -393,13 +406,13 @@ class pdf_report_downloader(View):
         textobj.setTextOrigin(inch,inch)
         
         lines= [
-            "total shipments :",
-            "total business :",
-            "total cod order :",
-            "total payed orders :",
-            "canceled orders :",
-            "total users :",
-            "total product quantity :"
+            "total shipments :"+str(total_shipments),
+            "total business :"+str(total_business),
+            "total cod order :"+str(total_cod_order),
+            "total payed orders :"+str(total_payed_orders),
+            "canceled orders :"+str(canceled_orders),
+            "total users :"+str(total_users),
+            "total product quantity :"+str(total_product_quantity)
         ]
 
         for line in lines:
@@ -412,8 +425,37 @@ class pdf_report_downloader(View):
         return FileResponse(buffer, as_attachment=True, filename="report.pdf")
 
  
-class excel_report_downloader(View):
+class csv_report_downloader(View):
     
     def get(self, request):
-        pass
 
+        # fetching data from the url
+        from_date = request.GET['from_date']
+        to_date = request.GET['to_date']
+
+        # fetching data from data base by filtering with the date range
+        total_shipments = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date).count()
+        total_business = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date).aggregate(Sum('payment_amount'))['payment_amount__sum']
+        total_cod_order = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date,payment_method = "Cash on delivery(COD)").count()
+        total_payed_orders = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date,payment_method = "Net banking / UPI").count()
+        canceled_orders = user_order.objects.filter(order_date__gte = from_date , order_date__lte = to_date,order_status = "order canceled").count()
+        total_users = CustomUser.objects.count() - 1
+        total_product_quantity = product_category.objects.aggregate(Sum("quantity"))['quantity__sum']
+        
+        # Create the HttpResponse object with the appropriate CSV header.
+        response = HttpResponse(
+        content_type="text/csv",
+        headers={"Content-Disposition": 'attachment; filename="report.csv"'},
+        )
+
+        # write contents to the csv file
+        writer = csv.writer(response)
+        writer.writerow(["total_shipments",total_shipments])
+        writer.writerow(["total_business",total_business])
+        writer.writerow(["total_cod_order",total_cod_order])
+        writer.writerow(["total_payed_orders",total_payed_orders])
+        writer.writerow(["canceled_orders",canceled_orders])
+        writer.writerow(["total_users",total_users])
+        writer.writerow(["total_product_quantity",total_product_quantity])
+
+        return response

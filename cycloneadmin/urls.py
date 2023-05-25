@@ -25,7 +25,7 @@ urlpatterns = [
     path('orderupdation/',views.cycloneadmin_order_updation.as_view(),name='orderupdation'),
     path('cancelorder/', views.cycloneadmin_cancel_order.as_view(),name='cancelorder'),
     path('reportgenerator/',views.cycloneadmin_report_generator.as_view(),name="reportgenerator"),
-    path('excelreportdownloader/', views.excel_report_downloader.as_view(), name="excelreportdownloader"),
+    path('csvreportdownloader/', views.csv_report_downloader.as_view(), name="csvreportdownloader"),
     path('pdfreportdownloader/',views.pdf_report_downloader.as_view(), name="pdfreportdownloader")
 
 
