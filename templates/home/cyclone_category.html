@@ -53,16 +53,16 @@
                 {% if cart_items %}
                 {% for product in cart_items %}
                 <!-- product tiles iteratively display start -->
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
 
-                  <div class="card p-3" style="width: 24rem;">
+                  <div class="card p-3" style="width: 25rem;">
                     <a href="{% url 'product' product.category_id %}">
                       <div class="row">
                         <div class="col-8">
                           <div class=""><h4 class="m-0">{{product.model}}</h4></div>
                           <!-- star rating -->
                           <div>
-                            <span class="fa fa-star {% if product.average_star_rating >= 1 %}checked{% endif %}"></span>
+                             <span class="fa fa-star {% if product.average_star_rating >= 1 %}checked{% endif %}"></span>
                             <span class="fa fa-star {% if product.average_star_rating >= 2 %}checked{% endif %}"></span>
                             <span class="fa fa-star {% if product.average_star_rating >= 3 %}checked{% endif %}"></span>
                             <span class="fa fa-star {% if product.average_star_rating >= 4 %}checked{% endif %}"></span>
@@ -71,9 +71,15 @@
   
                           <!-- color circle -->
                           <div>
-                            <i class="fa fa-circle" aria-hidden="true"></i>
-                            <i class="fa fa-circle" aria-hidden="true"></i>
-                            <i class="fa fa-circle" aria-hidden="true"></i> 
+
+                            <!-- iteratively list available colors start-->
+
+                            {% for color in product.avilable_colors %}
+                            <i class="fa fa-circle" aria-hidden="true" style="color: {{ color.color }};"></i>
+                            {% endfor %}  
+
+                            <!-- iteratively list available colors end-->
+
                           </div>
                         </div>
                         <!-- offer section start -->

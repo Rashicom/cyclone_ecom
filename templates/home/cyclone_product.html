@@ -77,6 +77,7 @@
               </div>
 
               <div class="row card-body">
+
                 <div class="col-4 align-middle"><p>{{product_details.break_type}}</p></div>
                 <div class="col-4 d-flex justify-content-center"><p>{{product_details.gear_type}}</p></div>
                 <div class="col-4 d-flex justify-content-end"><p>{{product_details.product_id.suspention}}</p></div>
@@ -87,18 +88,32 @@
                 <div class="col-6">
                   <p>frame size</p>
                   <div class="d-flex">
-                    {{product_details.frame_size}}
-                    <!-- itaratively list other avilable sizes  -->
+                    
+                    <!-- itaratively list other avilable sizes start -->
+                    {% for size in available_sizes %}
+
+                    <span class="bg-dark rounded-circle m-1">
+                      <h5 class="m-0 p-1">{{ size.frame_size }}</h5>        
+                    </span>
+                    
+                    {% endfor %}
+                    <!-- itaratively list other avilable sizes end -->
+
                   </div>
                   
                 </div>
                 <div class="col-6">
                   <p>color</p>
                   <div>
-                    <i class="fa fa-circle" aria-hidden="true" style="color: red;"></i>
-                    <!-- itaratively list other avilable colors colors -->
-                    <i class="fa fa-circle" aria-hidden="true"></i>
+
+                    <!-- list all available colorst in this product start -->
+                    {% for color in available_colors %}
+
+                    <i class="fa fa-circle" aria-hidden="true" style="color: {{ color.color }};"></i>
                     
+                    {% endfor %}
+                    <!-- list all available colorst in this product start -->
+                  
                   </div>
                 </div>
               </div>

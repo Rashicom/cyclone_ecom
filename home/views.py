@@ -233,11 +233,14 @@ class cyclone_category(View):
             image = product_image.objects.filter(category_id = item).values("product_image")[:1][0]["product_image"]
             average_star_rating = product_review.objects.filter(category_id = item.id).aggregate(Avg('star_rank'))['star_rank__avg']
             
+            # fetching same producs corol variations
+            avilable_colors = product_category.objects.filter(product_id = item.product_id).values('color')
+            
             # if there no star rating found we put a defoult value 2 as default
             if average_star_rating is None:
                 average_star_rating = 2
-            cart_items.append({"category_id":category_id, "color":color,"break_type":break_type,"gear_type":gear_type,"mrp":mrp,"seller_price":seller_price,"is_discounted":is_discounted,"model":model,"suspention":suspention,"image":image,"average_star_rating":int(average_star_rating)})
-        
+            cart_items.append({"category_id":category_id, "color":color,"break_type":break_type,"gear_type":gear_type,"mrp":mrp,"seller_price":seller_price,"is_discounted":is_discounted,"model":model,"suspention":suspention,"image":image,"average_star_rating":int(average_star_rating), "avilable_colors":avilable_colors})
+
         return render(request,'cyclone_category.html',{'cart_items':cart_items})
 
 
@@ -270,11 +273,17 @@ class cyclone_product(View):
         product_reviews = product_review.objects.filter(category_id = product_details).values('star_rank','product_comment','review_date','email__first_name')
         average_star_rating = product_review.objects.filter(category_id = category_id).aggregate(Avg('star_rank'))['star_rank__avg']
         
+        # fetching all available colors in this product
+        available_colors = product_category.objects.filter(product_id = product_details.product_id).values('color').distinct()
+
+        # fetching all available sizes in this product
+        available_sizes = product_category.objects.filter(product_id = product_details.product_id).values('frame_size').distinct()
+        
         # if there no star rating found we put a defoult value 2 as default
         if average_star_rating is None:
             average_star_rating = 2
 
-        return render(request,'cyclone_product.html',{"product_details":product_details,'product_dscpn':product_dscpn,'product_pics':product_pics,'product_first_pic':product_first_pic,'category_id':category_id,"product_reviews":product_reviews,"average_star_rating":int(average_star_rating)})
+        return render(request,'cyclone_product.html',{"product_details":product_details,'product_dscpn':product_dscpn,'product_pics':product_pics,'product_first_pic':product_first_pic,'category_id':category_id,"product_reviews":product_reviews,"average_star_rating":int(average_star_rating),"available_colors":available_colors,"available_sizes":available_sizes})
 
 
 
@@ -578,6 +587,7 @@ class cyclone_category_filter(View):
         array of filteres. every list contains. its mutliple filter values
         eg: color list contains multiple colors to filter
         """ 
+
         # fetch data from data base by applaying this list of filters
         cart_products =  product_category.objects.all()
         print(bike_types)
