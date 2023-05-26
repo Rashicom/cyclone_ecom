@@ -62,11 +62,11 @@
                           <div class=""><h4 class="m-0">{{product.model}}</h4></div>
                           <!-- star rating -->
                           <div>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star {% if product.average_star_rating >= 1 %}checked{% endif %}"></span>
+                            <span class="fa fa-star {% if product.average_star_rating >= 2 %}checked{% endif %}"></span>
+                            <span class="fa fa-star {% if product.average_star_rating >= 3 %}checked{% endif %}"></span>
+                            <span class="fa fa-star {% if product.average_star_rating >= 4 %}checked{% endif %}"></span>
+                            <span class="fa fa-star {% if product.average_star_rating >= 5 %}checked{% endif %}"></span>
                           </div>
   
                           <!-- color circle -->
@@ -138,31 +138,31 @@
                 <div class="widgets_inner">
 
                   <div class="form-check my-2">
-                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="mountain bike" id="">
+                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="Mountain Bike" id="">
                     <label class="form-check-label" for="flexCheckDefault">
                       Mountain Bikes
                     </label>
                   </div>
                   <div class="form-check my-2">
-                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="road bike" id="">
+                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="Road bike" id="">
                     <label class="form-check-label" for="flexCheckChecked">
                       Road Bikes
                     </label>
                   </div>
                   <div class="form-check my-2">
-                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="hybrid bike" id="">
+                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="Hybrid bike" id="">
                     <label class="form-check-label" for="flexCheckDefault">
                       Hybrid bikes
                     </label>
                   </div>
                   <div class="form-check my-2">
-                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="ladies bike" id="">
+                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="Ladies bike" id="">
                     <label class="form-check-label" for="flexCheckChecked">
                       Ladies Bikes
                     </label>
                   </div>
                   <div class="form-check my-2">
-                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="kids bike" id="" >
+                    <input class="form-check-input filter_checkbox" data-filter="bike_type" type="checkbox" value="Kids bike" id="" >
                     <label class="form-check-label" for="flexCheckChecked">
                       Kids Bikes
                     </label>

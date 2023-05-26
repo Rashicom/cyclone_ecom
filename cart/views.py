@@ -290,6 +290,7 @@ class cyclone_payment_success(View):
         delivery_date = datetime.datetime.now().date() + datetime.timedelta(days=7)
         order_status = user_order.objects.get(order_no = order_no)
         order_status.payment_status = "payed"
+        order_status.order_status = "order placed"
         order_status.save()
 
         return render(request,'cyclone_payment_success.html',{"order_no":order_no,"delivery_date":delivery_date})

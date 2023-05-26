@@ -10,6 +10,7 @@ from django.contrib.sessions.models import Session
 from django.http.response import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import View
+from django.db.models import Avg
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 
@@ -217,7 +218,7 @@ class cyclone_category(View):
 
         # products = product.objects.values("product_category__id","product_id","model","suspention","product_category__break_type","product_category__gear_type","product_category__mrp","product_category__is_discounted","product_category__seller_price","product_category__product_image__product_image")
         cart_products =  product_category.objects.all()
-
+        
         cart_items = []
         for item in cart_products:
             category_id = item.id
@@ -230,8 +231,13 @@ class cyclone_category(View):
             model = item.product_id.model
             suspention = item.product_id.suspention
             image = product_image.objects.filter(category_id = item).values("product_image")[:1][0]["product_image"]
-            cart_items.append({"category_id":category_id, "color":color,"break_type":break_type,"gear_type":gear_type,"mrp":mrp,"seller_price":seller_price,"is_discounted":is_discounted,"model":model,"suspention":suspention,"image":image})
-
+            average_star_rating = product_review.objects.filter(category_id = item.id).aggregate(Avg('star_rank'))['star_rank__avg']
+            
+            # if there no star rating found we put a defoult value 2 as default
+            if average_star_rating is None:
+                average_star_rating = 2
+            cart_items.append({"category_id":category_id, "color":color,"break_type":break_type,"gear_type":gear_type,"mrp":mrp,"seller_price":seller_price,"is_discounted":is_discounted,"model":model,"suspention":suspention,"image":image,"average_star_rating":int(average_star_rating)})
+        
         return render(request,'cyclone_category.html',{'cart_items':cart_items})
 
 
@@ -262,8 +268,13 @@ class cyclone_product(View):
         product_first_pic = product_image.objects.filter(category_id = product_details).values('product_image')[:1][0]['product_image']
         product_pics = product_image.objects.filter(category_id = product_details)[1:]
         product_reviews = product_review.objects.filter(category_id = product_details).values('star_rank','product_comment','review_date','email__first_name')
+        average_star_rating = product_review.objects.filter(category_id = category_id).aggregate(Avg('star_rank'))['star_rank__avg']
         
-        return render(request,'cyclone_product.html',{"product_details":product_details,'product_dscpn':product_dscpn,'product_pics':product_pics,'product_first_pic':product_first_pic,'category_id':category_id,"product_reviews":product_reviews})
+        # if there no star rating found we put a defoult value 2 as default
+        if average_star_rating is None:
+            average_star_rating = 2
+
+        return render(request,'cyclone_product.html',{"product_details":product_details,'product_dscpn':product_dscpn,'product_pics':product_pics,'product_first_pic':product_first_pic,'category_id':category_id,"product_reviews":product_reviews,"average_star_rating":int(average_star_rating)})
 
 
 
@@ -569,11 +580,12 @@ class cyclone_category_filter(View):
         """ 
         # fetch data from data base by applaying this list of filters
         cart_products =  product_category.objects.all()
-
+        print(bike_types)
+        print(cart_products)
         # filter by list of data
         if len(bike_types) > 0:
             cart_products = cart_products.filter(product_id__bike_type__in = bike_types)
-        
+        print(cart_products)
         if len(brands) > 0:
             cart_products = cart_products.filter(product_id__company__in = brands)
         

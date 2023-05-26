@@ -130,12 +130,10 @@ def cycloneadmin_addcategory(request):
         product_picture_3 = request.FILES.get('product_image_3')
         # update all the information , not a good practce
         # only update changed fields using ajax
-        print(product_picture)
-        print(product_picture_2)
-        print(product_picture_3)
-        
-        try:
-            product_id = product.objects.get(company = company, model = model)
+        print(company)
+        print(model)
+        try:    
+            product_id = product.objects.get(model = model, company = company)
             new_category = product_category(product_id = product_id,frame_size = frame_size,color = color, break_type = break_type, gear_type = gear_type, mrp = mrp ,seller_price = seller_price, quantity = quantity, is_discounted = is_discounted)      
             new_category.save()  
             new_image = product_image(category_id = new_category, product_image = product_picture)  
