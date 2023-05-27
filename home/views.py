@@ -13,6 +13,7 @@ from django.views import View
 from django.db.models import Avg
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
+from django.db.models import Q
 
 # Ai model for text sentiment
 from textblob import TextBlob
@@ -632,9 +633,17 @@ class cyclone_category_filter(View):
             model = item.product_id.model
             suspention = item.product_id.suspention
             image = product_image.objects.filter(category_id = item).values("product_image")[:1][0]["product_image"]
+            average_star_rating = product_review.objects.filter(category_id = item.id).aggregate(Avg('star_rank'))['star_rank__avg']
+            
+            # fetching same producs corol variations
+            avilable_colors = product_category.objects.filter(product_id = item.product_id).values('color')
+
+            # if there no star rating found we put a defoult value 2 as default
+            if average_star_rating is None:
+                average_star_rating = 2
 
             # appdending all the needed info to the cart_items list as a dict
-            cart_items.append({"category_id":category_id, "color":color,"break_type":break_type,"gear_type":gear_type,"mrp":mrp,"seller_price":seller_price,"is_discounted":is_discounted,"model":model,"suspention":suspention,"image":image})
+            cart_items.append({"category_id":category_id, "color":color,"break_type":break_type,"gear_type":gear_type,"mrp":mrp,"seller_price":seller_price,"is_discounted":is_discounted,"model":model,"suspention":suspention,"image":image,"average_star_rating":average_star_rating,"avilable_colors":avilable_colors})
 
         """
         filter_category.html is a small part of html that we have to change in the main page
@@ -646,6 +655,7 @@ class cyclone_category_filter(View):
         render_html = render_to_string('filter_category.html', {'cart_items':cart_items})
         # json responce to ajax request
         return JsonResponse({'status':200,'html':render_html})
+        
 
 
 class cyclone_track_order(View):
@@ -671,3 +681,52 @@ class cyclone_contact_cyclone(View):
         message = request.POST['message']
 
         return JsonResponse({'status':200})
+
+
+
+# main search
+class cyclone_main_search(View):
+
+    def get(self, request):
+        search_input = request.GET['search_input']
+
+        # searching through company model gender color and bike type
+        search_result = product_category.objects.filter(
+            Q(product_id__company__icontains = search_input) | 
+            Q(product_id__model__icontains = search_input) | 
+            Q(product_id__bike_type__icontains = search_input) | 
+            Q(product_id__gender_cat__icontains = search_input) | 
+            Q(color__icontains = search_input))
+        
+        # if the resutl is empty return not found
+        if len(search_result) == 0:
+            return render(request,'cyclone_category.html')
+        
+        # search result go through the for loop to fetch need info only from it    
+        # creating a list of requred field for response from filtered data
+        search_result_items = []
+        for item in search_result:
+            category_id = item.id
+            color = item.color  
+            break_type = item.break_type
+            gear_type = item.gear_type
+            mrp = item.mrp
+            seller_price = item.seller_price
+            is_discounted = item.is_discounted
+            model = item.product_id.model
+            suspention = item.product_id.suspention
+            image = product_image.objects.filter(category_id = item).values("product_image")[:1][0]["product_image"]
+            average_star_rating = product_review.objects.filter(category_id = item.id).aggregate(Avg('star_rank'))['star_rank__avg']
+            
+            # fetching same producs corol variations
+            avilable_colors = product_category.objects.filter(product_id = item.product_id).values('color')
+
+            # if there no star rating found we put a defoult value 2 as default
+            if average_star_rating is None:
+                average_star_rating = 2
+
+            # appdending all the needed info to the cart_items list as a dict
+            search_result_items.append({"category_id":category_id, "color":color,"break_type":break_type,"gear_type":gear_type,"mrp":mrp,"seller_price":seller_price,"is_discounted":is_discounted,"model":model,"suspention":suspention,"image":image,"average_star_rating":average_star_rating,"avilable_colors":avilable_colors})
+            
+        return render(request,'cyclone_category.html',{'cart_items':search_result_items})
+        

@@ -127,6 +127,18 @@
     
 
 
+    // main search
+    $('#main_search').on('click', function () {
+        console.log("main search")
+        var search_input = $("#main_search_input").val()
+        
+        // if no input we dont want to make a  ajax request
+        if (search_input == "") {
+            return
+        }
+
+        window.location.href = "{% url 'mainsearch' %}?search_input="+search_input
+    })
 
 
 
