@@ -13,18 +13,21 @@
           <div class=""><h4 class="m-0">{{product.model}}</h4></div>
           <!-- star rating -->
           <div>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-            <span class="fa fa-star"></span>
-          </div>
-
+            <span class="fa fa-star {% if product.average_star_rating >= 1 %}checked{% endif %}"></span>
+           <span class="fa fa-star {% if product.average_star_rating >= 2 %}checked{% endif %}"></span>
+           <span class="fa fa-star {% if product.average_star_rating >= 3 %}checked{% endif %}"></span>
+           <span class="fa fa-star {% if product.average_star_rating >= 4 %}checked{% endif %}"></span>
+           <span class="fa fa-star {% if product.average_star_rating >= 5 %}checked{% endif %}"></span>
+         </div>
           <!-- color circle -->
           <div>
-            <i class="fa fa-circle" aria-hidden="true"></i>
-            <i class="fa fa-circle" aria-hidden="true"></i>
-            <i class="fa fa-circle" aria-hidden="true"></i> 
+            <!-- iteratively list available colors start-->
+
+            {% for color in product.avilable_colors %}
+            <i class="fa fa-circle" aria-hidden="true" style="color: {{ color.color }};"></i>
+            {% endfor %}  
+
+            <!-- iteratively list available colors end-->
           </div>
         </div>
         <!-- offer section start -->

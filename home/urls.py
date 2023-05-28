@@ -11,6 +11,7 @@ urlpatterns = [
     path('blog/',views.cyclone_blog.as_view(),name='blog'),
     path('tracking/',views.cyclone_tracking.as_view(),name='tracking'),
     path('product/<int:category_id>',views.cyclone_product.as_view(),name='product'),
+    path('productvarientselect/',views.product_varient_selector.as_view(), name='productvarientselect'),
     path('signup/',views.cyclone_signup.as_view(),name='signup'),
     path('otplogin/',views.cyclone_otplogin.as_view(),name='otplogin'),
     path('otpgenerator/',views.cyclone_otpgenerator.as_view(),name='otpgenerator'),

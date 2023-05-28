@@ -266,25 +266,32 @@ class cyclone_product(View):
     def get(self,request,**kwargs):
         category_id = kwargs['category_id'] 
         product_details = product_category.objects.get(id = category_id)
-        
+    
         product_instence = product_details.product_id
         product_dscpn = product_description.objects.get(product_id = product_instence)
         product_first_pic = product_image.objects.filter(category_id = product_details).values('product_image')[:1][0]['product_image']
         product_pics = product_image.objects.filter(category_id = product_details)[1:]
         product_reviews = product_review.objects.filter(category_id = product_details).values('star_rank','product_comment','review_date','email__first_name')
         average_star_rating = product_review.objects.filter(category_id = category_id).aggregate(Avg('star_rank'))['star_rank__avg']
+        product_color = product_details.color
+        product_frame_size = product_details.frame_size 
         
+        """
+        fetching available color and size of the products also to display
+        its id also fetched to uniquely pass the id with it, and it helps 
+        to find that item when user click to that veleint 
+        """
         # fetching all available colors in this product
-        available_colors = product_category.objects.filter(product_id = product_details.product_id).values('color').distinct()
+        available_colors = product_category.objects.filter(product_id = product_details.product_id).values('color').exclude(color = product_color).distinct()
 
         # fetching all available sizes in this product
-        available_sizes = product_category.objects.filter(product_id = product_details.product_id).values('frame_size').distinct()
+        available_sizes = product_category.objects.filter(product_id = product_details.product_id).values('frame_size').exclude(frame_size = product_frame_size).distinct()
         
         # if there no star rating found we put a defoult value 2 as default
         if average_star_rating is None:
             average_star_rating = 2
 
-        return render(request,'cyclone_product.html',{"product_details":product_details,'product_dscpn':product_dscpn,'product_pics':product_pics,'product_first_pic':product_first_pic,'category_id':category_id,"product_reviews":product_reviews,"average_star_rating":int(average_star_rating),"available_colors":available_colors,"available_sizes":available_sizes})
+        return render(request,'cyclone_product.html',{"product_details":product_details,'product_dscpn':product_dscpn,'product_pics':product_pics,'product_first_pic':product_first_pic,'category_id':category_id,"product_color":product_color,"product_frame_size":product_frame_size,"product_reviews":product_reviews,"average_star_rating":int(average_star_rating),"available_colors":available_colors,"available_sizes":available_sizes})
 
 
 
@@ -593,6 +600,7 @@ class cyclone_category_filter(View):
         cart_products =  product_category.objects.all()
         print(bike_types)
         print(cart_products)
+        
         # filter by list of data
         if len(bike_types) > 0:
             cart_products = cart_products.filter(product_id__bike_type__in = bike_types)
@@ -652,6 +660,7 @@ class cyclone_category_filter(View):
         this part of html reach in the fromt end ajax success and update the part of html
         """
         # compaingning part of html and data
+        
         render_html = render_to_string('filter_category.html', {'cart_items':cart_items})
         # json responce to ajax request
         return JsonResponse({'status':200,'html':render_html})
@@ -729,4 +738,65 @@ class cyclone_main_search(View):
             search_result_items.append({"category_id":category_id, "color":color,"break_type":break_type,"gear_type":gear_type,"mrp":mrp,"seller_price":seller_price,"is_discounted":is_discounted,"model":model,"suspention":suspention,"image":image,"average_star_rating":average_star_rating,"avilable_colors":avilable_colors})
             
         return render(request,'cyclone_category.html',{'cart_items':search_result_items})
+
+
+
+# ajx call for different product varient 
+class product_varient_selector(View):
+
+    def get(self, request):
         
+        """
+        when user select diffrent color or frame size of a product'
+        it fires an ajax call with product id, selected color and
+        selected frame size and this function search for that perticular
+        product and send send back with that perticular html part 
+        """
+        # fetching data from request
+        category_id = request.GET['category_id']
+        selected_color = request.GET['selected_color']
+        selected_frame_size = request.GET['selected_frame_size']
+
+        # product instance to find match product
+        # one product_instence can have multiple category in category table
+        category_instence = product_category.objects.get(id = category_id)
+        product_instence = product.objects.get(product_id = category_instence.product_id.product_id)
+    
+        # fetch matched product from data base
+        mach_product = product_category.objects.filter(product_id = product_instence, color = selected_color, frame_size = selected_frame_size)
+        if len(mach_product) == 0:
+            mach_product = product_category.objects.filter(product_id = product_instence, frame_size = selected_frame_size)
+            
+        if len(mach_product) == 0:
+            mach_product = product_category.objects.filter(product_id = product_instence, color = selected_color)
+
+        # sliced becouse it filtered 
+        mach_product = mach_product[0]
+
+        product_dscpn = product_description.objects.get(product_id = product_instence)
+        product_first_pic = product_image.objects.filter(category_id = mach_product).values('product_image')[:1][0]['product_image']
+        product_pics = product_image.objects.filter(category_id = mach_product)[1:]
+        product_reviews = product_review.objects.filter(category_id = mach_product).values('star_rank','product_comment','review_date','email__first_name')
+        average_star_rating = product_review.objects.filter(category_id = mach_product).aggregate(Avg('star_rank'))['star_rank__avg']
+        product_color = mach_product.color
+        product_frame_size = mach_product.frame_size 
+
+        """
+        fetching available color and size of the products also to display
+        its id also fetched to uniquely pass the id with it, and it helps 
+        to find that item when user click to that veleint 
+        """
+        # fetching all available colors in this product
+        available_colors = product_category.objects.filter(product_id = mach_product.product_id).values('color').exclude(color = product_color).distinct()
+
+        # fetching all available sizes in this product
+        available_sizes = product_category.objects.filter(product_id = mach_product.product_id).values('frame_size').exclude(frame_size = product_frame_size).distinct()
+        
+        # if there no star rating found we put a defoult value 2 as default
+        if average_star_rating is None:
+            average_star_rating = 2
+
+        product_part_html = render_to_string('product_part.html', {"product_details":mach_product,'product_dscpn':product_dscpn,'product_pics':product_pics,'product_first_pic':product_first_pic,'category_id':category_id,"product_color":product_color,"product_frame_size":product_frame_size,"average_star_rating":int(average_star_rating),"available_colors":available_colors,"available_sizes":available_sizes})
+        review_part_html = render_to_string('review_part.html', {"product_details":mach_product,'category_id':category_id,"product_reviews":product_reviews,"average_star_rating":int(average_star_rating)})
+        
+        return JsonResponse({'status':200,'product_part_html':product_part_html, "review_part_html":review_part_html})

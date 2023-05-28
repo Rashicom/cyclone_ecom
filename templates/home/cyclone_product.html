@@ -27,9 +27,7 @@
     <!--================Single Product Area =================-->
     <div class="product_image_area">
       <div class="container">
-        <div class="row">
-
-          
+        <div class="row" id="product_part">
         
           <div class="col-md-6">
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
@@ -88,14 +86,23 @@
                 <div class="col-6">
                   <p>frame size</p>
                   <div class="d-flex">
+
+                    <!-- selected color bolder dispaly, other available colors iteratively display below -->
+                    <span class="bg-success rounded-circle m-1 ">
+                      <a class="">
+                        <h5 class="m-0 p-1">{{ product_frame_size }}</h5>
+                      </a>        
+                    </span>
                     
                     <!-- itaratively list other avilable sizes start -->
                     {% for size in available_sizes %}
-
-                    <span class="bg-dark rounded-circle m-1">
-                      <h5 class="m-0 p-1">{{ size.frame_size }}</h5>        
-                    </span>
-                    
+                      
+                      <span class="bg-dark rounded-circle m-1">
+                        <a class="frame_size_varient_selector" role="button" data-id={{ size.frame_size }}>
+                          <h5 class="m-0 p-1">{{ size.frame_size }}</h5>
+                        </a>        
+                      </span>
+                     
                     {% endfor %}
                     <!-- itaratively list other avilable sizes end -->
 
@@ -106,11 +113,17 @@
                   <p>color</p>
                   <div>
 
+                    <!-- selected color bolder dispaly, other available colors iteratively display below -->
+                    <a class="" >
+                      <i class="fa fa-circle bg-success p-1" aria-hidden="true" style="color: {{ product_color }};"></i>
+                      <p hidden>{{ product_color }}</p>
+                    </a>
+
                     <!-- list all available colorst in this product start -->
                     {% for color in available_colors %}
-
-                    <i class="fa fa-circle" aria-hidden="true" style="color: {{ color.color }};"></i>
-                    
+                    <a class="color_varient_selector" role="button" data-id={{ color.color }}>
+                      <i class="fa fa-circle" aria-hidden="true" style="color: {{ color.color }};"></i>
+                    </a>
                     {% endfor %}
                     <!-- list all available colorst in this product start -->
                   
@@ -130,6 +143,7 @@
             </div>
   
           </div>
+
         </div>
       </div>
 
@@ -147,7 +161,7 @@
             </div>
 
           </div>
-        </div>
+        </div>  
 
       </div>
 
@@ -199,7 +213,7 @@
           </div>
 
 
-          <div class="card text-dark bg-light mb-3">
+          <div class="card text-dark bg-light mb-3" id="review_part">
 
             <!-- comment iterate start -->
             {% if product_reviews %}
@@ -347,6 +361,60 @@
 
 
       })
+
+
+      /* 
+      in a product user can see the available color and frame size
+      when the user click in the color or frame size varient we fetch
+      product selected color and selected frame size and call a ajax to 
+      fetch that perticular item and show it. here we fetch selected color
+      and selected frame size and pass the two info to a commn function to
+      send ajax request   
+      */
+
+      // color selector
+      $(".color_varient_selector").on('click', function() {
+
+        console.log("color trigger")
+        var selected_color = $(this).data('id')
+        var selected_frame_size = '{{ product_frame_size }}'
+        var category_id = '{{category_id}}'
+        get_varient(selected_color,selected_frame_size,category_id)
+        
+      })
+
+      // frame size selector
+      $(".frame_size_varient_selector").on('click', function() {
+
+        console.log("frame size trigger")
+        var selected_frame_size = $(this).data('id')
+        var selected_color = '{{ product_color }}'
+        var category_id = '{{category_id}}'
+        get_varient(selected_color,selected_frame_size,category_id)
+        
+        
+      })
+      
+      function get_varient(selected_color,selected_frame_size,category_id) {
+        
+        data = {selected_color : selected_color, selected_frame_size:selected_frame_size, category_id:category_id}
+
+        $.ajax({
+          method: "GET",
+          url: {% url 'productvarientselect' %},
+          data:data,
+          
+          success: function(data) {
+            console.log("code run success")
+            $("#product_part").html("")
+            $("#review_part").html("")
+            $("#product_part").html(data.product_part_html)
+            $("#review_part").html(data.review_part_html)
+
+          }
+        })
+      }
+
     </script>
     
     {% endblock cyclonecontant %}

@@ -1,0 +1,114 @@
+<div class="col-md-6">
+    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        
+        <!-- outside of the loop paste first pic as active -->
+        <!-- rest of the pic loop inside the loop with out active tag -->
+        <div class="carousel-item active xzoom">
+          <img src="/media/{{product_first_pic}}" class="img-fluid" alt="">
+        </div>
+        {% for pics in product_pics %}
+        <div class="carousel-item xzoom">
+          <img src="/media/{{pics.product_image}}" class="img-fluid" alt="">
+        </div>
+        {% endfor %}
+        
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+</div>
+  
+
+
+<div class="col-md-6">
+
+    <div class="card border-dark mb-3">
+      <div class="card-header"><h4>{{product_details.product_id.company}}</h4></div>
+      <div class="card-body">
+        <h4 class="m-0">{{product_details.product_id.model}}</h4>
+        <div>
+          <span class="fa fa-star {% if average_star_rating >= 1 %}checked{% endif %}"></span>
+          <span class="fa fa-star {% if average_star_rating >= 2 %}checked{% endif %}"></span>
+          <span class="fa fa-star {% if average_star_rating >= 3 %}checked{% endif %}"></span>
+          <span class="fa fa-star {% if average_star_rating >= 4 %}checked{% endif %}"></span>
+          <span class="fa fa-star {% if average_star_rating >= 5 %}checked{% endif %}"></span>
+        </div>
+        
+      </div>
+
+      <div class="row card-body">
+
+        <div class="col-4 align-middle"><p>{{product_details.break_type}}</p></div>
+        <div class="col-4 d-flex justify-content-center"><p>{{product_details.gear_type}}</p></div>
+        <div class="col-4 d-flex justify-content-end"><p>{{product_details.product_id.suspention}}</p></div>
+
+      </div>
+
+      <div class="row card-body">
+        <div class="col-6">
+          <p>frame size</p>
+          <div class="d-flex">
+
+            <!-- selected color bolder dispaly, other available colors iteratively display below -->
+            <span class="bg-success rounded-circle m-1 ">
+              <a class="">
+                <h5 class="m-0 p-1">{{ product_frame_size }}</h5>
+              </a>        
+            </span>
+            
+            <!-- itaratively list other avilable sizes start -->
+            {% for size in available_sizes %}
+              
+              <span class="bg-dark rounded-circle m-1">
+                <a class="frame_size_varient_selector" role="button" data-id={{ size.frame_size }}>
+                  <h5 class="m-0 p-1">{{ size.frame_size }}</h5>
+                </a>        
+              </span>
+             
+            {% endfor %}
+            <!-- itaratively list other avilable sizes end -->
+
+          </div>
+          
+        </div>
+        <div class="col-6">
+          <p>color</p>
+          <div>
+
+            <!-- selected color bolder dispaly, other available colors iteratively display below -->
+            <a class="" >
+              <i class="fa fa-circle bg-success p-1" aria-hidden="true" style="color: {{ product_color }};"></i>
+              <p hidden>{{ product_color }}</p>
+            </a>
+
+            <!-- list all available colorst in this product start -->
+            {% for color in available_colors %}
+            <a class="color_varient_selector" role="button" data-id={{ color.color }}>
+              <i class="fa fa-circle" aria-hidden="true" style="color: {{ color.color }};"></i>
+            </a>
+            {% endfor %}
+            <!-- list all available colorst in this product start -->
+          
+          </div>
+        </div>
+      </div>
+      <div class="row card-body">
+        <div class="d-flex">
+          <h3 class="text-danger">₹{{product_details.seller_price}}</h3>
+          <h4 class="px-3 "><s>₹{{product_details.mrp}}</s></h4>
+        </div>
+        
+        <button type="button" data-id={{category_id}} class="btn btn-outline-secondary my-3 addtocartbtn">Add to cart</button>
+        <button type="button" class="btn btn-outline-success">Buy now</button>
+
+      </div>
+    </div>
+
+</div>
