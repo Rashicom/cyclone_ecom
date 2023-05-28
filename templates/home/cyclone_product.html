@@ -314,6 +314,7 @@
           success: function(data) {
             console.log("success")
             console.log(data.status)
+            $("#review_part").html(data.review_part_html)
             if (data.status == 200) {
               toastr.info(data.message,{timeOut: 500})
             }
@@ -365,6 +366,7 @@
           
           success: function(data) {
             console.log("code run success")
+            $("#review_part").html(data.review_part_html)
             toastr.info(data.message,{timeOut: 500})
 
           }

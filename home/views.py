@@ -505,6 +505,7 @@ class cyclone_wishlist(View):
         return render(request,'cyclone_wishlist.html',{'wishlist_data':wishlist_data})  
 
 
+
 # product commenting
 class cyclone_add_comment(View):
 
@@ -546,7 +547,11 @@ class cyclone_add_comment(View):
             new_review = product_review(category_id = category_instence, email = user_instence, star_rank = rank, product_comment = comment)
             new_review.save()
         
-        return JsonResponse({'status':200,'message':'comment updatd'})
+        # fetching commetns to refresh 
+        product_reviews = product_review.objects.filter(category_id = category_id).values('star_rank','product_comment','review_date','email__first_name')
+
+        review_part_html = render_to_string('review_part.html', {"product_reviews":product_reviews})
+        return JsonResponse({'status':200,'message':'comment updatd',"review_part_html":review_part_html})
 
 
 # star rating
@@ -579,8 +584,13 @@ class cyclone_add_star_rating(View):
             new_review = product_review(email = user_instance, category_id = category_instance, star_rank = star_rate_value)
             new_review.save()
 
+        # fetching commetns to refresh 
+        product_reviews = product_review.objects.filter(category_id = category_id).values('star_rank','product_comment','review_date','email__first_name')
+
+        review_part_html = render_to_string('review_part.html', {"product_reviews":product_reviews})
+
         # update table to new star rating
-        return JsonResponse({'status':200,'message':'your rating has been recorded' })
+        return JsonResponse({'status':200,'message':'your rating has been recorded',"review_part_html":review_part_html })
 
 
 
