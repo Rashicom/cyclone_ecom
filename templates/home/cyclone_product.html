@@ -61,7 +61,18 @@
           <div class="col-md-6">
 
             <div class="card border-dark mb-3">
-              <div class="card-header"><h4>{{product_details.product_id.company}}</h4></div>
+              <div class="card-header d-flex justify-content-between">
+                <h4>{{product_details.product_id.company}}</h4>
+                
+                {% if is_discounted %}
+                  <div class="bg-danger rounded-circle p-2 d-flex justify-content-center">
+                    <div>
+                      <h3>{{is_discounted}}%</h3>
+                      <h4>OFF</h4>
+                    </div>
+                  </div>
+                {% endif %}      
+              </div>
               <div class="card-body">
                 <h4 class="m-0">{{product_details.product_id.model}}</h4>
                 <div>

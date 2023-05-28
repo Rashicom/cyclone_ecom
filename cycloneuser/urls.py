@@ -10,7 +10,8 @@ urlpatterns = [
     path('mobileotpgenerator/',views.cyclone_mobile_otp_generator.as_view(),name='mobileotpgenerator'),
     path('userorder/',views.cyclone_user_order.as_view(),name='userorder'),
     path('usercancelorder/',views.user_cancel_order.as_view(),name='usercancelorder'),
-    path('userpasswordreset/',views.cyclone_user_password_reset.as_view(),name='userpasswordreset')
+    path('userpasswordreset/',views.cyclone_user_password_reset.as_view(),name='userpasswordreset'),
+    path('orderinvoicedownload/<str:order_no>',views.cyclone_order_invoice_download.as_view(), name='orderinvoicedownload')
     
 
 ]

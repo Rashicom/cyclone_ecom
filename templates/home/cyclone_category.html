@@ -85,9 +85,11 @@
                         <!-- offer section start -->
                         <div class="col-4">
                           {% if product.is_discounted %}
-                          <div class="bg-danger rounded-circle p-1">
-                            <h3>25%</h3>
-                            <h4>OFF</h4>
+                          <div class="bg-danger rounded-circle p-1 d-flex justify-content-center">
+                            <div>
+                              <h3>{{product.offer_percent}}%</h3>
+                              <h4>OFF</h4>
+                            </div>
                           </div>
                           {% endif %}
                         </div>

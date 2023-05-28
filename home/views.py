@@ -237,10 +237,13 @@ class cyclone_category(View):
             # fetching same producs corol variations
             avilable_colors = product_category.objects.filter(product_id = item.product_id).values('color')
             
+            # calculating offer percentage
+            offer_percent = int(((mrp-seller_price)/mrp)*100)
+            
             # if there no star rating found we put a defoult value 2 as default
             if average_star_rating is None:
                 average_star_rating = 2
-            cart_items.append({"category_id":category_id, "color":color,"break_type":break_type,"gear_type":gear_type,"mrp":mrp,"seller_price":seller_price,"is_discounted":is_discounted,"model":model,"suspention":suspention,"image":image,"average_star_rating":int(average_star_rating), "avilable_colors":avilable_colors})
+            cart_items.append({"category_id":category_id, "color":color,"break_type":break_type,"gear_type":gear_type,"mrp":mrp,"seller_price":seller_price,"is_discounted":is_discounted,"model":model,"suspention":suspention,"image":image,"average_star_rating":int(average_star_rating), "avilable_colors":avilable_colors,"offer_percent":offer_percent})
 
         return render(request,'cyclone_category.html',{'cart_items':cart_items})
 
@@ -266,7 +269,12 @@ class cyclone_product(View):
     def get(self,request,**kwargs):
         category_id = kwargs['category_id'] 
         product_details = product_category.objects.get(id = category_id)
-    
+
+        # calculating product discount percentage
+        is_discounted = product_details.is_discounted
+        if is_discounted:
+            is_discounted = int(((product_details.mrp-product_details.seller_price)/product_details.mrp)*100)
+        
         product_instence = product_details.product_id
         product_dscpn = product_description.objects.get(product_id = product_instence)
         product_first_pic = product_image.objects.filter(category_id = product_details).values('product_image')[:1][0]['product_image']
@@ -291,7 +299,7 @@ class cyclone_product(View):
         if average_star_rating is None:
             average_star_rating = 2
 
-        return render(request,'cyclone_product.html',{"product_details":product_details,'product_dscpn':product_dscpn,'product_pics':product_pics,'product_first_pic':product_first_pic,'category_id':category_id,"product_color":product_color,"product_frame_size":product_frame_size,"product_reviews":product_reviews,"average_star_rating":int(average_star_rating),"available_colors":available_colors,"available_sizes":available_sizes})
+        return render(request,'cyclone_product.html',{"product_details":product_details,'product_dscpn':product_dscpn,'product_pics':product_pics,'product_first_pic':product_first_pic,'category_id':category_id,"product_color":product_color,"product_frame_size":product_frame_size,"product_reviews":product_reviews,"average_star_rating":int(average_star_rating),"available_colors":available_colors,"available_sizes":available_sizes,"is_discounted":is_discounted})
 
 
 

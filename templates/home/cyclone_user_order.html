@@ -107,10 +107,16 @@
                         <div class="progress" role="progressbar" aria-label="Example 20px high" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="height: 20px">
                             <div class="progress-bar" style="width: 25%"></div>
                         </div>
+
                         <!-- Button trigger modal -->
-                        <button type="button" value="{{order.order_no}}" class="btn btn-outline-secondary my-4 order_cancel" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        <div class="d-flex justify-content-between">
+                          <button type="button" value="{{order.order_no}}" class="btn btn-outline-secondary my-4 order_cancel" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                             Cancel order
-                        </button>
+                          </button>
+                          <a role="button" href="{% url 'orderinvoicedownload' order.order_no %}" class="btn btn-outline-secondary my-4">
+                            Download invoice
+                          </a>
+                        </div>
                         
                     </div>
                    
@@ -190,6 +196,8 @@
         })
         
     })
+
+    
 </script>
 
 {% endblock cyclonecontant %}

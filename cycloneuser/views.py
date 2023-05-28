@@ -10,6 +10,14 @@ from django.conf import settings
 from django.db.models import Sum
 from django.contrib import messages
 
+# for generating pdf
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+from django.http import FileResponse
+
+
 # Create your views here.
 
 class cyclone_user(View):
@@ -62,6 +70,45 @@ class cyclone_user_order(View):
         return render(request, 'cyclone_user_order.html', {"order_data":order_data})
 
 
+
+# order invoice download
+class cyclone_order_invoice_download(View):
+
+    def get(self, request, order_no):
+        
+        # fetch order details
+            
+        order_quantity = order_list.objects.filter(order_no = order_no).aggregate(Sum('order_quantity'))['order_quantity__sum']
+        order_items = order_list.objects.filter(order_no = order_no).values("category_id__product_id__model","category_id__frame_size","category_id__color","order_quantity","category_id__seller_price")
+        
+        
+        
+        # pdf creation
+        buffer = io.BytesIO()
+        pdf = canvas.Canvas(buffer, pagesize=letter, bottomup=0)
+        
+        textobj = pdf.beginText()
+        textobj.setTextOrigin(inch,inch)
+        
+        lines= [
+            
+            item['category_id__product_id__model'] for item in order_items
+                
+        ]
+
+        print(lines)
+        for line in lines:
+            textobj.textLine(line)
+        
+        pdf.drawText(textobj)
+        pdf.showPage()
+        pdf.save()
+        buffer.seek(0)
+        return FileResponse(buffer, as_attachment=True, filename="report.pdf")
+        
+
+
+# add new address
 class cyclone_addnewaddress(View):
 
     def post(self,request):

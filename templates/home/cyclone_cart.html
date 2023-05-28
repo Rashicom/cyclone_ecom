@@ -46,7 +46,7 @@
                       <div class="col-5">
                         <img style="height: 15rem;" src="/media/{{item.image}}" alt=""> 
                       </div>
-                      <div class="col-5">
+                      <div class="col-6">
                         <div><h3>{{item.model}}</h3></div>
                         <hr>
                         <div class="row">
@@ -65,7 +65,10 @@
                               <button class="btn btn-outline-light count_down" type="button" id="">-</button>
                               <input type="text" name="category_quantity[]" min="1" step="1" value="{{item.item_qty}}" data-id={{item.category_id}} class="form-control quantity_evnt" id="amountInput">
                               <button class="btn btn-outline-light count_up" type="button" id="">+</button>
+                              
+                              <p class="text-danger quantity_exceeded_msg"></p>                           
                             </div>
+                            
                             
                           </div>
 
@@ -76,7 +79,7 @@
                         </div>
                       </div>
 
-                      <div class="col-2">
+                      <div class="col-1">
                         <div class="">
                           <h4 class="price_event">{{ item.price }}</h4>
 
@@ -108,7 +111,7 @@
                       <div class="col-5"></div>
                       <div class="col-5">
                         <h4>quantity</h4>
-                        <p class="text-danger" id="quantity_exceeded_msg"></p>
+                        
                       </div>
                       <div class="col-2">
                         <h4 id="cart_items_qnty">0</h4>
@@ -237,16 +240,18 @@
       // quantity trigger based value changing
       /* when user change the quantity we ahve to calculate quantity and price of
       each product and calculate the sum of it, so we are creating a dom make_list
-      called cart_items to access the price and quantity */
+      called cart_items to access the price and quantity 
+      */
       let cart_items = $(".items")
-      $(".quantity_evnt").on('change', function() {
+      //$(".quantity_evnt").on('change', function() {
+      function qty_ajax_check(category_id, needed_quantity,row){
           total_quantity = 0
           total_price = 0
           total_mrp = 0
 
           //fetching the category_id to check entered qnty is available or not
-          let category_id = $(this).data('id')
-          let needed_quantity = parseInt($(this).val())
+          //let category_id = $(this).data('id')
+          //let needed_quantity = parseInt($(this).val())
           
           data = {category_id:category_id, needed_quantity:needed_quantity, csrfmiddlewaretoken: '{{ csrf_token }}'}
 
@@ -259,11 +264,14 @@
 
               success: function(data) {
                   console.log("sucsess")
-                  console.log(data.status)
-
+                  
+                  
                   if (data.status == 200) {
+                     
+                      // updating the quantity
+                      row.val(needed_quantity)
 
-                      $("#quantity_exceeded_msg").text("")
+                      $(".quantity_exceeded_msg").text("")
                       //iterate over a list
                       cart_items.each(function() {
 
@@ -296,16 +304,55 @@
                           $("#final_total_price").text(total_price)
                       }
                       
+                      
                   }
 
                   else{
                       // show limit exceede msg
-                      $("#quantity_exceeded_msg").text(data.message)
-                      console.log("limit exceeded")
+                      $(row).siblings('.quantity_exceeded_msg').text("max limit")
+                      console.log("Qty exceed")
+                      toastr.warning("quantity exceeded")
+                      
                   }
+                  
+                   
               }
           })
-      })    
+          
+          
+      }
+        
+        
+      //count down trigger
+      $(".count_down").on('click', function() {
+        console.log("count down btn")
+        let input = $(this).siblings('.quantity_evnt').val()
+        let category_id = $(this).siblings(".quantity_evnt").data('id')
+        let row = $(this).siblings('.quantity_evnt')
+        qty_ajax_check(category_id, parseInt(input)-1,row)
+        
+        
+        //$(this).siblings('.quantity_evnt').val(parseInt(input)-1).trigger('change')
+        
+          
+      })
+
+
+      // count up trigger
+      $(".count_up").on('click', function() {
+        console.log("coumt up")
+        let input = $(this).siblings('.quantity_evnt').val()
+        let category_id = $(this).siblings(".quantity_evnt").data('id')
+        let row = $(this).siblings('.quantity_evnt')
+        qty_ajax_check(category_id, parseInt(input)+1,row)
+        
+        
+        //$(this).siblings('.quantity_evnt').val(parseInt(input)+1).trigger('change')
+        
+        
+        
+      })
+
     })
 
     </script>

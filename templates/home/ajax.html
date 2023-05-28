@@ -111,19 +111,7 @@
     })
     
 
-    $(".count_down").on('click', function() {
-        console.log("count down btn")
-        let input = $(this).siblings('.quantity_evnt').val()
-        $(this).siblings('.quantity_evnt').val(parseInt(input)-1).trigger('change')
-        
-        
-    })
-
-    $(".count_up").on('click', function() {
-        console.log("coumt up")
-        let input = $(this).siblings('.quantity_evnt').val()
-        $(this).siblings('.quantity_evnt').val(parseInt(input)+1).trigger('change')
-    })
+    
     
 
 
