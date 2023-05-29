@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
-from home.models import CustomUser,product,product_category,product_description,wishlist_items,cart_items,product_image,guest_cart_items,guest_wishlist_items,product_review, user_order
+from home.models import CustomUser,product,product_category,product_description,wishlist_items,cart_items,product_image,guest_cart_items,guest_wishlist_items,product_review, user_order, subscription
 from django.contrib import messages
 from django.conf import settings
 from django.core.mail import send_mail
@@ -818,3 +818,23 @@ class product_varient_selector(View):
         review_part_html = render_to_string('review_part.html', {"product_details":mach_product,'category_id':category_id,"product_reviews":product_reviews,"average_star_rating":int(average_star_rating)})
         
         return JsonResponse({'status':200,'product_part_html':product_part_html, "review_part_html":review_part_html})
+
+
+
+# email subscription
+class cyclone_email_subscription(View):
+
+    def post(self, request):
+
+        # fetch data from request
+        subscription_email = request.POST['subscription_email']
+        
+        # cheking if the user email already in data base
+        if subscription.objects.filter(email = subscription).exists():
+            return JsonResponse({'status':409,'message':'already subscibed'})
+
+        # else register email in database for subscription
+        else:
+            new_subscriber = subscription(email = subscription_email)
+            new_subscriber.save()
+            return JsonResponse({'status':200,'message':'email successfully added to the subscription'})

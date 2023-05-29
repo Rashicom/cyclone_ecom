@@ -23,6 +23,8 @@ urlpatterns = [
     path('categoryfilter/',views.cyclone_category_filter.as_view(), name='categoryfilter'),
     path('contactadmin/',views.cyclone_contact_cyclone.as_view(), name='contactadmin'),
     path('tackorder/',views.cyclone_track_order.as_view(), name='tackorder'),
-    path('mainsearch/',views.cyclone_main_search.as_view(),name='mainsearch')
+    path('mainsearch/',views.cyclone_main_search.as_view(),name='mainsearch'),
+    path('emailsubscription/',views.cyclone_email_subscription.as_view(), name='emailsubscription'),
+    
     
 ]       

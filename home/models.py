@@ -158,6 +158,12 @@ class product_review(models.Model):
     product_comment = models.TextField()
 
 
+# subsctiption table
+class subscription(models.Model):
+    email = models.EmailField(max_length=254)
+    
+
+
 """<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<GUEST USER>>>>>>>>>>>>>>>>>>>>>>>>>>"""
 
 # quest user cart 

@@ -130,7 +130,30 @@
 
 
 
-    
+    // email subscription
+    $(".email_subscription").on('click', function() {
+        
+        var subscription_email = $("#subscription_email").val()
+ 
+        // validation       
+        if (subscription_email == "") {
+            toastr.warning("invalied email")
+            return
+        }
+
+        data = {subscription_email:subscription_email, csrfmiddlewaretoken:'{{csrf_token}}'}
+
+        $.ajax({
+            method: "POST",
+            url: "{% url 'emailsubscription' %}",
+            data: data,
+
+            success: function(data){
+                console.log("code run success")
+                toastr.info(data.message)
+            }
+        })
+    })
 
     
   
