@@ -85,7 +85,7 @@ class product_category(models.Model):
     mrp = models.IntegerField()
     seller_price = models.IntegerField()
     is_discounted = models.BooleanField(default=False)
-    added_date = models.DateField(auto_now_add=True)
+    added_date = models.DateField(auto_now=True)
     quantity = models.IntegerField()
 
 # for picture

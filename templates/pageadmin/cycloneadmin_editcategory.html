@@ -38,7 +38,7 @@
             <hr>
             <br>
             <!-- add category start -->
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col">
@@ -120,9 +120,8 @@
                 <h5>Image section</h5>
                 <hr>
                 <br>
-                <input type="file" name="product_image">
-                <input type="file" name="product_image_2">
-                <input type="file" name="product_image_3">
+                <input type="file" name="current_imgs[]" multiple="multiple">
+                
 
                 <br><br>
 
@@ -151,13 +150,13 @@
                 <!-- is discounted -->
                 <label for="">is the product in discount category ?</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" {% if productcat.is_discounted == True %}checked{% endif %}>
+                    <input class="form-check-input" type="radio" name="is_discounted" id="flexRadioDefault1" value="True" {% if productcat.is_discounted == True %}checked{% endif %}>
                     <label class="form-check-label" for="flexRadioDefault1">
                       Yes
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" {% if productcat.is_discounted == False %}checked{% endif %}>
+                    <input class="form-check-input" type="radio" name="is_discounted" id="flexRadioDefault2" value="False" {% if productcat.is_discounted == False %}checked{% endif %}>
                     <label class="form-check-label" for="flexRadioDefault2">
                       No
                     </label>

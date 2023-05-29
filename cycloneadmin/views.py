@@ -130,8 +130,6 @@ def cycloneadmin_addcategory(request):
         
         # update all the information , not a good practce
         # only update changed fields using ajax
-        print(company)
-        print(model)
         try:    
             product_id = product.objects.get(model = model, company = company)
             new_category = product_category(product_id = product_id,frame_size = frame_size,color = color, break_type = break_type, gear_type = gear_type, mrp = mrp ,seller_price = seller_price, quantity = quantity, is_discounted = is_discounted)      
@@ -154,11 +152,56 @@ def cycloneadmin_addcategory(request):
 
 
 
-def cycloneadmin_editcategory(request,category_id):
+class cycloneadmin_editcategory(View):
 
-    productcat = product_category.objects.get(id = category_id)
-    print(productcat.is_discounted)
-    return render(request,'cycloneadmin_editcategory.html',{"productcat":productcat})
+    def get(self,request,category_id):
+
+        productcat = product_category.objects.get(id = category_id)
+        print(productcat.is_discounted)
+        return render(request,'cycloneadmin_editcategory.html',{"productcat":productcat})
+
+    def post(self,request,category_id):
+        
+        # fetch pictures from the backend
+        current_imgs = request.FILES.getlist('current_imgs[]')
+        
+        # fetch other fields
+        frame_size = request.POST['frame_size']
+        color = request.POST['color']
+        break_type = request.POST['break_type']
+        gear_type = request.POST['gear_type']
+        mrp = request.POST['mrp']
+        seller_price = request.POST['seller_price']
+        quantity = request.POST['quantity']
+        is_discounted = request.POST['is_discounted']
+
+        
+        # update all the information , not a good practce
+        # only update changed fields using ajax
+        try:
+            update_product = product_category.objects.get(id = category_id)    
+            
+            update_product.frame_size = frame_size
+            update_product.color = color
+            update_product.break_type = break_type
+            update_product.gear_type = gear_type
+            update_product.mrp = mrp
+            update_product.seller_price = seller_price
+            update_product.quantity = quantity
+            update_product.is_discounted = is_discounted
+            
+            update_product.save()
+            # iteratively update all pictures in data base from picture list
+            for image in current_imgs:
+                new_image = product_image(category_id = update_product, product_image = image)  
+                new_image.save()        
+            messages.info(request,"product updated successfully")
+        except Exception as e:
+            print(e)
+            messages.info(request,"such product does not exist")
+            return redirect("addcategory") 
+        
+        return redirect("category")
 
 
 class cycloneadmin_delete_category(View):

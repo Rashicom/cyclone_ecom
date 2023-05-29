@@ -97,6 +97,16 @@
 </div>
 
 <script>
+
+  $(document).ready(function() {
+    {% if messages %}
+      {% for info in messages %}
+        toastr.info("{{info}}")
+      {% endfor %}
+    {% endif %}
+  })
+
+  //delete category  
   $(".delete_category_item").on('click', function() {
     console.log("delete category item")
     var category_id = $(this).data('id')
