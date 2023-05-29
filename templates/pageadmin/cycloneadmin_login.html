@@ -12,41 +12,49 @@
 {% comment %} main section start{% endcomment %}
 {% block adminsection %}
 
-<div>
+<div class="">
     <div class="container">
-        <div class="row"> 
-
+        <div class="row align-items-center vh-100">
             <div class="col-6">
-                <h1>Admin Panal</h1>
+                <h1>Admin Login</h1>
+                <p>Login using your Admin email and Password.</p>
             </div>
-         
-
-            <div class="col-6 bg-dark">
-                <div class="p-5">
+            <div class="col-6 p-5 rounded-2 bg-dark opacity-75">
+                <h3>Login</h3>
+                <hr>
+                <br>
+                <form method="POST">
+                {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Email address</label>
+                        <input type="email" class="form-control bg-transparent" name ="email" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      
+                    </div>
                     
-                    <!-- admin lofin form -->
-                    <form method="POST">
-                    {% csrf_token %}
-                        <div class="mb-3">
-                          <label for="exampleInputEmail1" class="form-label">Email address</label>
-                          <input type="email" class="form-control" name ="email" id="exampleInputEmail1" aria-describedby="emailHelp">
-                          
-                        </div>
-                        <div class="mb-3">
-                          <label for="exampleInputPassword1" class="form-label">Password</label>
-                          <input type="password" class="form-control" name="password" id="exampleInputPassword1">
-                        </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <input type="password" class="form-control bg-transparent" name="password" id="exampleInputPassword1">
+                    </div>
+                    
+                    <br><hr>
+                    {% if messages %}
+                    {% for info in messages %}
+                    <p class="text-danger">{{info}}</p>
+                    {% endfor %}
+                    {% endif %}
+                    <div class="d-grid gap-2 userloginbtn">
                         <button type="submit" class="btn bg-primary adminloginbtn">LOGIN</button>
-                    </form>
+                    </div>
                     
-                </div>
+                    
+                    
+                </form>
+                
+                
 
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 {% endblock adminsection %}
