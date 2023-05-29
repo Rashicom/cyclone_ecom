@@ -109,6 +109,10 @@ def cycloneadmin_category(request):
 def cycloneadmin_addcategory(request):
     
     if request.method == "POST":
+
+        product_imgs = request.FILES.getlist('product_imgs[]')
+        
+        
         # find the record using this info
         company = request.POST['company']
         model = request.POST['model']
@@ -123,11 +127,7 @@ def cycloneadmin_addcategory(request):
         quantity = request.POST['quantity']
         is_discounted = request.POST['is_discounted']
         
-
-        # product image
-        product_picture = request.FILES.get('product_image_1')
-        product_picture_2 = request.FILES.get('product_image_2')
-        product_picture_3 = request.FILES.get('product_image_3')
+        
         # update all the information , not a good practce
         # only update changed fields using ajax
         print(company)
@@ -136,16 +136,11 @@ def cycloneadmin_addcategory(request):
             product_id = product.objects.get(model = model, company = company)
             new_category = product_category(product_id = product_id,frame_size = frame_size,color = color, break_type = break_type, gear_type = gear_type, mrp = mrp ,seller_price = seller_price, quantity = quantity, is_discounted = is_discounted)      
             new_category.save()  
-            new_image = product_image(category_id = new_category, product_image = product_picture)  
-            new_image.save()
 
-            if product_picture_2:
-                new_image_2 = product_image(category_id = new_category, product_image = product_picture_2)  
-                new_image_2.save()
-
-            if product_picture_3:
-                new_image_3 = product_image(category_id = new_category, product_image = product_picture_3)  
-                new_image_3.save()
+            # iteratively update all pictures in data base from picture list
+            for image in product_imgs:
+                new_image = product_image(category_id = new_category, product_image = image)  
+                new_image.save()
             
         except product.DoesNotExist:
             messages.info(request,"such product does not exist")
