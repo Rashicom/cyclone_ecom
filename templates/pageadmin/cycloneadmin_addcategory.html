@@ -38,7 +38,7 @@
             <hr>
             <br>
             <!-- add category start -->
-            <form enctype="multipart/form-data" method="POST">
+            <form enctype="multipart/form-data" method="POST" id="add_category_form">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col">
@@ -82,7 +82,8 @@
 
                         <!-- frame size -->
                         <label>Frame size</label>
-                        <select class="form-control bg-transparent" name="frame_size" id="exampleFormControlSelect1">
+                        <select class="form-control bg-transparent" name="frame_size" id="frame_size">
+                            <option></option>
                             <option>35</option>
                             <option>38</option>
                             <option>41</option>
@@ -94,11 +95,13 @@
 
 
                         </select>
+                        <p class="text-danger" id="frame_size_error">*This field is requered</p>
                         <br>
 
                         <!--  color -->
                         <label>Color</label>
-                        <select class="form-control bg-transparent" name="color" id="exampleFormControlSelect1">
+                        <select class="form-control bg-transparent" name="color" id="color">
+                            <option></option>
                             <option>black</option>
                             <option>white</option>
                             <option>blue</option>
@@ -109,6 +112,7 @@
                             <option>violet</option>
                             
                         </select>
+                        <p class="text-danger" id="color_error">*This field is requered</p>
                     </div>
                     <div class="col">
 
@@ -120,12 +124,13 @@
                             <option value="hydroulic break">hydroulic break</option>
                             
                         </select>
+                        
                         <br>
 
                         <!-- gear type -->
                         <label>Gear type</label>
-                        <input type="text" name="gear_type" class="bg-transparent prodctfld d-block" placeholder="Enter company name">
-                        
+                        <input type="text" name="gear_type" id="gear_type" class="bg-transparent prodctfld d-block" placeholder="Enter company name">
+                        <p class="text-danger" id="gear_type_error">*This field is requered</p>
                     </div>
                 </div>
                 <br><br>    
@@ -135,7 +140,8 @@
                 <h5>Image section</h5>
                 <hr>
                 <br>
-                <input type="file" name="product_imgs[]" multiple="multiple">
+                <input type="file" name="product_imgs[]" id="product_imgs" multiple="multiple">
+                <p class="text-danger" id="product_imgs_error">This field is requered</p>
                 <br><br>
 
                 <br>
@@ -147,33 +153,39 @@
 
                 <!-- mrp -->
                 <label>MRP</label>
-                <input type="text" name="mrp" class="bg-transparent prodctfld d-block" placeholder="Enter company name">
+                <input type="text" name="mrp" id="mrp" class="bg-transparent prodctfld d-block" placeholder="Enter company name">
+                <p class="text-danger" id="mrp_error">This field is requered</p>
                 <br>
 
                 <!-- selling price -->
                 <label>Selling price</label>
-                <input type="text" name="seller_price" class="bg-transparent prodctfld d-block" placeholder="Enter company name">
+                <input type="text" name="seller_price" id="seller_price" class="bg-transparent prodctfld d-block" placeholder="Enter company name">
+                <p class="text-danger" id="seller_price_error">This field is requered</p>
                 <br>
 
                 <!-- quantity -->
                 <label>Quantity</label>
-                <input type="text" name="quantity" class="bg-transparent prodctfld d-block" placeholder="Enter company name">
+                <input type="text" name="quantity" id="quantity" class="bg-transparent prodctfld d-block" placeholder="Enter company name">
+                <p class="text-danger" id="quantity_error">This field is requered</p>
                 <br>
 
                 <!-- is discounted -->
                 <label for="">is the product in discount category ?</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="is_discounted" id="flexRadioDefault1" value="True">
+                    <input class="form-check-input" type="radio" name="is_discounted" value="True">
                     <label class="form-check-label" for="flexRadioDefault1">
                       Yes
                     </label>
                 </div>
+                
+
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="is_discounted" id="flexRadioDefault1" value="False">
+                    <input class="form-check-input" type="radio" name="is_discounted"  value="False" checked>
                     <label class="form-check-label" for="flexRadioDefault1">
                       No
                     </label>
                 </div>
+                
                   
                  <br>
                 
@@ -189,8 +201,88 @@
 
 <script>
 
+    $("#add_category_form").submit(function(e) {
+        e.preventDefault()
+        
+        var frame_size = $("#frame_size").val()
+        var color = $("#color").val()
+        var gear_type = $("#gear_type").val()
+        var product_imgs = $("#product_imgs").val()
+        var mrp = $("#mrp").val()
+        var seller_price = $("#seller_price").val()
+        var quantity = $("#quantity").val()
+        
+        
+        if (frame_size == "" || color == "" || gear_type == "" || product_imgs == "" || mrp == "" || seller_price == "" || quantity == "") {
+            
+            if (frame_size == "") {
+                $("#frame_size_error").show()
+            }
+            else{
+                $("#frame_size_error").hide()
+            }
+
+            if (color == "") {
+                $("#color_error").show()
+            }
+            else{
+                $("#color_error").hide()
+            }
+
+            if (gear_type == "") {
+                $("#gear_type_error").show()
+            }
+            else{
+                $("#gear_type_error").hide()
+            }
+
+            if (product_imgs == "") {
+                $("#product_imgs_error").show()
+            }
+            else{
+                $("#product_imgs_error").hide()
+            }
+
+            if (mrp == "") {
+                $("#mrp_error").show()
+            }
+            else{
+                $("#mrp_error").hide()
+            }
+
+            if (seller_price == "") {
+                $("#seller_price_error").show()
+            }
+            else{
+                $("#seller_price_error").hide()
+            }
+
+            if (quantity == "") {
+                $("#quantity_error").show()
+            }
+            else{
+                $("#quantity_error").hide()
+
+            }
+
+        }
+        else{
+            $("#add_category_form").submit()
+        }
+    })
+
     $(document).ready(function() {
-        console.log("document load")
+        
+        $("#frame_size_error").hide()
+        $("#color_error").hide()
+        $("#gear_type_error").hide()
+        $("#product_imgs_error").hide()
+        $("#mrp_error").hide()
+        $("#seller_price_error").hide()
+        $("#quantity_error").hide()
+        $("#is_discounted_error").hide()
+        
+
         {% if messages %}
             {% for message in messages %}
             console.log("message")
