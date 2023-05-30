@@ -224,15 +224,12 @@ class cycloneadmin_delete_category(View):
             discontinue_product.save()
             return JsonResponse({'status':200,'message':'category back to available'})
 
-        
-        
 
 
 def cycloneadmin_orders(request):
 
     orders = user_order.objects.values('order_no','email','order_date','payment_status','order_status')
     return render(request,'cycloneadmin_orders.html',{'orders':orders})
-
 
 
 
@@ -408,18 +405,19 @@ class cycloneadmin_order_updation(View):
     def get(self, request):
         order_no = request.GET['order_no']
         order = user_order.objects.get(order_no = order_no)
-        email = request.user.email
         
-        return JsonResponse({"status":200,"order_no":order.order_no,"payment_method":order.payment_method,"payment_status":order.payment_status,"order_status":order.order_status,'email':email,'order_date':order.order_date})
+        return JsonResponse({"status":200,"order_no":order.order_no,"payment_method":order.payment_method,"payment_status":order.payment_status,"order_status":order.order_status,'email':order.email.email,'order_date':order.order_date})
+
 
     def post(self, request):
         order_no = request.POST['order_no']
         update_val = request.POST['update_val']
+        print(update_val)
         try:
             user_order.objects.filter(order_no = order_no).update(order_status = update_val)
         except Exception:
             return JsonResponse({'status':404,'message':'updation filed'})
-        return JsonResponse({'status':200,'message':'updaed'})
+        return JsonResponse({'status':200,'message':'status updaed'})
 
 class cycloneadmin_cancel_order(View):
 

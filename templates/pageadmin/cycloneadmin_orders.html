@@ -54,7 +54,7 @@
                         <td>{{order.email}}</td>
                         <td class="test">{{order.order_date}}</td>
                         <td>{{order.payment_status}}</td>
-                        <td>{{order.order_status}}</td>
+                        <td id="{{order.order_no}}">{{order.order_status}}</td>
                         <td>
                             <button type="button" class="btn btn-primary order_status_btn" value="{{order.order_no}}" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Update</button>
                         </td>
@@ -105,8 +105,16 @@
                         <p>Current shipping status</p>
                         <p id="order_status_p"></p>
                     </div>
-                    <input type="text" id="input_order_update" class="form-control">
-
+                    <select class="form-select" id="input_order_update" aria-label="Default select example">
+                        <option value="Order placed" selected>Order placed</option>
+                        <option value="Order packed by seller">Order packed by seller</option>
+                        <option value="Order reached nesrest">Order reached nesrest</option>
+                        <option value="Out for delivery">Out for delivery</option>
+                        <option value="order delivered">order delivered</option>
+                        <option value="order returning">order returning</option>
+                        <option value="order returned">order returned</option>
+                        <option value="order cancelled">order cancelled</option>
+                    </select>
 
                 </div>
                 <div class="modal-footer">
@@ -160,6 +168,7 @@
         })
     })
 
+
     $("#order_update_btn").on('click', function() {
         console.log("updation btton clicked")
         order_no = $("#order_no_p").text()
@@ -173,8 +182,8 @@
             data:data,
             success: function(data) {
                 console.log("success")
-                console.log(data.status)
-                console.log(data.message)
+                toastr.info(data.message)
+                $("#"+order_no).text(update_val)
             }
         })
         
