@@ -57,7 +57,7 @@
                         </div>
 
                     </div>
-                    <p id="report_msg"></p>
+                    <p class="text-danger" id="report_msg"></p>
                 </div>
             </div>
             
@@ -69,31 +69,31 @@
 
                           <tr>
                             <td>total shipments</td>
-                            <td id="total_shipments">data</td>
+                            <td id="total_shipments"></td>
                           </tr>
                           <tr>
                             <td>total business</td>
-                            <td id="total_business">data</td>
+                            <td id="total_business"></td>
                           </tr>
                           <tr>
                             <td>total cod order</td>
-                            <td id="total_cod_order">data</td>
+                            <td id="total_cod_order"></td>
                           </tr>
                           <tr>
                             <td>total payed orders</td>
-                            <td id="total_payed_orders">data</td>
+                            <td id="total_payed_orders"></td>
                           </tr>
                           <tr>
                             <td>canceled orders</td>
-                            <td id="canceled_orders">data</td>
+                            <td id="canceled_orders"></td>
                           </tr>
                           <tr>
                             <td>total users</td>
-                            <td id="total_users">data</td>
+                            <td id="total_users"></td>
                           </tr>
                           <tr>
                             <td>total product quantity</td>
-                            <td id="total_product_quantity">data</td>
+                            <td id="total_product_quantity"></td>
                           </tr>
 
                         </tbody>
@@ -112,13 +112,14 @@
         var from_date = $("#report_from").val()
         var to_date = $("#report_to").val()
         
-        if (from_date == "" || to_date == "") {
-            $("#report_msg").text("Give a date")
+        if (from_date == "" || to_date == "" || to_date < from_date) {
+            $("#report_msg").text("Invalied date")
             return
         }
         else{
             $("#report_msg").text("")
         }
+
         data = {from_date:from_date, to_date:to_date}
 
         $.ajax({
@@ -148,7 +149,7 @@
         var from_date = $("#report_from").val()
         var to_date = $("#report_to").val()
 
-        if (from_date == "" || to_date == "") {
+        if (from_date == "" || to_date == "" || to_date < from_date) {
             toastr.warning("please provide valied dates")
             return
         }
@@ -157,12 +158,13 @@
         window.location.href = url;
     })
 
+
     $("#csv_report_generator").on('click', function() {
         console.log("csv_generator")
         var from_date = $("#report_from").val()
         var to_date = $("#report_to").val()
         
-        if (from_date == "" || to_date == "") {
+        if (from_date == "" || to_date == "" || to_date < from_date) {
             toastr.warning("please provide valied dates")
             return
         }
