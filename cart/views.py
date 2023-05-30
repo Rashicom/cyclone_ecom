@@ -287,11 +287,22 @@ class cyclone_coupen_check(View):
 class cyclone_payment_success(View):
 
     def get(self, request,order_no):
+        email = request.user.email
         delivery_date = datetime.datetime.now().date() + datetime.timedelta(days=7)
         order_status = user_order.objects.get(order_no = order_no)
         order_status.payment_status = "payed"
         order_status.order_status = "order placed"
         order_status.save()
+
+        # reducing stock quantity of ordered products
+        order_items = order_list.objects.filter(order_no = order_no).values("order_no","order_quantity","category_id")
+        
+        for item in order_items:
+            ordered_product = product_category.objects.get(id = item['category_id'])
+            ordered_product.quantity = int(ordered_product.quantity) - int(item['order_quantity'])
+            ordered_product.save()
+        # clear user cart after order success
+        cart_items.objects.filter(email = email).delete()
 
         return render(request,'cyclone_payment_success.html',{"order_no":order_no,"delivery_date":delivery_date})
 
@@ -305,11 +316,23 @@ class cyclone_cod_success(View):
 class cyclone_cod_placeorder(View):
 
     def post(self, request):
+        email = request.user.email
         order_no = request.POST["order_no"]
         order_status = "order placed"
         new_order = user_order.objects.get(order_no = order_no)
         new_order.order_status = order_status
         new_order.save()
+
+        # reducing stock quantity of ordered products
+        order_items = order_list.objects.filter(order_no = order_no).values("order_no","order_quantity","category_id")
+        
+        for item in order_items:
+            ordered_product = product_category.objects.get(id = item['category_id'])
+            ordered_product.quantity = int(ordered_product.quantity) - int(item['order_quantity'])
+            ordered_product.save()
+        # clear user cart after order success
+        cart_items.objects.filter(email = email).delete()
+
         return JsonResponse({'status':200,'message':'order placed'})
         
 

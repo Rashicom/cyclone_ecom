@@ -195,10 +195,15 @@
         $("#perfomance_description_error").hide()
         $("#precision_description_error").hide()
 
+
+        // product submittion redirected to this page with message
         {% if messages %}
             {% for message in messages %}
-            console.log("message")
-            toastr.info("{{message}}")
+                {% if message.tags == 'info' %}
+                    toastr.info("{{message}}")
+                {% elif message.tags == 'warning' %}
+                    toastr.warning("{{message}}")
+                {% endif %}
             {% endfor %}
         {% endif %}
     })

@@ -247,7 +247,7 @@ class cycloneadmin_addproduct(View):
 
         # fetch data if the request is post
         if request.method == "POST":
-            
+
             # for product table
             company = request.POST['company']
             model = request.POST['model']
@@ -263,6 +263,12 @@ class cycloneadmin_addproduct(View):
             perfomance_description = request.POST['perfomance_description']
             precision_description = request.POST['precision_description']
             
+            # checking the product is already exist or not
+            if product.objects.filter(company = company, model = model).exists():
+                messages.warning(request,"Product already exist")
+                return redirect("addproduct")
+
+
             newproduct = product(company = company, model = model, wheel_size = wheel_size, suspention = suspention, internal_cabling = internal_cabling, bike_type = bike_type, gender_cat = gender_cat)
             newproduct.save()
             newdescription = product_description(product_id = newproduct, terrain_description = terrain_description, strength_description = strength_description, perfomance_description = perfomance_description, precision_description = precision_description)
