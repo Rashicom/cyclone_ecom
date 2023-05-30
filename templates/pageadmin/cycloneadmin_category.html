@@ -52,8 +52,8 @@
                     <th scope="col">FRAME SIZE</th>
                     <th scope="col">BREAK TYPE</th>
                     <th scope="col">COLOR</th>
-                    <th scope="col">GEAR TYPE</th>
                     <th scope="col">STOCK</th>
+                    <th scope="col">STATUS</th>
 
                     <th scope="col"></th>
                     <th scope="col"></th>
@@ -73,14 +73,27 @@
                     <td>{{category.frame_size}}</td>
                     <td>{{category.break_type}}</td>
                     <td>{{category.color}}</td>
-                    <td>{{category.gear_type}}</td>
                     <td>{{category.quantity}}</td>
+                    <td id="{{category.id}}">
+                      {% if category.is_discontinued %}
+                        Discontinued
+                      {% else %}
+                        Available
+                      {% endif %}
+                    </td>
+                    
                     <!-- edit and remove button -->
                     <td>
                       <a class="btn btn-outline-success" href="{% url 'editcategory' category.id %}" role="button">Edit</a>
                     </td>
                     <td>
-                      <button type="button" class="btn btn-outline-danger delete_category_item" data-id={{category.id}} >Delete</button>
+                      <button type="button" class="btn btn-outline-danger delete_category_item" data-id={{category.id}} >
+                        {% if category.is_discontinued %}
+                          Add
+                        {% else %}
+                          Discontinue
+                        {% endif %}
+                      </button>
                     </td>
                   </tr>
                   {% endfor %}
@@ -109,8 +122,9 @@
   //delete category  
   $(".delete_category_item").on('click', function() {
     console.log("delete category item")
-    var category_id = $(this).data('id')
     
+    var category_id = $(this).data('id')
+    var dlt_button = $(this)
     data = {category_id:category_id}
 
     $.ajax({
@@ -124,7 +138,16 @@
         console.log("code run success")
         console.log(data.status)
         toastr.info(data.message,{timeOut: 500})
-      
+
+        if (data.message == "category discontinued") {
+          $("#"+category_id).text("Discontinued")
+          $(dlt_button).html("Add")
+        }
+        else{
+          $("#"+category_id).text("Available")
+          $(dlt_button).html("Discontinue")
+        }
+        
       }
     })
 

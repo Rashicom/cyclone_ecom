@@ -87,6 +87,7 @@ class product_category(models.Model):
     is_discounted = models.BooleanField(default=False)
     added_date = models.DateField(auto_now=True)
     quantity = models.IntegerField()
+    is_discontinued = models.BooleanField(default=False)
 
 # for picture
 # single category have many pictures

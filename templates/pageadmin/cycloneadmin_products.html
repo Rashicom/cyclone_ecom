@@ -65,7 +65,7 @@
                     <!-- edit and remove button -->
                     <td>
                       <a class="btn btn-outline-success" href="{% url 'editproduct' product.product_id %}" role="button">Edit</a>
-                      <a class="btn btn-outline-danger" href="{% url 'deleteproduct' product.product_id %}" role="button">Remove</a>
+                      <button class="btn btn-outline-danger product_discontinue_btn" value={{product.product_id}} type="button">Discontinue</button>
                     </td>
 
                   </tr>
@@ -81,5 +81,30 @@
     </div>
 
 </div>
+
+<script>
+
+  $(".product_discontinue_btn").on('click', function() {
+    console.log("Discontinue btn")
+    
+    var product_id = $(this).val()
+    console.log(product_id)
+
+    data = {product_id:product_id}
+    
+    $.ajax({
+      method: "GET",
+      url: "{% url 'discontinueproduct' %}",
+      data: data,
+      
+      success: function(data) {
+        console.log("code run success")
+        toastr.info(data.message,{timeOut: 500})
+
+      }
+    })
+  })
+
+</script>
 
 {% endblock adminsection %}

@@ -99,8 +99,7 @@ def cycloneadmin_category(request):
     # fetching data from database to  list out categories
     # product and product_catogories are joined to fetch the data
     
-    # categories = product.objects.select_related("product_id").values("product_id","company","model","product_category__frame_size","product_category__break_type","product_category__color","product_category__gear_type","product_category__quantity","product_category__id")
-    categories = product_category.objects.values("product_id__company","product_id__model","frame_size","break_type","color","gear_type","quantity","id")
+    categories = product_category.objects.values("product_id__company","product_id__model","frame_size","break_type","color","is_discontinued","quantity","id")
     
     return render(request,'cycloneadmin_category.html',{"categories":categories})
 
@@ -204,14 +203,29 @@ class cycloneadmin_editcategory(View):
         return redirect("category")
 
 
+# product continue / discontinue
 class cycloneadmin_delete_category(View):
 
     def get(self, request):
         
         category_id = request.GET['category_id']
-        product_category.objects.get(id = category_id).delete()
-        return JsonResponse({'status':200,'message':'category successfully deleted'})
 
+        # fetch product object
+        discontinue_product = product_category.objects.get(id = category_id)
+        
+        # if product is available set to true / discontinue
+        if discontinue_product.is_discontinued == False:
+            discontinue_product.is_discontinued = True
+            discontinue_product.save()
+            return JsonResponse({'status':200,'message':'category discontinued'})
+        # else set to false / continue
+        else:
+            discontinue_product.is_discontinued = False
+            discontinue_product.save()
+            return JsonResponse({'status':200,'message':'category back to available'})
+
+        
+        
 
 
 def cycloneadmin_orders(request):
@@ -372,10 +386,21 @@ class cycloneadmin_deletecoupen(View):
 
 
 
-# delete product recorde
-def cycloneadmin_deleteproduct(request,product_id):
-    product.objects.filter(product_id = product_id).delete()
-    return redirect("products")
+# dicontinue or continue product/ all categories
+
+class cycloneadmin_discontinuproduct(View):
+
+    def get(self,request):
+        print('didcontinue hit')
+        """
+        when a product need to be discontinued we have to set is_discontinue
+        filds of every category of the pericular product as True
+        """
+
+        product_id = request.GET['product_id']
+        product_dis_continue = product.objects.get(product_id = product_id)
+        product_category.objects.filter(product_id = product_dis_continue).update(is_discontinued = True)
+        return JsonResponse({'status':200,'message':'product discontinued'})
 
 
 class cycloneadmin_order_updation(View):
