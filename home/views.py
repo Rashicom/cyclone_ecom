@@ -14,6 +14,7 @@ from django.db.models import Avg
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from django.db.models import Q
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Ai model for text sentiment
 from textblob import TextBlob
@@ -259,7 +260,9 @@ class cyclone_blog(View):
     def get(self,request):
         return render(request,'cyclone_blog.html')
 
-class cyclone_tracking(View):
+class cyclone_tracking(LoginRequiredMixin,View):
+    login_url = "userlogin"
+
     def get(self,request):
         return render(request,'cyclone_tracking.html')
     
@@ -693,7 +696,9 @@ class cyclone_category_filter(View):
         
 
 
-class cyclone_track_order(View):
+# order tracking
+class cyclone_track_order(LoginRequiredMixin,View):
+    login_url = "userlogin"
 
     def get(self, requset):
         email = requset.user.email

@@ -44,6 +44,7 @@
             <hr>
             
             <!-- orders iteratively listing start -->
+
             {% if order_data %}
             {% for order in order_data %}
             <div class="accordion accordion-flush border border-success border-4" id="accordionFlushExample">
@@ -89,6 +90,7 @@
                                 {% endfor %}
 
                               <!-- order items iteratively list here start -->
+                            
                             </tbody>
                         </table>
                         <br>
@@ -130,7 +132,7 @@
             {% endif %}
             <!-- orders iteratively listing end -->
 
-
+            
             <!-- Modal -->
             <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -142,6 +144,32 @@
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
+
+                          <table class="table">
+                            <thead>
+                              <tr>
+
+                                <th scope="col">Model</th>
+                                <th scope="col">Price</th>
+                                
+                              </tr>
+                            </thead>
+                            <tbody>
+                              
+                              <!-- order item iteratively list here start -->
+                              
+                              <tr>
+                                
+                                <td>name</td>
+                                <td>Thornton</td>
+                                
+                              </tr>
+                              
+                              <!-- order item iteratively list here start -->
+
+                            </tbody>
+                          </table>
+
                             <label for="" class="form-label">Reason of cancel</label>
                             <input type="text" class="form-control" id="reason_of_cancel" aria-describedby="emailHelp">
                             <label for="" class="form-label">Payment return option</label>
@@ -150,13 +178,14 @@
                                 <option value="1">Return to account</option>
                                 <option value="2">Order another</option>
                             </select>
+
                         </div>
                     </div>
                     <div class="modal-footer">
                     <button type="button" id="order_cancel_btn" class="btn btn-secondary" data-bs-dismiss="modal">Submit</button>
                     </div>
                 </div>
-                </div>
+              </div>
             </div>
             
 
@@ -169,9 +198,11 @@
 <script>
 
     $(".order_cancel").on('click', function() {
-        console.log("first click")
+    
         let test = $(this).val()
         $("#order_no_p").text(test)
+
+      
     })
 
     $("#order_cancel_btn").on('click', function() {

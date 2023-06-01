@@ -16,7 +16,7 @@
               <a href="index.html">Home</a>
               <a href="checkout.html">Product Checkout</a>
             </div>
-          </div>
+          </div>  
         </div>
       </div>
     </section>
@@ -32,7 +32,7 @@
             <div class="card text-dark bg-light mb-3">
                 <div class="card-header">Order no: {{order_no}}</div>
 
-                <!-- iterateively display oroducts -->
+                <!-- iterateively display order products -->
                 {% if cart_list %}
                 {% for item in cart_list %}
                 <div class="card-body">
@@ -51,7 +51,7 @@
                 </div>
                 {% endfor %}
                 {% endif %}
-                <!-- iterateively display oroducts -->
+                <!-- iterateively display order products -->
 
                 {% for price in address_data %}
                 <div class="card-body">

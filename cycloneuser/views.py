@@ -9,6 +9,7 @@ from twilio.rest import Client
 from django.conf import settings
 from django.db.models import Sum
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # for generating pdf
 import io
@@ -20,7 +21,8 @@ from django.http import FileResponse
 
 # Create your views here.
 
-class cyclone_user(View):
+class cyclone_user(LoginRequiredMixin,View):
+    login_url = "userlogin"
 
     def post(self,request):
         email = request.user
@@ -41,7 +43,8 @@ class cyclone_user(View):
 
 
 # user order details
-class cyclone_user_order(View):
+class cyclone_user_order(LoginRequiredMixin,View):
+    login_url = "userlogin"
 
     def get(self, request):
 
@@ -73,7 +76,8 @@ class cyclone_user_order(View):
 
 
 # user wallet
-class cyclone_my_wallet(View):
+class cyclone_my_wallet(LoginRequiredMixin,View):
+    login_url = "userlogin"
 
     def get(self, request):
         
@@ -84,13 +88,15 @@ class cyclone_my_wallet(View):
         wallet_balance = user_wallet_account.objects.get(email = request.user.email)
         return render(request,'cyclone_my_wallet.html',{'wallet_balance':wallet_balance})
 
+
+
 # order invoice download
-class cyclone_order_invoice_download(View):
+class cyclone_order_invoice_download(LoginRequiredMixin,View):
+    login_url = "userlogin"
 
     def get(self, request, order_no):
         
-        # fetch order details
-            
+        # fetch order details    
         order_quantity = order_list.objects.filter(order_no = order_no).aggregate(Sum('order_quantity'))['order_quantity__sum']
         order_items = order_list.objects.filter(order_no = order_no).values("category_id__product_id__model","category_id__frame_size","category_id__color","order_quantity","category_id__seller_price")
         
@@ -122,7 +128,9 @@ class cyclone_order_invoice_download(View):
 
 
 # add new address
-class cyclone_addnewaddress(View):
+class cyclone_addnewaddress(LoginRequiredMixin,View):
+    login_url = "userlogin"
+
 
     def post(self,request):
         email = request.user.email
@@ -196,7 +204,10 @@ class cyclone_mobile_otp_generator(View):
     
 
 
-class user_cancel_order(View):
+# cancell order
+class user_cancel_order(LoginRequiredMixin,View):
+    login_url = "userlogin"
+
 
     def post(self,request):
         order_no = request.POST['order_no']
@@ -236,14 +247,21 @@ class cyclone_user_password_reset(View):
         return redirect("userlogin")
         
 
+class cyclone_deleteaddress(LoginRequiredMixin,View):
+    login_url = "userlogin"
 
-def cyclone_deleteaddress(request):
-    email = request.user.email
-    user = CustomUser.objects.get(email = email)
-    address_id = request.POST['address_id']
-    user_address.objects.filter(email = user,id = address_id).delete()
-    return JsonResponse({'status':'address removed'})
 
-def cyclone_userlogout(request):
-    logout(request)
-    return redirect("home")
+    def get(self,request):
+        email = request.user.email
+        user = CustomUser.objects.get(email = email)
+        address_id = request.POST['address_id']
+        user_address.objects.filter(email = user,id = address_id).delete()
+        return JsonResponse({'status':'address removed'})
+
+
+class cyclone_userlogout(LoginRequiredMixin,View):
+    login_url = "userlogin"
+
+    def get(self,request):
+        logout(request)
+        return redirect("home")

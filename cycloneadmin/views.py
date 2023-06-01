@@ -10,14 +10,19 @@ from django.core import serializers
 from datetime import date, timedelta
 from django.db.models import Sum, Count
 import json
+from django.http import FileResponse, HttpResponse
+
+# for pdf generation
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
-from django.http import FileResponse, HttpResponse
 import io
 import csv
 
+from django.contrib.auth.decorators import user_passes_test
+
 # Create your views here.
+
 
 def cycloneadmin_login(request):
 
@@ -45,7 +50,9 @@ def cycloneadmin_logout(request):
     return redirect("login")
 
 
+
 class cycloneadmin_dashboard(View):
+
 
     def get(self,request):
         user_count = CustomUser.objects.filter(is_superuser = False).count()   
@@ -536,3 +543,4 @@ class csv_report_downloader(View):
         return response
 
     
+

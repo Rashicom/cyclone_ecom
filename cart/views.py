@@ -8,6 +8,7 @@ from django.contrib.sessions.models import Session
 import razorpay
 from django.conf import settings
 import datetime
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
@@ -60,7 +61,9 @@ class cyclone_cart(View):
 
 
 
-class cyclone_checkout(View):
+class cyclone_checkout(LoginRequiredMixin,View):
+    login_url = "userlogin"
+
 
     def post(self,request):
         print("order request hit")
@@ -200,8 +203,9 @@ class quantitycheck(View):
     
 
 
-class cyclone_ordersummery(View):
-    
+class cyclone_ordersummery(LoginRequiredMixin,View):
+    login_url = "userlogin"
+
     def post(self,request):
         # post request came here after payment done
         # then update order products in to table
@@ -253,8 +257,11 @@ class cyclone_ordersummery(View):
         payment = client.order.create(data=DATA)
         print(payment)
         return render(request,'cyclone_order_summery.html',{"address_data":address, "cart_list":cart_list,"order_no":order_no,"seller_price":seller_price,"saved":saved,"discount":discount,"payment":payment,"key_id":settings.RAZORPAY_KEY_ID})
-    
-class cyclone_coupen_check(View):
+
+
+  
+class cyclone_coupen_check(LoginRequiredMixin,View):
+    login_url = "userlogin"
     
     # user given coupen no varification
     def post(self,request):
@@ -284,7 +291,9 @@ class cyclone_coupen_check(View):
             return JsonResponse({'status':404,'message':'invalied coupen'})
         
 
-class cyclone_payment_success(View):
+class cyclone_payment_success(LoginRequiredMixin,View):
+    login_url = "userlogin"
+
 
     def get(self, request,order_no):
         email = request.user.email
@@ -306,14 +315,18 @@ class cyclone_payment_success(View):
 
         return render(request,'cyclone_payment_success.html',{"order_no":order_no,"delivery_date":delivery_date})
 
+
 # cod sucsess page rendering
-class cyclone_cod_success(View):
-    
+class cyclone_cod_success(LoginRequiredMixin,View):
+    login_url = "userlogin"
+
     def get(self, request, order_no):
         return render(request,'cyclone_cod_succuss.html')
-        
+
+
 # cod order placing
-class cyclone_cod_placeorder(View):
+class cyclone_cod_placeorder(LoginRequiredMixin,View):
+    login_url = "userlogin"
 
     def post(self, request):
         email = request.user.email
