@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
-from home.models import CustomUser,product,product_category,product_description,wishlist_items,cart_items,product_image,guest_cart_items,guest_wishlist_items,product_review, user_order, subscription
+from home.models import CustomUser,product,product_category,product_description,wishlist_items,cart_items,product_image,guest_cart_items,guest_wishlist_items,product_review, user_order, subscription, user_wallet_account
 from django.contrib import messages
 from django.conf import settings
 from django.core.mail import send_mail
@@ -106,8 +106,8 @@ class cyclone_login(View):
         # fetching cedencials from request
         email = request.POST["email"]
         password = request.POST["password"]
-        # validating the user is exixt or not
         
+        # validating the user is exixt or not
         user = authenticate(email = email, password = password)
         if user is not None:
             """
@@ -315,8 +315,16 @@ class cyclone_signup(View):
         # password matching need tobe checked in the frontend
         # already check the emaile exist or not when curser leave using ajax
 
+        # creating user
         user = CustomUser.objects.create_user(email=email,password=password1)
+
+        # initialize user wallet with 0 balance
+        # defultly amoumt set to zeto
+        new_wallet = user_wallet_account(email = user)
+        new_wallet.save()
+
         return   redirect('userlogin')
+    
     
     def get(self,request):
         return render(request,'cyclone_signup.html')

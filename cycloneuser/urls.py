@@ -11,7 +11,8 @@ urlpatterns = [
     path('userorder/',views.cyclone_user_order.as_view(),name='userorder'),
     path('usercancelorder/',views.user_cancel_order.as_view(),name='usercancelorder'),
     path('userpasswordreset/',views.cyclone_user_password_reset.as_view(),name='userpasswordreset'),
-    path('orderinvoicedownload/<str:order_no>',views.cyclone_order_invoice_download.as_view(), name='orderinvoicedownload')
+    path('orderinvoicedownload/<str:order_no>',views.cyclone_order_invoice_download.as_view(), name='orderinvoicedownload'),
+    path('mywallet',views.cyclone_my_wallet.as_view(),name='mywallet')
     
 
 ]

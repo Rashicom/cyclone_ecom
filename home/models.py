@@ -162,7 +162,12 @@ class product_review(models.Model):
 # subsctiption table
 class subscription(models.Model):
     email = models.EmailField(max_length=254)
-    
+
+
+# user wallet account
+class user_wallet_account(models.Model):
+    email = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+    wallet_balance = models.IntegerField(default=0)
 
 
 """<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<GUEST USER>>>>>>>>>>>>>>>>>>>>>>>>>>"""

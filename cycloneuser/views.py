@@ -3,7 +3,7 @@ from django.contrib.auth import  authenticate,login, logout
 from django.views import View
 import random
 from django.http.response import JsonResponse
-from home.models import CustomUser,product,product_category,product_description,wishlist_items,cart_items,product_image,user_address,user_order,order_list,canceled_orders
+from home.models import CustomUser,product,product_category,product_description,wishlist_items,cart_items,product_image,user_address,user_order,order_list,canceled_orders, user_wallet_account
 from django.core.exceptions import ObjectDoesNotExist
 from twilio.rest import Client
 from django.conf import settings
@@ -70,6 +70,19 @@ class cyclone_user_order(View):
         return render(request, 'cyclone_user_order.html', {"order_data":order_data})
 
 
+
+
+# user wallet
+class cyclone_my_wallet(View):
+
+    def get(self, request):
+        
+        if not user_wallet_account.objects.filter(email = request.user.email).exists():
+            new_wallet = user_wallet_account(email = CustomUser.objects.get(email = request.user.email))
+            new_wallet.save()
+        
+        wallet_balance = user_wallet_account.objects.get(email = request.user.email)
+        return render(request,'cyclone_my_wallet.html',{'wallet_balance':wallet_balance})
 
 # order invoice download
 class cyclone_order_invoice_download(View):
