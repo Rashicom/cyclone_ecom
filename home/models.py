@@ -208,4 +208,4 @@ class applyed_coupen(models.Model):
 
 
 # Create your models here.
-
+    

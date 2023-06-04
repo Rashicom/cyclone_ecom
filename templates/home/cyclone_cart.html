@@ -86,6 +86,7 @@
                           <!-- hidden elements to calculate total price and mrp -->
                           <p class="multiplied_price" hidden>{{item.mult_price}}</p>
                           <p class="item_mrp" hidden>{{item.mlt_mrp}}</p>
+                          <p class="individual_mrp" hidden>{{item.mrp}}</p>
 
                         </div>
                         <div class="">
@@ -279,9 +280,11 @@
                           var item = $(this)
                           // total quantity iteratively incremented
                           // total price iteratively added item quantity times item price
+
                           total_quantity += parseInt(item.find(".quantity_evnt").val())
                           total_price += parseInt(item.find(".price_event").text()) * parseInt(item.find(".quantity_evnt").val())
-                          total_mrp += parseInt(item.find(".item_mrp").text()) * parseInt(item.find(".quantity_evnt").val())
+                          total_mrp += parseInt(item.find(".individual_mrp").text()) * parseInt(item.find(".quantity_evnt").val())
+        
 
                       })  
 
@@ -293,6 +296,7 @@
                       // discount is the defference of mrp and price
                       $("#total_discount").text(total_mrp - total_price)
                       
+    
                       //checking total price to find delivery charge applictble or not
                       if (total_price < 25000) {
                           $("#delivery_charge").text(249)
@@ -329,6 +333,10 @@
         let input = $(this).siblings('.quantity_evnt').val()
         let category_id = $(this).siblings(".quantity_evnt").data('id')
         let row = $(this).siblings('.quantity_evnt')
+        
+        if (input-1 < 1) {
+          return
+        }
         qty_ajax_check(category_id, parseInt(input)-1,row)
         
         

@@ -510,7 +510,7 @@ class pdf_report_downloader(View):
 class csv_report_downloader(View):
     
     def get(self, request):
-
+               
         # fetching data from the url
         from_date = request.GET['from_date']
         to_date = request.GET['to_date']
