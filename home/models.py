@@ -137,6 +137,7 @@ class user_order(models.Model):
     delivery_charge = models.IntegerField()
     payment_amount = models.IntegerField()
 
+
 # user orders
 class order_list(models.Model):
     order_no = models.ForeignKey(user_order,on_delete=models.CASCADE)
@@ -144,6 +145,7 @@ class order_list(models.Model):
     order_quantity = models.IntegerField(default=1)
 
 
+# cancelled order
 class canceled_orders(models.Model):
     order_no = models.ForeignKey(user_order, on_delete=models.CASCADE)
     reason_of_cancel = models.TextField()

@@ -80,12 +80,13 @@
                             <tbody>
                                 <!-- order items iteratively list here start -->
                                 {% for item in order.order_items %}
-                                <tr>
-                                    <td>{{item.category_id__product_id__model}}</td>
+                                <tr class="items_each">
+                                    <td class="category_id_id" hidden>{{item.category_id__id}}</td>
+                                    <td class="item_mode">{{item.category_id__product_id__model}}</td>
                                     <td>{{item.category_id__frame_size}}</td>
                                     <td>{{item.category_id__color}}</td>
-                                    <td>{{item.order_quantity}}</td>
-                                    <td>{{item.category_id__seller_price}}</td>
+                                    <td class="item_quantity">{{item.order_quantity}}</td>
+                                    <td class="item_selle_Price">{{item.category_id__seller_price}}</td>
                                 </tr>
                                 {% endfor %}
 
@@ -146,26 +147,10 @@
                         <div class="mb-3">
 
                           <table class="table">
-                            <thead>
-                              <tr>
-
-                                <th scope="col">Model</th>
-                                <th scope="col">Price</th>
-                                
-                              </tr>
-                            </thead>
-                            <tbody>
+                            
+                            <tbody class="item_row">
                               
-                              <!-- order item iteratively list here start -->
-                              
-                              <tr>
-                                
-                                <td>name</td>
-                                <td>Thornton</td>
-                                
-                              </tr>
-                              
-                              <!-- order item iteratively list here start -->
+                              <!-- data listed here using jquery when this pop ups -->
 
                             </tbody>
                           </table>
@@ -197,21 +182,48 @@
 
 <script>
 
+    // updating order return popup order item list
     $(".order_cancel").on('click', function() {
-    
+        console.log("cancell pop up")
         let test = $(this).val()
         $("#order_no_p").text(test)
+        
+        $(".item_row").empty()
+
+        $(".items_each").each(function() {
+
+          var category_id_id = $(this).find(".category_id_id").text()
+          var item_model = $(this).find(".item_mode").text()
+          var item_quantity = $(this).find(".item_quantity").text()
+          var item_selle_Price = $(this).find(".item_selle_Price").text()
+          
+          var td_input = "<input type="+"checkbox"+" value=" +category_id_id+ " class=" +"categoryid_id"+ " >"
+          
+          var item_table_row = "<tr><td>" + td_input + "<td/><td>" + item_model + "<td/><td>" + item_selle_Price + "<td/><td>" + item_quantity + "</td><tr/>" 
+          $(".item_row").append(item_table_row)
+        
+        })
+        
 
       
     })
 
     $("#order_cancel_btn").on('click', function() {
-        console.log("cancel cutton clicked")
+        console.log("cancel button clicked")
+
+        var cancel_item_id = new Array()
+        $(".categoryid_id").each(function() {
+   
+          cancel_item_id.push($(this).val())
+          
+        })
+
+        console.log(cancel_item_id)
         let order_no = $("#order_no_p").text()
         let reason_of_cancel = $("#reason_of_cancel").val()
         let payment_return_option = $("#payment_return_option").val()
         
-        data = {order_no:order_no, reason_of_cancel:reason_of_cancel,payment_return_option:payment_return_option,csrfmiddlewaretoken: '{{ csrf_token }}'}
+        data = {"order_no":order_no, "cancel_item_id[]":cancel_item_id, "reason_of_cancel":reason_of_cancel,"payment_return_option":payment_return_option,"csrfmiddlewaretoken": '{{ csrf_token }}'}
 
         $.ajax({
             method:"POST",
@@ -223,7 +235,6 @@
                 toastr.options.timeOut = 500
                 toastr.info(data.message)
             }
-
 
         })
         

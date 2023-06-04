@@ -67,7 +67,7 @@ class cyclone_user_order(LoginRequiredMixin,View):
             order_no = order.order_no
             order_status = order.order_status
             order_quantity = order_list.objects.filter(order_no = order_no).aggregate(Sum('order_quantity'))['order_quantity__sum']
-            order_items = order_list.objects.filter(order_no = order_no).values("category_id__product_id__model","category_id__frame_size","category_id__color","order_quantity","category_id__seller_price")
+            order_items = order_list.objects.filter(order_no = order_no).values("category_id__id","category_id__product_id__model","category_id__frame_size","category_id__color","order_quantity","category_id__seller_price")
             order_data.append({"order_no":order_no,"order_status":order_status,"order_quantity":order_quantity,"order_items":order_items})
 
         return render(request, 'cyclone_user_order.html', {"order_data":order_data})
@@ -211,9 +211,14 @@ class user_cancel_order(LoginRequiredMixin,View):
 
     def post(self,request):
         order_no = request.POST['order_no']
+
         reason_of_cancel = request.POST['reason_of_cancel']
         payment_return_option = request.POST['payment_return_option']
         order_no_instance = user_order.objects.get(order_no = order_no)
+        
+        # cancellation items list
+        cancel_item_id = request.POST.getlist('cancel_item_id[]')
+        
 
         try:
             new_cancel_order = canceled_orders(order_no = order_no_instance,reason_of_cancel = reason_of_cancel,payment_return_option = payment_return_option)
