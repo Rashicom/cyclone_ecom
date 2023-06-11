@@ -2,6 +2,24 @@
 <script>
     toastr.options.timeOut = 500
     
+    $(document).ready(function() {
+        $(".dropdownsearch").hide()
+    })
+
+    $(document).on('click', function() {
+        $(".dropdownsearch").hide()
+    })
+
+    $('.dropdownsearch').on('click', 'a.dropsuggesion', function() {
+        console.log("search dropdown")
+        var value = $(this).text()
+        console.log(value)
+        $("#main_search_input").val(value).trigger('input')
+         
+
+    })
+   
+
     $("#otpbtn").click(function() {
         console.log("button clicked")
         let email = $("#email").val()
@@ -46,6 +64,7 @@
 
         })
     })
+
 
     $(".addtocartbtn").click(function() {
         console.log("add to cart btn clicked")
@@ -111,8 +130,48 @@
         })
     })
     
-
     
+    
+
+    // main search auto suggestion
+    $("#main_search_input").on('input', function() {
+        console.log("input value changed")
+        var search_for = $(this).val()
+        
+        
+        // make sure that the field is not empty
+        if (search_for == "") {
+            return
+        }
+
+        //data for ajaxing
+        data = {"search_for":search_for}
+        
+        // this ajax request returns the suggeions that mach with search_for
+        $.ajax({
+
+            url: {% url 'autosuggestion' %},
+            method: "GET",
+            data:data,
+
+            success: function(data) {
+                console.log("code run success")
+                console.log(data)
+                $(".dropdownsearch").show()
+                $(".dropdownsearch").empty()
+                for (i in data) {
+                    var newLink = $('<a>').addClass('dropdown-item dropsuggesion').attr('role', 'button').text(data[i]);
+                    $('.dropdownsearch').append(newLink);
+                    
+                }
+                
+            }
+
+            
+        })
+        
+
+    })
     
 
 
@@ -129,13 +188,14 @@
         window.location.href = "{% url 'mainsearch' %}?search_input="+search_input
     })
 
-
-
+    
     // email subscription
     $(".email_subscription").on('click', function() {
         
         var subscription_email = $("#subscription_email").val()
- 
+        
+        
+      
         // validation       
         if (subscription_email == "") {
             toastr.warning("invalied email")
@@ -154,7 +214,11 @@
                 toastr.info(data.message)
             }
         })
+        
     })
+
+    
+    
 
     
   

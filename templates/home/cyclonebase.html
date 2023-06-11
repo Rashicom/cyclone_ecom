@@ -120,6 +120,15 @@
 
                     <li class="nav-item">
                       <input class="border border-white rounded-3" id="main_search_input" type="text">
+
+                      <!-- suggession iteratively list here start-->
+                      <!-- listing the suggession when user search for somhing and ajax iteratively list here suggesions -->
+                      <div class="dropdownsearch position-absolute">
+                        <a class="dropdown-item dropsuggesion" role="button" >Another link</a>
+                      </div>
+                      <!-- suggession iteratively list here end-->
+                      
+
                       <a role="button" id="main_search" class="icons m-0">
                         <i class="ti-search" aria-hidden="true"></i>
                       </a>
@@ -253,12 +262,10 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     
+
     <!-- toster -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    
-    {% include "ajax.html" %}
-
     <script src="{% static 'JavaScripts/jquery-3.2.1.min.js' %}"></script>
     <!-- <script src="{% static 'JavaScripts/popper.js' %}"></script> -->
     <!-- <script src="{% static 'JavaScripts/bootstrap.min.js' %}"></script> -->
@@ -278,7 +285,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <!-- jquery validator -->
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
 
-    
+    {% include "ajax.html" %}
     
   </body>
 </html>

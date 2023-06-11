@@ -169,9 +169,7 @@ MEDIA_URL = '/media/'
 RAZORPAY_KEY_ID = 'rzp_test_jZvlBVA7lGbY2k'
 RAZORPAY_KEY_SECRET = 'f5Tm2aUqkmP5rOHHRtsDOcq0'
 
-
 # twilio otp varification
-
 TWILIO_ACCOUNT_SID = 'AC239106057fd6e4cbfc2cb8cd5a5a6f45'
 TWILIO_AUTH_TOKEN = '9c5d38846abfdc0fa4bbd9af5b9a8101'
 TWILIO_NO = '+16085915072'

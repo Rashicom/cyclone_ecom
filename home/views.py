@@ -723,6 +723,43 @@ class cyclone_contact_cyclone(View):
         return JsonResponse({'status':200})
 
 
+# search auto suggestion
+class cyclone_auto_suggestion(View):
+
+    def get(self, request):
+        """
+        a aja erquest carrieng the requested for value and return the 
+        company or order names which matches for the search value
+        """
+
+        # fetching seatch for data
+        search_for = request.GET['search_for']
+        
+        # searching in the data set for match as search suggestion 
+        """
+        searching for search_for in company, model and bike type also. list() is used for returning list
+        insted of query set. _istartswith is for searching starts with that search_for and __i represending case insensitive.
+        distinct() make sure that no duplicates are there. value_list returning only the fields specified as the parameter not the 
+        object and return it as a tuple. flat = true converts the tuple in to list values if it contains only one colomn items
+        """
+
+        # searching for company name
+        suggestion_result = list(product_category.objects.filter(
+            Q(product_id__company__istartswith = search_for)).distinct().values_list("product_id__company",flat=True))
+
+        #searching for model name and add to the previous search suggestion
+        suggestion_result += list(product_category.objects.filter(
+            Q(product_id__model__istartswith = search_for)).distinct().values_list("product_id__model",flat=True))
+        
+
+        #searching for bike type and add to the previous search suggestion
+        suggestion_result += list(product_category.objects.filter(
+            Q(product_id__bike_type__istartswith = search_for)).distinct().values_list("product_id__bike_type",flat=True))
+
+        # return the json response contain suggestion_result 
+        return JsonResponse(suggestion_result,safe=False)
+        
+
 
 # main search
 class cyclone_main_search(View):

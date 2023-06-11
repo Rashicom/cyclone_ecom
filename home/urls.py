@@ -24,6 +24,7 @@ urlpatterns = [
     path('contactadmin/',views.cyclone_contact_cyclone.as_view(), name='contactadmin'),
     path('tackorder/',views.cyclone_track_order.as_view(), name='tackorder'),
     path('mainsearch/',views.cyclone_main_search.as_view(),name='mainsearch'),
+    path('autosuggestion/',views.cyclone_auto_suggestion.as_view(), name='autosuggestion'),
     path('emailsubscription/',views.cyclone_email_subscription.as_view(), name='emailsubscription'),
     
     
