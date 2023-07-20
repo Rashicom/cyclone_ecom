@@ -18,7 +18,7 @@
          
 
     })
-   
+    
 
     $("#otpbtn").click(function() {
         console.log("button clicked")
@@ -130,8 +130,6 @@
         })
     })
     
-    
-    
 
     // main search auto suggestion
     $("#main_search_input").on('input', function() {
@@ -160,7 +158,7 @@
                 $(".dropdownsearch").show()
                 $(".dropdownsearch").empty()
                 for (i in data) {
-                    var newLink = $('<a>').addClass('dropdown-item dropsuggesion').attr('role', 'button').text(data[i]);
+                    var newLink = $('<a>').addClass('dropdown-item dropsuggesion h6 text-white').attr('role', 'button').text(data[i]);
                     $('.dropdownsearch').append(newLink);
                     
                 }

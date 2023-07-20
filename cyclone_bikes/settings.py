@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--xsr2$0xxw9qj544md0#&g@d7&vinkf0_7c_d3n$1)atc+-**6'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -81,28 +82,18 @@ WSGI_APPLICATION = 'cyclone_bikes.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'CycloneBikes',
-#         'USER': 'postgres',
-#         'PASSWORD': 'rashi123',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cyclonebikes',
-        'USER': 'cyclone_postgres',
-        'PASSWORD': 'rashid484',
-        'HOST': 'cyclonebikes.cxxepfs5yidb.eu-north-1.rds.amazonaws.com',
+        'NAME': 'CycloneBikes',
+        'USER': 'postgres',
+        'PASSWORD': config('PASSWORD'),
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -156,21 +147,21 @@ AUTH_USER_MODEL = "home.CustomUser"
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER =  'rashid.kp484@gmail.com'
-EMAIL_HOST_PASSWORD = 'lleutusawwvvjnjh'
+EMAIL_HOST_USER =  config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 
 # media root config
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
 
-
+ 
 # Razor payment integration
-RAZORPAY_KEY_ID = 'rzp_test_jZvlBVA7lGbY2k'
-RAZORPAY_KEY_SECRET = 'f5Tm2aUqkmP5rOHHRtsDOcq0'
+RAZORPAY_KEY_ID = config('RAZORPAY_KEY_ID')
+RAZORPAY_KEY_SECRET = config('RAZORPAY_KEY_SECRET')
 
 # twilio otp varification
-TWILIO_ACCOUNT_SID = 'AC239106057fd6e4cbfc2cb8cd5a5a6f45'
-TWILIO_AUTH_TOKEN = '9c5d38846abfdc0fa4bbd9af5b9a8101'
-TWILIO_NO = '+16085915072'
+TWILIO_ACCOUNT_SID = config('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = config('TWILIO_AUTH_TOKEN')
+TWILIO_NO = config('TWILIO_NO')
 
