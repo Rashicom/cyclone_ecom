@@ -27,7 +27,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -85,13 +85,19 @@ WSGI_APPLICATION = 'cyclone_bikes.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'CycloneBikes',
-        'USER': 'postgres',
+        'NAME': config('NAME'),
+        'USER': config('P_USER'),
         'PASSWORD': config('PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'HOST': config('HOST'),
+        'PORT': config('PORT'),
     }
 }
+
+# NAME=CycloneBikes
+# P_USER=postgres
+# PASSWORD=rashi123
+# HOST=localhost
+# PORT=5432
 
 
 
